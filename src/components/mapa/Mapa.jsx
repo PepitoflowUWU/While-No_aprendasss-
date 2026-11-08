@@ -22,7 +22,8 @@ function useCompacto() {
     const mq = window.matchMedia(COMPACTO);
     const f = () => setM(mq.matches);
     mq.addEventListener('change', f);
-    return () => mq.removeEventListener('change', f);
+    window.addEventListener('resize', f);   // respaldo: algunos navegadores no avisan el cambio al rotar o redimensionar
+    return () => { mq.removeEventListener('change', f); window.removeEventListener('resize', f); };
   }, []);
   return m;
 }

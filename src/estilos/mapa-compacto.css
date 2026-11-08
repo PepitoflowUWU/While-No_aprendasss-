@@ -9,8 +9,11 @@
 /* Barra superior */
 .isla .hc-top { position: fixed; top: 0; left: 0; right: 0; pointer-events: auto; display: flex; flex-direction: column; gap: var(--gap); background: rgba(14, 42, 92, .92); border-bottom: 2px solid #F2C85B;
   padding: calc(6px + env(safe-area-inset-top)) calc(var(--gap) + env(safe-area-inset-right)) var(--gap) calc(var(--gap) + env(safe-area-inset-left)); }
-.isla .hc-row1 { display: flex; align-items: center; gap: var(--gap); }
-.isla .hc-row2 { display: flex; flex-wrap: wrap; gap: var(--gap); }
+.isla .hc-top { container: hctop / inline-size; }
+.isla .hc-top-in { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; }
+.isla .hc-row1 { display: flex; align-items: center; gap: var(--gap); min-width: 0; }
+.isla .hc-row2 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); min-width: 0; }
+.isla .hc-acciones { display: flex; gap: var(--gap); margin-left: auto; flex: none; }
 .isla .hc-avatar { width: clamp(48px, calc(var(--u) * 12.3), 68px); height: clamp(48px, calc(var(--u) * 12.3), 68px); flex: none; padding: 3px; background: #7ed957; border: 2px solid #1d4a14; display: grid; place-items: center; overflow: hidden; }
 .isla .hc-avatar svg, .isla .hc-avatar .mp-avatar-img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 15%; image-rendering: pixelated; }
 .isla .hc-nivel { display: flex; align-items: baseline; gap: var(--gap); flex: 1; min-width: 0; }
@@ -18,18 +21,47 @@
 .isla .hc-nn { font-size: clamp(22px, calc(var(--u) * 6), 32px); font-weight: 700; color: #fff; }
 .isla .hc-gear { width: clamp(48px, calc(var(--u) * 12.3), 68px); height: clamp(48px, calc(var(--u) * 12.3), 68px); flex: none; display: grid; place-items: center; background: #0d2152; border: 2px solid #5FA8FF; color: #fff; }
 .isla .hc-gear svg { width: 62%; height: 62%; }
-.isla .hc-pill { flex: 1 1 40%; min-width: 0; height: clamp(44px, calc(var(--u) * 11.5), 60px); display: flex; align-items: center; gap: var(--gap); padding: 0 clamp(10px, calc(var(--u) * 2.6), 16px); background: #0d2152; border: 2px solid #5FA8FF; font-size: clamp(15px, calc(var(--u) * 4.1), 20px); font-weight: 700; white-space: nowrap; }
-.isla .hc-pill span:last-child { overflow: hidden; text-overflow: ellipsis; }
-.isla .hc-ico { width: clamp(28px, calc(var(--u) * 7.2), 38px); height: clamp(28px, calc(var(--u) * 7.2), 38px); flex: none; display: block; }
+/* Comodines y rachas: ícono + etiqueta pequeña arriba y valor abajo (como el HUD grande) */
+.isla .hc-pill { min-width: 0; height: clamp(44px, calc(var(--u) * 11.5), 56px); display: flex; align-items: center; justify-content: center; gap: clamp(5px, calc(var(--u) * 1.6), 10px);
+  padding: 0 clamp(6px, calc(var(--u) * 2), 12px); background: #0d2152; border: 2px solid #5FA8FF; font-weight: 700; white-space: nowrap; }
+.isla .hc-dato { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; line-height: 1.1; }
+.isla .hc-pl { font-size: clamp(10px, calc(var(--u) * 2.6), 12px); letter-spacing: .5px; color: #cfe6ff; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.isla .hc-pv { font-size: clamp(15px, calc(var(--u) * 4.1), 19px); color: #fff; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.isla .hc-pv.gold { color: #ffd23f; }
+.isla .hc-ico { width: clamp(24px, calc(var(--u) * 6.6), 34px); height: clamp(24px, calc(var(--u) * 6.6), 34px); flex: none; display: block; }
 .isla .hc-ico svg, .isla .hc-nico svg { width: 100%; height: 100%; display: block; }
-/* Horizontal o más ancho (>= 480 px): una sola fila */
-@media (min-width: 480px) {
-  .isla .hc-top { flex-direction: row; align-items: center; min-height: 52px; padding-bottom: 6px; }
+
+/* Etiqueta corta en celulares angostos ("MÁXIMA" en vez de "RACHA MÁX.") */
+.isla .hc-corto { display: none; }
+@container hctop (max-width: 419px) {
+  .isla .hc-largo { display: none; }
+  .isla .hc-corto { display: inline; }
+}
+/* Pantallas muy angostas: sin ícono en comodines y rachas, para que el texto quepa */
+@container hctop (max-width: 339px) {
+  .isla .hc-pill .hc-ico { display: none; }
+  .isla .hc-dato { align-items: center; }
+}
+
+/* Con espacio suficiente (>= 700 px de barra): todo en UNA fila; ajustes y admin quedan al final, a la derecha */
+@container hctop (min-width: 700px) {
+  .isla .hc-top-in { flex-direction: row; align-items: center; }
   .isla .hc-row1, .isla .hc-row2 { display: contents; }
   .isla .hc-nivel { flex: none; }
-  .isla .hc-pill { flex: none; }
-  .isla .hc-gear { margin-left: auto; order: 9; }
-  .isla .hc-corona { margin-left: 0; order: 9; }
+  .isla .hc-pill { flex: 0 1 auto; }
+  .isla .hc-acciones { order: 9; }
+}
+/* Celular en horizontal (poco alto): una sola fila, sin etiquetas (ícono + valor) y botones de 44 px, para dejar más mapa visible */
+@media (max-height: 559px) {
+  @container hctop (min-width: 520px) {
+    .isla .hc-top-in { flex-direction: row; align-items: center; }
+    .isla .hc-row1, .isla .hc-row2 { display: contents; }
+    .isla .hc-nivel { flex: none; }
+    .isla .hc-pill { flex: 0 1 auto; height: 44px; }
+    .isla .hc-pl { display: none; }
+    .isla .hc-acciones { order: 9; }
+    .isla .hc-avatar, .isla .hc-gear { width: 44px; height: 44px; }
+  }
 }
 
 /* Barra inferior + tira del nivel */

@@ -78,18 +78,33 @@ export default function HudCompacto({
   return (
     <div className="hud-compacto">
       <header className="hc-top" ref={topRef}>
+        {/* Fila 1: jugador y nivel a la izquierda; ajustes y admin SIEMPRE a la derecha (nunca se salen de la pantalla).
+            Fila 2: comodines y rachas. Con espacio suficiente las dos filas se juntan en una sola (ver mapa-compacto.css). */}
+        <div className="hc-top-in">
         <div className="hc-row1">
           <button type="button" className="hc-avatar hc-btn" onClick={onFicha || onPerfil} aria-label="Ver perfil">
             <AvatarJugador personaje={personaje} size={48} />
           </button>
           <div className="hc-nivel"><span className="hc-nl">NIVEL</span><span className="hc-nn">{actual + 1}</span></div>
-          <button type="button" className="hc-gear hc-btn" onClick={onPerfil} aria-label="Ajustes y perfil"><GearIcon size={32} /></button>
-          {onAdmin && <button type="button" className="hc-gear hc-corona hc-btn" onClick={onAdmin} aria-label="Panel de administración" title="Panel de administración"><CrownIcon size={32} /></button>}
+          <div className="hc-acciones">
+            <button type="button" className="hc-gear hc-btn" onClick={onPerfil} aria-label="Ajustes y perfil" title="Ajustes"><GearIcon size={32} /></button>
+            {onAdmin && <button type="button" className="hc-gear hc-corona hc-btn" onClick={onAdmin} aria-label="Panel de administración" title="Panel de administración"><CrownIcon size={32} /></button>}
+          </div>
         </div>
         <div className="hc-row2">
-          <div className="hc-pill"><span className="hc-ico"><CardIcon size={28} /></span><span>COMODINES x{com}</span></div>
-          <div className="hc-pill"><span className="hc-ico"><FlameIcon size={28} /></span><span>RACHA {racha}</span></div>
-          <div className="hc-pill"><span className="hc-ico"><StarGold size={28} /></span><span>MÁX {rachaMax}</span></div>
+          <div className="hc-pill" title="Comodines" aria-label={`Comodines: ${com}`}>
+            <span className="hc-ico" aria-hidden="true"><CardIcon size={28} /></span>
+            <span className="hc-dato" aria-hidden="true"><span className="hc-pl">COMODINES</span><span className="hc-pv">x{com}</span></span>
+          </div>
+          <div className="hc-pill" title="Racha" aria-label={`Racha: ${racha} ${racha === 1 ? 'día' : 'días'}`}>
+            <span className="hc-ico" aria-hidden="true"><FlameIcon size={28} /></span>
+            <span className="hc-dato" aria-hidden="true"><span className="hc-pl">RACHA</span><span className="hc-pv gold">{racha} {racha === 1 ? 'día' : 'días'}</span></span>
+          </div>
+          <div className="hc-pill" title="Racha máxima" aria-label={`Racha máxima: ${rachaMax} ${rachaMax === 1 ? 'día' : 'días'}`}>
+            <span className="hc-ico" aria-hidden="true"><StarGold size={28} /></span>
+            <span className="hc-dato" aria-hidden="true"><span className="hc-pl"><span className="hc-largo">RACHA MÁX.</span><span className="hc-corto">MÁXIMA</span></span><span className="hc-pv gold">{rachaMax} {rachaMax === 1 ? 'día' : 'días'}</span></span>
+          </div>
+        </div>
         </div>
       </header>
 
