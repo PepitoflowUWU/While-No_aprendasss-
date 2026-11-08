@@ -1,0 +1,43 @@
+/* Ejercicio de ESCRIBIR: ventana de codigo con casillas para teclear */
+.ec { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.ec-ventana { background: #07112b; border: 3px solid #2a4a9a; box-shadow: 4px 4px 0 rgba(0, 0, 0, .45); }
+.ec-barra { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 12px; background: #142a63; border-bottom: 3px solid #2a4a9a; }
+.ec-luces { display: inline-flex; gap: 5px; }
+.ec-luces i { width: 10px; height: 10px; border-radius: 50%; background: #e63946; }
+.ec-luces i:nth-child(2) { background: #f5c542; }
+.ec-luces i:nth-child(3) { background: #4ee86a; }
+.ec-barra b { font-size: clamp(10px, 1.6dvh + .4vw, 14px); color: #F2C85B; letter-spacing: .5px; }
+.ec-barra em { margin-left: auto; font-style: normal; font-size: clamp(8px, 1.2dvh + .3vw, 11px); color: #8fa3c8; }
+.ec-codigo { padding: 10px 12px 12px; overflow-x: auto; font-family: ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace; font-size: clamp(13px, 1.9dvh + .5vw, 18px); line-height: 1.7; color: #cfe6ff; }
+.ec-linea { display: flex; gap: 14px; min-height: 1.7em; white-space: pre; }
+.ec-num { flex: none; width: 2ch; text-align: right; color: #4a5f95; user-select: none; }
+.ec-txt { white-space: pre; }
+.ec-input { box-sizing: content-box; padding: 0 6px; margin: 0 2px; height: 1.45em; vertical-align: baseline; font: inherit; color: #fff; background: #142a63; border: 2px dashed #F2C85B; border-radius: 3px; outline: none; }
+.ec-input:focus { border-style: solid; border-color: #ffd23f; background: #1b3a85; box-shadow: 0 0 0 3px rgba(255, 210, 63, .25); }
+.ec-input.ok { color: #d9ffe3; background: #123d2a; border: 2px solid #4ee86a; }
+.ec-input.mal { color: #ffe0e0; background: #4a1c26; border: 2px solid #ff6b6b; animation: ec-sacudir .35s; }
+.ec-input:disabled { opacity: 1; }
+.ec-resultado { margin: 0; padding: 9px 12px; font-size: clamp(10px, 1.5dvh + .3vw, 13px); color: #b6f2c4; background: #12301f; border: 3px solid #2c7a4a; }
+@keyframes ec-sacudir { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@media (max-width: 640px) { .ec-linea { gap: 8px; } .ec-barra em { margin-left: 0; width: 100%; } }
+
+/* En los ejercicios de escribir la escena se compacta (cabeza del guia + dialogo) para que el codigo entre completo en pantalla */
+.escena.compacta { padding-top: clamp(104px, 17dvh, 190px); }
+/* Pantallas anchas: el guia se ve completo a la izquierda y el dialogo queda a su derecha (no le tapa la cara) */
+@media (min-width: 900px) {
+  .escena.compacta { padding-top: 0; height: clamp(190px, 29dvh, 250px); justify-content: center; }
+  .escena.compacta .escena-dialogo { margin-left: 50%; margin-bottom: 0; }
+}
+@media (max-height: 760px) {
+  .ec-codigo { padding: 8px 12px 10px; line-height: 1.5; font-size: clamp(12px, 1.8dvh + .4vw, 16px); }
+  .ec-linea { min-height: 1.5em; }
+  .ec-input { height: 1.3em; }
+}
+
+/* Celular: casillas y letra mas justas para que cada linea del codigo quepa en pantalla */
+@media (max-width: 480px) {
+  .ec-codigo { padding: 8px 8px 10px; font-size: 11.5px; }
+  .ec-num { display: none; }
+  .ec-linea { gap: 0; }
+  .ec-input { padding: 0 3px; margin: 0 1px; }
+}

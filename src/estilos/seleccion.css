@@ -1,0 +1,57 @@
+/* ===== Pantalla de selección de personaje ===== */
+.cs-screen { font-family:"Press Start 2P","Pixelify Sans",monospace; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,3vh,26px); padding:24px 12px 28px; }
+.cs-title { font-family:"Press Start 2P",monospace; margin:0; text-align:center; font-size:clamp(11px,3.4vw,28px); line-height:1.5; color:#fff; letter-spacing:1px;
+  text-shadow:.1em .1em 0 #2f8f46, .18em .18em 0 #0f3b2a; background:rgba(15,42,68,.82); border:4px solid #fff; box-shadow:0 0 0 4px #2f8f46, 5px 5px 0 4px #0f2a44; padding:12px 16px; max-width:100%; }
+
+.cs-grid { display:flex; justify-content:center; align-items:flex-start; gap:clamp(12px,3vw,34px); padding-top:30px; max-width:100%; }
+
+.char-card { --w:min(clamp(84px,24vw,200px),24vh); --cut:clamp(5px,1vw,10px);
+  position:relative; width:var(--w); display:flex; flex-direction:column; align-items:center; cursor:pointer; outline:none;
+  transition:transform .2s steps(4,end); -webkit-tap-highlight-color:transparent; }
+.char-card:focus-visible { outline:4px solid #fff; outline-offset:6px; box-shadow:0 0 0 10px #15102b; }
+.char-card.is-active { transform:translateY(-8px) scale(1.05); }
+
+.char-face, .char-frame { clip-path:polygon(var(--cut) 0,calc(100% - var(--cut)) 0,100% var(--cut),100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,var(--cut) 100%,0 calc(100% - var(--cut)),0 var(--cut)); }
+.char-face { position:relative; width:100%; height:calc(var(--w) * 1.65); background:var(--c); overflow:hidden; z-index:1;
+  filter:saturate(.45) brightness(.8); opacity:.85; transition:filter .2s, opacity .2s; }
+.char-card.is-active .char-face { filter:saturate(1.3) brightness(1.05); opacity:1; }
+
+/* patrón pixel repetido: rombos + estrellitas. Tamaño 32px, el desplazamiento es múltiplo para que el bucle sea continuo */
+.char-pattern { position:absolute; inset:0; --s:rgba(255,255,255,.3); background-color:transparent;
+  background-image:
+    linear-gradient(45deg,var(--s) 25%,transparent 25%,transparent 75%,var(--s) 75%),
+    linear-gradient(45deg,var(--s) 25%,transparent 25%,transparent 75%,var(--s) 75%),
+    radial-gradient(circle,#fff 2px,transparent 2.5px);
+  background-size:32px 32px,32px 32px,32px 32px; background-position:0 0,16px 16px,8px 8px; }
+.char-card.is-active .char-pattern { animation:cs-scroll 3s linear infinite; }
+@keyframes cs-scroll { to { background-position:64px 64px,80px 80px,72px 72px; } }
+
+.char-img { position:absolute; left:50%; bottom:6%; height:84%; max-width:92%; width:auto; object-fit:contain; transform:translateX(-50%); image-rendering:auto;
+  filter:brightness(0) invert(.5); transition:filter .2s; user-select:none; } /* silueta GRIS hasta que se revela */
+.char-card.is-active .char-img { filter:none; animation:cs-idle .8s steps(2,end) infinite; }
+@keyframes cs-idle { 0%,100%{ transform:translate(-50%,0); } 50%{ transform:translate(-50%,-3px); } }
+
+.char-missing { position:absolute; inset:18% 10%; display:grid; place-items:center; background:#8a8a8a; border:3px solid #555; color:#fff; font-size:8px; text-align:center; }
+
+/* marco blanco biselado + flecha */
+.char-frame { position:absolute; left:-8px; right:-8px; top:-8px; height:calc(var(--w) * 1.65 + 16px); background:#fff; z-index:0; display:none; --cut:calc(clamp(5px,1vw,10px) + 4px);
+  filter:drop-shadow(0 0 0 #000); }
+.char-card.is-selected .char-frame { display:block; }
+.char-card.is-selected .char-face { --cut:clamp(5px,1vw,10px); }
+.char-arrow { position:absolute; top:-34px; left:50%; margin-left:-.5em; z-index:3; color:#fff; font-size:clamp(14px,3vw,22px); text-shadow:3px 3px 0 #15102b,0 0 6px #ff4f9a; animation:cs-bob .7s steps(2,end) infinite; }
+@keyframes cs-bob { 50% { transform:translateY(5px); } }
+
+.char-name { font-family:"Press Start 2P",monospace; margin-top:14px; font-size:clamp(8px,1.8vw,14px); color:#fff; text-shadow:.12em .12em 0 #15102b; text-align:center; z-index:1; }
+.char-phrase { margin-top:8px; min-height:5.6em; font-size:clamp(7px,1.3vw,11px); line-height:1.7; color:#fff; text-shadow:1px 1px 0 #15102b; text-align:center; z-index:1; }
+
+.cs-help { font-family:"Press Start 2P",monospace; margin:0; font-size:clamp(7px,1.6vw,10px); color:#fff; text-shadow:2px 2px 0 #15102b; text-align:center; background:rgba(15,42,68,.8); padding:8px 12px; }
+.cs-actions { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .char-card.is-active .char-pattern, .char-card.is-active .char-img, .char-arrow { animation:none; }
+  .char-card, .char-face, .char-img { transition:none; }
+}
+
+.cs-screen .pixel-button, .reg-screen .pixel-button { font-size:clamp(11px,2.6vw,15px); min-height:56px; padding:14px 18px; }
+.cs-reintentar { font:inherit; color:#ffd93d; background:none; border:0; padding:0; margin-left:6px; text-decoration:underline; cursor:pointer; }
+.cs-reintentar:focus-visible { outline:2px solid #fff; outline-offset:2px; }

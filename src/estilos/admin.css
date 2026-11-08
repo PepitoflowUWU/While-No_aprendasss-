@@ -1,0 +1,149 @@
+/* Panel de administracion (corona). Estilo dashboard; usa letra legible en vez de la pixelada del juego para los datos. */
+.adm-velo { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; padding: clamp(6px, 2vw, 24px); background: rgba(3, 8, 20, .8);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #e8eefc; }
+.adm-velo *, .adm-velo *::before, .adm-velo *::after { box-sizing: border-box; font-family: inherit; }
+.adm { width: min(1180px, 100%); height: min(760px, 100%); display: grid; grid-template-columns: 224px 1fr; overflow: hidden;
+  background: #0b1426; border: 2px solid #2a3f6b; border-radius: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, .6); }
+
+/* Menu lateral */
+.adm-lateral { display: flex; flex-direction: column; gap: 6px; padding: 14px 10px; background: #08101f; border-right: 1px solid #1d2d52; overflow-y: auto; }
+.adm-marca { display: flex; align-items: center; gap: 10px; padding: 4px 8px 14px; font-weight: 800; letter-spacing: 2px; color: #ffd23f; font-size: 15px; border-bottom: 1px solid #1d2d52; margin-bottom: 8px; }
+.adm-corona { display: grid; place-items: center; width: 44px; height: 44px; background: #14213f; border: 2px solid #ffd23f; border-radius: 10px; }
+.adm-lateral nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.adm-nav { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; text-align: left; font-size: 14px; font-weight: 600; color: #b9c8e8;
+  background: transparent; border: 1px solid transparent; border-radius: 9px; cursor: pointer; }
+.adm-nav:hover:not(:disabled) { background: #121f3b; color: #fff; }
+.adm-nav.activa { background: #17284d; color: #ffd23f; border-color: #2f4a85; }
+.adm-nav:disabled { opacity: .45; cursor: not-allowed; }
+.adm-nav em { margin-left: auto; font-style: normal; font-size: 10px; padding: 2px 6px; border-radius: 99px; background: #22345c; color: #8fa3c8; text-transform: uppercase; }
+.adm-nav-i { width: 18px; text-align: center; font-size: 15px; flex: none; }
+.adm-salir { margin-top: 6px; color: #ff9b9b; }
+
+/* Contenido */
+.adm-main { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 16px 20px 20px; overflow-y: auto; }
+.adm-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.adm-cab h1 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; }
+.adm-cab span { font-size: 12px; color: #8fa3c8; }
+.adm-main h2 { margin: 0 0 4px; font-size: 18px; color: #fff; }
+.adm-main h3 { margin: 0 0 10px; font-size: 14px; color: #dbe6ff; }
+.adm-cargando { color: #8fa3c8; }
+
+/* Tarjetas */
+.adm-tarjetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.adm-card { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 14px; background: #111d36; border: 1px solid #25396a; border-radius: 12px; }
+.adm-card-oro { border-color: #8a6d12; background: linear-gradient(160deg, #1b2440, #2a2410); }
+.adm-card-t { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; color: #8fa3c8; }
+.adm-card-n { font-size: 32px; font-weight: 800; color: #fff; line-height: 1.1; }
+.adm-card-n small { font-size: 14px; font-weight: 600; color: #8fa3c8; }
+.adm-card-oro .adm-card-n { color: #ffd23f; }
+.adm-card-s { font-size: 12.5px; color: #aebfe2; line-height: 1.4; overflow-wrap: anywhere; }
+.adm-card-s b { color: #fff; }
+.adm-genero { margin-bottom: 12px; }
+.adm-genero-nums { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 10px; }
+.adm-genero-nums > div { display: flex; flex-direction: column; gap: 2px; min-width: 110px; }
+.adm-genero-nums span { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; color: #8fa3c8; }
+.adm-genero-nums b { font-size: 32px; font-weight: 800; line-height: 1.1; }
+.adm-genero-nums small { font-size: 12px; color: #aebfe2; }
+.adm-genero-h b { color: #4aa3ff; }
+.adm-genero-m b { color: #ff7eb6; }
+.adm-genero-barra { display: flex; height: 14px; overflow: hidden; border-radius: 99px; background: #17233f; }
+.adm-genero-barra i { display: block; height: 100%; }
+.adm-genero-barra .h { background: #4aa3ff; }
+.adm-genero-barra .m { background: #ff7eb6; }
+.adm-genero-nota { margin: 10px 0 0; font-size: 12px; color: #8fa3c8; }
+.adm-dos { display: grid; grid-template-columns: 3fr 2fr; gap: 12px; }
+.adm-caja { padding: 14px; background: #0f1a31; border: 1px solid #22345c; border-radius: 12px; min-width: 0; }
+.adm-barras, .adm-top { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+.adm-barras li { display: grid; grid-template-columns: 64px 1fr 34px; align-items: center; gap: 10px; font-size: 13px; color: #b9c8e8; }
+.adm-barras b { text-align: right; color: #fff; }
+.adm-barra { display: block; height: 12px; background: #17233f; border-radius: 99px; overflow: hidden; }
+.adm-barra i { display: block; height: 100%; background: linear-gradient(90deg, #4fd18b, #7ed957); border-radius: 99px; min-width: 2px; }
+.adm-top li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 10px; background: #14213f; border-radius: 8px; font-size: 13px; }
+.adm-top li b { color: #ffd23f; }
+.adm-vacio { color: #8fa3c8; text-align: center; }
+
+/* Tabla de usuarios */
+.adm-usuarios { position: relative; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+/* Con una ficha abierta: la tabla a la izquierda y la ficha a la derecha, sin taparse */
+.adm-usuarios.con-detalle { display: grid; grid-template-columns: minmax(0, 1fr) 330px; grid-template-areas: "busca detalle" "tabla detalle"; grid-template-rows: auto minmax(0, 1fr); gap: 10px 14px; }
+.adm-usuarios.con-detalle .adm-barra-busqueda { grid-area: busca; }
+.adm-usuarios.con-detalle .adm-tabla-wrap { grid-area: tabla; }
+.adm-barra-busqueda { display: flex; align-items: center; gap: 12px; }
+.adm-barra-busqueda input { flex: 1; min-width: 0; }
+.adm-cuenta { font-size: 12px; color: #8fa3c8; white-space: nowrap; }
+.adm-tabla-wrap { overflow: auto; border: 1px solid #22345c; border-radius: 12px; max-height: 100%; }
+.adm-tabla { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 13px; }
+.adm-tabla th { position: sticky; top: 0; z-index: 1; padding: 10px 12px; text-align: left; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #8fa3c8; background: #0f1a31; border-bottom: 1px solid #22345c; white-space: nowrap; }
+.adm-tabla td { padding: 10px 12px; border-bottom: 1px solid #172444; vertical-align: middle; white-space: nowrap; }
+.adm-tabla td b { display: block; color: #fff; }
+.adm-tabla small { display: block; color: #8fa3c8; font-size: 11.5px; }
+.adm-tabla tbody tr { cursor: pointer; }
+.adm-tabla tbody tr:hover, .adm-tabla tbody tr.sel, .adm-tabla tbody tr:focus-visible { background: #14223f; outline: none; }
+.adm-pronto { color: #6f83ab; font-style: italic; }
+.adm-rol { display: inline-block; padding: 2px 8px; font-size: 10.5px; font-weight: 700; letter-spacing: .6px; border-radius: 99px; background: #1b2f58; color: #9fc0ff; }
+.adm-rol-admin { background: #3a2f0b; color: #ffd23f; }
+.adm-detalle { grid-area: detalle; position: relative; align-self: start; padding: 16px;
+  background: #101c38; border: 1px solid #3a5aa5; border-radius: 12px; box-shadow: 0 14px 34px rgba(0, 0, 0, .55); }
+.adm-detalle h3 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-right: 26px; font-size: 16px; color: #fff; }
+.adm-detalle dl { display: grid; grid-template-columns: 112px 1fr; gap: 8px 10px; margin: 0 0 14px; font-size: 13px; }
+.adm-detalle dt { color: #8fa3c8; }
+.adm-detalle dd { margin: 0; color: #fff; overflow-wrap: anywhere; }
+.adm-mono { font-family: ui-monospace, Consolas, monospace !important; font-size: 11.5px; }
+.adm-detalle .adm-acciones .adm-btn { flex: 1 1 130px; }
+.adm-x { position: absolute; top: 8px; right: 10px; width: 28px; height: 28px; font-size: 20px; line-height: 1; color: #b9c8e8; background: transparent; border: 0; cursor: pointer; }
+
+/* Formularios (eliminar / contrasena) */
+.adm-form { max-width: 620px; display: flex; flex-direction: column; gap: 12px; }
+.adm-ayuda { margin: 0 0 4px; font-size: 13px; color: #9db0d6; line-height: 1.5; }
+.adm-buscar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; }
+.adm-buscar .adm-campo { flex: 1 1 300px; }
+.adm-campo { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; font-weight: 600; color: #b9c8e8; }
+.adm-clave { display: flex; gap: 8px; }
+.adm-clave input { flex: 1; min-width: 0; }
+.adm-velo input, .adm-velo select { width: 100%; padding: 10px 12px; font-size: 14px; color: #fff; background: #0a1224; border: 1px solid #2f4a85; border-radius: 9px; outline: none; }
+.adm-velo input:focus, .adm-velo select:focus { border-color: #ffd23f; box-shadow: 0 0 0 2px rgba(255, 210, 63, .25); }
+.adm-resultado { display: flex; flex-direction: column; gap: 12px; padding: 14px; background: #0f1a31; border: 1px solid #22345c; border-radius: 12px; }
+.adm-ficha { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #b9c8e8; }
+.adm-ficha b { font-size: 16px; color: #fff; margin-right: 6px; }
+.adm-ficha small { color: #6f83ab; }
+.adm-error { margin: 0; padding: 9px 12px; font-size: 13px; color: #ffb4b4; background: #3a1620; border: 1px solid #7a2a3a; border-radius: 9px; }
+.adm-error-gral { margin-bottom: 12px; }
+.adm-exito { margin: 0; padding: 9px 12px; font-size: 13px; color: #b6f2c4; background: #12301f; border: 1px solid #2c7a4a; border-radius: 9px; }
+
+/* Botones */
+.adm-btn { padding: 10px 16px; font-size: 13.5px; font-weight: 700; color: #e8eefc; background: #1a2b52; border: 1px solid #3a5aa5; border-radius: 9px; cursor: pointer; }
+.adm-btn:hover:not(:disabled) { background: #22386b; }
+.adm-btn:disabled { opacity: .45; cursor: not-allowed; }
+.adm-btn-ok { background: #1f6b3d; border-color: #35a862; }
+.adm-btn-ok:hover:not(:disabled) { background: #28854c; }
+.adm-btn-peligro { background: #7a1f2b; border-color: #c4414f; }
+.adm-btn-peligro:hover:not(:disabled) { background: #9a2837; }
+.adm-acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.adm-reenviar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; font-size: 13px; color: #c5d3f0; background: #0b1530; border: 1px dashed #3a5aa5; border-radius: 9px; }
+.adm-clave button { padding: 0 12px; font-size: 12.5px; font-weight: 700; color: #b9c8e8; background: #14213f; border: 1px solid #2f4a85; border-radius: 9px; cursor: pointer; }
+
+/* Validador (ventana de confirmacion) */
+.adm-modal-velo { position: fixed; inset: 0; z-index: 9100; display: grid; place-items: center; padding: 14px; background: rgba(2, 6, 16, .78); }
+.adm-modal { width: min(460px, 100%); display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #101c38; border: 2px solid #c4414f; border-radius: 14px; box-shadow: 0 20px 50px rgba(0, 0, 0, .7); }
+.adm-modal h3 { margin: 0; font-size: 18px; color: #fff; }
+.adm-modal p { margin: 0; font-size: 13.5px; line-height: 1.5; color: #c5d3f0; }
+
+/* Celular: el menu pasa arriba como barra horizontal */
+@media (max-width: 760px) {
+  .adm { grid-template-columns: 1fr; grid-template-rows: auto 1fr; border-radius: 10px; }
+  .adm-lateral { flex-direction: row; align-items: center; gap: 6px; padding: 8px; border-right: 0; border-bottom: 1px solid #1d2d52; overflow-x: auto; overflow-y: hidden; }
+  .adm-marca { padding: 0 6px 0 0; margin: 0; border: 0; flex: none; }
+  .adm-marca span:last-child { display: none; }
+  .adm-corona { width: 38px; height: 38px; }
+  .adm-lateral nav { flex-direction: row; flex: none; }
+  .adm-nav { width: auto; flex: none; white-space: nowrap; padding: 9px 11px; font-size: 13px; }
+  .adm-nav em { display: none; }
+  .adm-salir { margin: 0; flex: none; }
+  .adm-main { padding: 12px 12px 16px; }
+  .adm-cab h1 { font-size: 17px; }
+  .adm-tarjetas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .adm-card-n { font-size: 26px; }
+  .adm-dos { grid-template-columns: 1fr; }
+  .adm-usuarios.con-detalle { display: flex; }
+  .adm-detalle { position: fixed; inset: auto 8px 8px 8px; z-index: 9050; width: auto; max-height: 72dvh; overflow-y: auto; }
+}

@@ -1,0 +1,27 @@
+/* ===== Presentacion seria del guia (niveles 4 y 5) ===== */
+.is-velo { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+  padding: clamp(12px, 3vw, 32px); background: radial-gradient(circle at 60% 40%, rgba(10, 20, 45, .86), rgba(2, 5, 14, .96) 70%);
+  backdrop-filter: blur(4px) brightness(.6); cursor: pointer; animation: is-entrar .35s ease-out; }
+.is-escena { position: relative; width: min(1060px, 100%); display: flex; flex-direction: column; align-items: center; }
+.is-guia { display: block; width: min(46dvh, 420px, 82vw); aspect-ratio: 1; object-fit: cover; margin-bottom: calc(-1 * clamp(28px, 6dvh, 60px));
+  border: 4px solid #0b1430; box-shadow: 0 0 0 3px #d7e6ff33, 0 18px 50px rgba(0, 0, 0, .7), 0 0 80px rgba(120, 160, 255, .18);
+  animation: is-guia .5s ease-out; }
+.is-dialogo { position: relative; z-index: 1; width: 100%; padding: clamp(14px, 2.4dvh, 24px) clamp(16px, 2.4vw, 30px) clamp(10px, 1.6dvh, 16px);
+  color: #fff; background: rgba(5, 12, 30, .96); border: 3px solid #d7e6ff; box-shadow: 0 0 0 3px #05122c, 4px 4px 0 3px rgba(0, 0, 0, .5); cursor: default; }
+.is-dialogo p { margin: 0; min-height: 3em; font: 400 clamp(13px, 2.4vw, 22px) / 1.6 "Press Start 2P", monospace; text-wrap: pretty; }
+.is-resto { visibility: hidden; }          /* reserva el espacio del texto que falta: el cuadro no salta mientras se escribe */
+.is-pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: clamp(8px, 1.6dvh, 14px); }
+.is-pasos { display: flex; gap: 6px; }
+.is-pasos i { width: 10px; height: 10px; background: #2a3f7a; border: 2px solid #05122c; }
+.is-pasos i.on { background: #F2C85B; }
+.is-btn { flex: none; }
+
+@keyframes is-entrar { from { opacity: 0; } to { opacity: 1; } }
+@keyframes is-guia { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .is-velo, .is-guia { animation: none; } }
+
+@media (max-height: 520px) and (min-aspect-ratio: 5/4) {          /* celular horizontal: el guia a la izquierda del dialogo */
+  .is-escena { flex-direction: row; align-items: flex-end; }
+  .is-guia { width: min(70dvh, 300px); margin: 0 -24px 0 0; }
+  .is-dialogo p { font-size: clamp(11px, 3.6dvh, 16px); }
+}

@@ -1,0 +1,49 @@
+/* Ejecucion paso a paso de un algoritmo (se abre al responder bien un ejercicio de pseudocodigo o de diagrama) */
+.ejp-fondo { position: fixed; inset: 0; z-index: 520; display: grid; place-items: center; padding: 12px; background: rgba(6, 14, 34, .82); }
+.ejp-panel { width: min(860px, 100%); max-height: calc(100dvh - 24px); overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 14px 16px 16px;
+  color: #fff; background: #0e2a5c; border: 4px solid #5fa8ff; box-shadow: 0 0 0 4px #04122e, 6px 6px 0 4px rgba(0, 0, 0, .45); font-family: "Pixelify Sans", system-ui, sans-serif; }
+.ejp-panel > * { flex-shrink: 0; }
+.ejp-titulo { margin: 0; font: 400 clamp(11px, 2.4vw, 15px) / 1.4 "Press Start 2P", monospace; color: #4ee86a; text-align: center; }
+.ejp-entrada { margin: 0; text-align: center; color: #ffe48a; font-size: clamp(14px, 2.6vw, 17px); }
+
+.ejp-cuerpo { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 640px) { .ejp-cuerpo { grid-template-columns: 1fr; } }
+
+.ejp-codigo { margin: 0; padding: 10px 6px; list-style: none; background: #081320; border: 3px solid #274a7c; overflow-x: auto; }
+.ejp-linea { display: flex; gap: 10px; align-items: baseline; padding: 3px 8px; border-left: 4px solid transparent; transition: background .25s, border-color .25s; }
+.ejp-linea code { font: 400 clamp(13px, 2.6vw, 16px) / 1.5 ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace; white-space: pre; color: #cfe6ff; }
+.ejp-num { width: 1.5ch; text-align: right; color: #5a7aa8; font: 400 12px ui-monospace, Consolas, monospace; user-select: none; }
+.ejp-linea.hecha code { color: #86c6a0; }
+.ejp-linea.activa { background: rgba(78, 232, 106, .18); border-left-color: #4ee86a; }
+.ejp-linea.activa code { color: #fff; font-weight: 700; }
+
+.ejp-diagrama { margin: 0; padding: 10px; list-style: none; display: flex; flex-direction: column; align-items: center; background: #081320; border: 3px solid #274a7c; }
+.ejp-bloque { display: flex; flex-direction: column; align-items: center; opacity: .55; transition: opacity .25s, transform .25s; }
+.ejp-bloque.hecha { opacity: .9; }
+.ejp-bloque.activa { opacity: 1; transform: scale(1.06); }
+.ejp-bloque.activa .ejp-chip { box-shadow: 0 0 18px #4ee86a; border-color: #4ee86a; }
+.ejp-chip { pointer-events: none; }
+.ejp-flecha { color: #f5c542; font-size: 16px; line-height: 1; margin: 3px 0; }
+
+.ejp-lado { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ejp-memoria, .ejp-pantalla { padding: 8px 10px; background: rgba(255, 255, 255, .06); border-left: 4px solid #5fa8ff; min-height: 64px; }
+.ejp-pantalla { border-left-color: #54e06c; background: #04100a; }
+.ejp-memoria h3, .ejp-pantalla h3 { margin: 0 0 6px; font: 400 9px / 1.4 "Press Start 2P", monospace; color: #9cc8ff; }
+.ejp-pantalla h3 { color: #8dff9c; }
+.ejp-memoria table { border-collapse: collapse; width: 100%; }
+.ejp-memoria th, .ejp-memoria td { padding: 3px 8px; text-align: left; font: 400 clamp(13px, 2.6vw, 16px) ui-monospace, Consolas, monospace; border-bottom: 1px dashed #274a7c; }
+.ejp-memoria th { color: #ffd23f; font-weight: 700; width: 50%; }
+.ejp-memoria tr.cambio td { background: rgba(255, 210, 63, .25); color: #fff; font-weight: 700; }
+.ejp-pantalla pre { margin: 0; font: 400 clamp(14px, 2.8vw, 18px) / 1.4 ui-monospace, Consolas, monospace; color: #8dff9c; white-space: pre-wrap; }
+.ejp-vacio { margin: 0; font-size: 13px; color: #7a8ea8; }
+
+.ejp-texto { margin: 0; min-height: 3.2em; padding: 8px 12px; background: #fff8dc; color: #1a1400; border: 3px solid #2a1f00; font: 400 clamp(14px, 2.6vw, 17px) / 1.4 system-ui, sans-serif; }
+.ejp-barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.ejp-contador { font: 400 10px "Press Start 2P", monospace; color: #9cc8ff; }
+.ejp-botones { display: flex; flex-wrap: wrap; gap: 8px; }
+.ejp-btn { min-height: 44px; padding: 8px 12px; cursor: pointer; font: 700 14px system-ui, sans-serif; color: #0d2a4a; background: #bfe6ff; border: 3px solid #f2fbff; border-right-color: #3b82c4; border-bottom-color: #2f6fae; }
+.ejp-btn.principal { background: #f5c542; border-color: #fff1b8; border-right-color: #b88a12; border-bottom-color: #b88a12; color: #2a1400; }
+.ejp-btn.secundario { background: #14233f; color: #cfe6ff; border-color: #3b5a8a; }
+.ejp-btn:disabled { opacity: .45; cursor: default; }
+.ejp-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.ejp-fin { margin: 0; text-align: center; color: #4ee86a; font-weight: 700; }

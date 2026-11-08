@@ -1,0 +1,565 @@
+/* ========================================================
+   ESTILOS DE LA PANTALLA DE LECCIÓN / NIVEL (CAPYHEIN)
+   Fiel a la interfaz de referencia con Profesor Capyehein
+   ======================================================== */
+
+.nivel-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0b1524;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(10px, 2vh, 24px) clamp(14px, 3vw, 36px);
+  overflow-y: auto;
+  font-family: 'Nunito', sans-serif;
+  user-select: none;
+}
+
+/* Fondo ambiental con símbolos de código y vegetación retro */
+.nivel-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(22, 105, 154, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(99, 40, 130, 0.08) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+/* Símbolos de código flotantes en el fondo */
+.bg-code-token {
+  position: absolute;
+  color: #194363;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(14px, 2vw, 24px);
+  font-weight: 900;
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 0;
+}
+.bg-token-1 { top: 18%; right: 5%; font-size: 28px; }
+.bg-token-2 { top: 38%; right: 7%; }
+.bg-token-3 { bottom: 25%; right: 8%; }
+.bg-token-4 { bottom: 42%; left: 45%; }
+.bg-token-5 { top: 28%; left: 4%; }
+
+/* Contenedor principal alineado y responsivo */
+.nivel-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  gap: clamp(12px, 2vh, 24px);
+}
+
+/* ========================================================
+   1. BARRA SUPERIOR: Volver, Título, Progreso y Comodines
+   ======================================================== */
+
+.nivel-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Botón atrás [←] */
+.nivel-back-btn {
+  width: clamp(40px, 4.5vw, 48px);
+  height: clamp(40px, 4.5vw, 48px);
+  background: #112033;
+  border: 3px solid #f5c542;
+  border-radius: 6px;
+  color: #f5c542;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #070e17;
+  transition: transform 0.1s ease, background 0.15s;
+  flex-shrink: 0;
+}
+
+.nivel-back-btn:hover {
+  transform: translateY(-2px);
+  background: #182e4a;
+}
+
+.nivel-back-btn:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+/* Título de nivel y barra de progreso central */
+.nivel-progress-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nivel-title-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(10px, 1.2vw, 13px);
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.nivel-track {
+  width: 100%;
+  height: clamp(14px, 1.8vh, 18px);
+  background: #0d221c;
+  border: 2px solid #285444;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
+  padding: 1px;
+}
+
+.nivel-fill {
+  height: 100%;
+  background: linear-gradient(180deg, #5ae863 0%, #35b842 60%, #1e7526 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 10px #42cc4e;
+  transition: width 0.4s ease-out;
+}
+
+/* Píldora de Comodines superior derecha */
+.nivel-gift-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #461c61;
+  border: 3px solid #f5c542;
+  border-radius: 6px;
+  padding: clamp(6px, 1vh, 10px) clamp(12px, 1.5vw, 18px);
+  box-shadow: 0 4px 0 #070e17;
+  color: #f5c542;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.nivel-gift-badge .gift-ico {
+  font-size: clamp(15px, 1.6vw, 20px);
+}
+
+/* ========================================================
+   2. SECCIÓN CENTRAL: Profesor Capyehein + Bocadillo
+   ======================================================== */
+
+.nivel-stage {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) 1fr;
+  gap: clamp(16px, 3vw, 36px);
+  align-items: center;
+  margin: auto 0;
+}
+
+/* Tarjeta del Profesor Capyehein */
+.capy-frame-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.capy-card {
+  width: 100%;
+  background: #0d1e34;
+  border: 4px solid #16699a;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(22, 105, 154, 0.4), 0 8px 20px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+}
+
+.capy-img-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle at 50% 40%, #16365c 0%, #0a1728 85%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.capy-img {
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+}
+
+.capy-nameplate {
+  background: #081320;
+  border-top: 2px solid #16699a;
+  padding: 8px 6px;
+  text-align: center;
+  color: #ffffff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(8px, 0.85vw, 11px);
+  letter-spacing: 0.02em;
+}
+
+/* Badge 'CAPIBARA' */
+.capy-sub-badge {
+  background: #e5a932;
+  color: #1a1205;
+  border: 2px solid #231704;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(7px, 0.75vw, 9px);
+  font-weight: 900;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Bocadillo de diálogo estilo cómic en pergamino */
+.capy-bubble {
+  position: relative;
+  background: #faefd6;
+  border: 3px solid #281d0f;
+  border-radius: 8px;
+  padding: clamp(16px, 2.5vh, 28px) clamp(20px, 3vw, 36px);
+  color: #1c150c;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Cola de la burbuja apuntando hacia Capyehein */
+.capy-bubble::before {
+  content: '';
+  position: absolute;
+  left: -18px;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-right: 18px solid #281d0f;
+}
+
+.capy-bubble::after {
+  content: '';
+  position: absolute;
+  left: -13px;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  border-right: 15px solid #faefd6;
+}
+
+.capy-bubble-tag {
+  color: #9c7333;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(8px, 0.85vw, 10px);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.capy-bubble-question {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(14px, 1.8vw, 22px);
+  line-height: 1.5;
+  color: #1a1208;
+  margin: 0;
+}
+
+/* Mensajes de feedback dentro del bocadillo */
+.capy-bubble-feedback {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(9px, 0.95vw, 12px);
+  line-height: 1.5;
+}
+
+.feedback-ok {
+  background: #d4f3d8;
+  color: #176326;
+  border: 2px solid #52bc66;
+}
+
+.feedback-error {
+  background: #fcd8d8;
+  color: #8c1e1e;
+  border: 2px solid #d95353;
+}
+
+/* ========================================================
+   3. SECCIÓN INFERIOR: Opciones de Respuesta (Grid 2x2)
+   ======================================================== */
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(10px, 1.5vh, 18px) clamp(12px, 2vw, 22px);
+  width: 100%;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.5vw, 16px);
+  background: #132235;
+  border: 3px solid #263e5c;
+  border-radius: 6px;
+  padding: clamp(12px, 1.8vh, 18px) clamp(14px, 2vw, 22px);
+  color: #ffffff;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  text-align: left;
+  min-height: clamp(56px, 7vh, 76px);
+}
+
+.option-card:hover:not(:disabled) {
+  border-color: #f5c542;
+  background: #192d47;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.option-card:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* Estado seleccionado (antes de comprobar) */
+.option-card.selected {
+  border-color: #f5c542;
+  background: #1b3454;
+  box-shadow: 0 0 14px rgba(245, 197, 66, 0.4), inset 0 0 8px rgba(245, 197, 66, 0.15);
+}
+
+/* Estado correcto */
+.option-card.correct {
+  border-color: #55e672;
+  background: #184c2b;
+  box-shadow: 0 0 16px rgba(85, 230, 114, 0.5);
+}
+
+/* Estado incorrecto */
+.option-card.wrong {
+  border-color: #ef5b5b;
+  background: #521c1c;
+  box-shadow: 0 0 16px rgba(239, 91, 91, 0.5);
+}
+
+/* Placa con la letra [A], [B], [C], [D] */
+.option-badge {
+  width: clamp(28px, 3vw, 36px);
+  height: clamp(28px, 3vw, 36px);
+  background: #e5a932;
+  border: 2px solid #8e6212;
+  border-radius: 4px;
+  color: #1b1204;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(11px, 1.2vw, 15px);
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.option-text {
+  font-size: clamp(14px, 1.35vw, 18px);
+  font-weight: 800;
+  line-height: 1.35;
+  color: #f7f9fc;
+}
+
+/* ========================================================
+   4. BARRA DE ACCIONES INFERIOR: Botón Comodín y Botón Acción
+   ======================================================== */
+
+.nivel-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+/* Botón Comodín Inferior */
+.btn-comodin-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #582177;
+  border: 3px solid #8432b0;
+  border-radius: 6px;
+  padding: clamp(8px, 1.2vh, 12px) clamp(14px, 2vw, 20px);
+  color: #f5c542;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(9px, 1vw, 12px);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #280a3a;
+  transition: transform 0.1s ease, filter 0.15s;
+}
+
+.btn-comodin-action:hover:not(:disabled) {
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+}
+
+.btn-comodin-action:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.btn-comodin-action:disabled {
+  opacity: 0.5;
+  filter: grayscale(0.8);
+  cursor: not-allowed;
+}
+
+/* Botón de Comprobar / Continuar / Siguiente */
+.btn-primary-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #35a853;
+  border: 3px solid #63e277;
+  border-radius: 6px;
+  padding: clamp(10px, 1.4vh, 14px) clamp(22px, 3vw, 36px);
+  color: #ffffff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(10px, 1.15vw, 14px);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #1b5e2a;
+  transition: transform 0.1s ease, background 0.15s;
+  letter-spacing: 0.05em;
+}
+
+.btn-primary-action:hover:not(:disabled) {
+  background: #3ec25f;
+  transform: translateY(-2px);
+}
+
+.btn-primary-action:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.btn-primary-action.check-btn {
+  background: #f3c74f;
+  border-color: #ffe78b;
+  color: #382405;
+  box-shadow: 0 4px 0 #8b5510;
+}
+
+.btn-primary-action.check-btn:hover:not(:disabled) {
+  background: #fed35e;
+}
+
+.btn-primary-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ========================================================
+   5. PANTALLA DE NIVEL COMPLETADO (RESUMEN)
+   ======================================================== */
+
+.nivel-fin-card {
+  background: #102035;
+  border: 4px solid #f5c542;
+  border-radius: 12px;
+  padding: clamp(24px, 4vh, 44px);
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.nivel-fin-capy {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+}
+
+.nivel-fin-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(16px, 2vw, 22px);
+  color: #ffe67a;
+  margin: 0;
+}
+
+.nivel-fin-stars {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.nivel-fin-msg {
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #f7f0db;
+}
+
+/* ========================================================
+   6. RESPONSIVIDAD PARA PANTALLAS PEQUEÑAS / MÓVILES
+   ======================================================== */
+
+@media (max-width: 768px) {
+  .nivel-stage {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .capy-frame-wrapper {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .capy-card {
+    width: 90px;
+    flex-shrink: 0;
+  }
+
+  .capy-nameplate {
+    display: none;
+  }
+
+  .capy-bubble::before,
+  .capy-bubble::after {
+    display: none; /* En móvil vertical evitamos la flecha lateral */
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+}

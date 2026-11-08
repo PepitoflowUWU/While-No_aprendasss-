@@ -1,0 +1,110 @@
+/* ===== Mapa de niveles: HUD, ranking con scroll, botones inferiores y etiquetas de nodo ===== */
+.isla .hud-layer, .isla .escenario { font-variant-ligatures: none; --fp: "Pixelify Sans", sans-serif; --ft: "Press Start 2P", monospace; --c: max(5px, .55cqw); --b: max(2px, .22cqw); image-rendering: pixelated; }
+
+.isla .mp-item { position: absolute; margin: 0; padding: 0; z-index: 15; font-family: var(--fp); color: #fff; text-align: left;
+  filter: drop-shadow(max(3px, .3cqw) max(3px, .3cqw) 0 #040c24); }
+.isla button.mp-item { cursor: pointer; background: none; border: 0; }
+
+/* Panel azul marino: doble borde azul claro, esquinas biseladas y brillo */
+.isla .mp-panel { --cut: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+  display: flex; align-items: center; background: #a9d8ff; clip-path: var(--cut); }
+.isla .mp-nivel-panel { position: relative; }
+.isla .mp-panel::before { content: ""; position: absolute; inset: var(--b); z-index: 0; background: linear-gradient(135deg, rgba(255,255,255,.22) 0 12%, transparent 12%), #0d2152;
+  clip-path: polygon(calc(var(--c) - var(--b)) 0, calc(100% - var(--c) + var(--b)) 0, 100% calc(var(--c) - var(--b)), 100% calc(100% - var(--c) + var(--b)), calc(100% - var(--c) + var(--b)) 100%, calc(var(--c) - var(--b)) 100%, 0 calc(100% - var(--c) + var(--b)), 0 calc(var(--c) - var(--b))); }
+.isla .mp-panel::after { content: ""; position: absolute; inset: calc(var(--b) * 2); z-index: 0; border: var(--b) solid #4f95e6; pointer-events: none; }
+.isla .mp-panel > * { position: relative; z-index: 1; }
+
+.isla .mp-t { font-family: var(--ft); font-size: max(6px, .68cqw); line-height: 1.3; color: #cfe6ff; white-space: nowrap; }
+.isla .mp-n { font-family: var(--fp); font-weight: 700; font-size: max(15px, 2.1cqw); line-height: 1; color: #fff; text-shadow: .15cqw .15cqw 0 #040c24; }
+.isla .mp-v { font-family: var(--fp); font-weight: 700; font-size: max(12px, 1.5cqw); line-height: 1.1; color: #fff; text-shadow: .15cqw .15cqw 0 #040c24; white-space: nowrap; }
+.isla .mp-v.gold { color: #ffd23f; }
+
+/* Posiciones (% del ancho y alto de la pantalla) */
+.isla .mp-nivel { left: 1.5%; top: 1.5%; width: 18%; height: 9%; display: flex; align-items: stretch; gap: .5cqw; }
+.isla .mp-avatar { flex: none; height: 100%; aspect-ratio: 1; background: #7ed957; padding: max(3px, .3cqw); display: grid; place-items: center; overflow: hidden;
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c)); }
+.isla .mp-avatar svg, .isla .mp-avatar-img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 15%; image-rendering: pixelated; }
+.isla .mp-nivel-panel { flex: 1; min-width: 0; flex-direction: column; justify-content: center; gap: .2cqw; padding: 0 .5cqw; }
+.isla .mp-gear { left: 19.8%; top: 1.5%; width: 5.4%; height: 9%; justify-content: center; }
+.isla .mp-corona { left: 25.6%; top: 1.5%; width: 5.4%; height: 9%; justify-content: center; }
+.isla .mp-com { left: 42%; top: 1.5%; width: 14%; height: 9%; gap: .8cqw; padding: 0 1cqw; }
+.isla .mp-racha { left: 60%; top: 1.5%; width: 13%; height: 9%; gap: .8cqw; padding: 0 1cqw; }
+.isla .mp-racha-max { left: 74%; top: 1.5%; width: 13%; height: 9%; gap: .8cqw; padding: 0 1cqw; }
+.isla .mp-ico { width: 52%; height: 62%; display: block; }
+.isla .mp-ico-s { flex: none; width: 3.2cqw; height: 3.2cqw; display: block; }
+.isla .mp-ico svg, .isla .mp-ico-s svg, .isla .mp-ico-big svg { width: 100%; height: 100%; display: block; }
+.isla .mp-txt { display: flex; flex-direction: column; gap: .25cqw; align-items: center; flex: 1; min-width: 0; }
+
+/* Madera oscura con marco dorado (ranking y objetivo) */
+.isla .mp-wood { --cut: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+  display: flex; flex-direction: column; padding: max(7px, .8cqw); clip-path: var(--cut);
+  background: linear-gradient(135deg, #ffe58a 0%, #d9a73a 45%, #8f6418 100%); }
+.isla .mp-wood::before { content: ""; position: absolute; inset: max(3px, .3cqw); z-index: 0; clip-path: var(--cut);
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 2px, transparent 2px 7px), linear-gradient(#34200f, #241509); }
+.isla .mp-wood > * { position: relative; z-index: 1; }
+.isla .mp-rank { left: 1.5%; top: 13%; width: 18.5%; height: 34%; gap: .6cqw; }
+.isla .mp-obj { left: 1.5%; top: 48.5%; width: 18.5%; height: 13%; gap: .35cqw; justify-content: center; align-items: center; }
+
+.isla .mp-rk-title { margin: 0; text-align: center; font-family: var(--ft); font-weight: 400; font-size: max(7px, .95cqw); line-height: 1; padding: max(4px, .5cqw) 0; flex: none;
+  color: #3b2410; background: #f3e2b0; border: max(2px, .2cqw) solid #b98a2e; }
+.isla .mp-rk-list { flex: 1; min-height: 0; position: relative; overflow-y: auto; overflow-x: hidden; container-type: size; overscroll-behavior: contain; touch-action: pan-y; -webkit-overflow-scrolling: touch; outline: none; }
+.isla .mp-rk-list:focus-visible { box-shadow: 0 0 0 max(2px,.2cqw) #ffe67a; }
+.isla .mp-rk-list ol { list-style: none; margin: 0; padding: 0; }
+.isla .mp-rk-row { height: 20cqh; display: grid; grid-template-columns: 8cqw 11cqw 1fr auto; align-items: center; gap: 3cqw; padding: 0 3cqw; font-size: max(11px, 5.4cqw); font-weight: 700; color: #fff; border-bottom: 1px solid rgba(255,255,255,.08); }
+.isla .mp-rk-row:nth-child(even) { background: rgba(255,255,255,.05); }
+.isla .mp-rk-row.yo { background: #ffb627; color: #2a1400; border-bottom-color: #b87500; box-shadow: inset 0 0 0 2px #ffe28a; }
+.isla .mp-rk-pos { text-align: center; }
+.isla .mp-rk-av { width: 11cqw; height: 11cqw; background: #eed9b7; overflow: hidden; border: 1px solid #000; }
+.isla .mp-rk-av svg, .isla .mp-rk-av .mp-avatar-img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 15%; }
+.isla .mp-rk-alias { display: flex; align-items: center; min-width: 0; white-space: nowrap; }
+.isla .mp-rk-txt { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.isla .mp-rk-tu { flex: none; margin-left: 1.5cqw; font-family: var(--fp); font-weight: 700; font-size: max(8px, 3.2cqw); line-height: 1; background: #2a1400; color: #ffe28a; padding: .8cqw 1.2cqw; }
+.isla .mp-rk-score { font-variant-numeric: tabular-nums; }
+/* Barra de scroll pixel art: riel oscuro, pulgar dorado */
+.isla .mp-rk-list::-webkit-scrollbar { width: 11px; }
+.isla .mp-rk-list::-webkit-scrollbar-track { background: #1a0f08; border-left: 2px solid #4a2f17; }
+.isla .mp-rk-list::-webkit-scrollbar-thumb { background: #f0c040; border: 2px solid #8a5f12; box-shadow: inset 2px 2px 0 #fff2a8; border-radius: 0; }
+@supports not selector(::-webkit-scrollbar) { .isla .mp-rk-list { scrollbar-width: auto; scrollbar-color: #f0c040 #1a0f08; } }
+
+/* Objetivo */
+.isla .mp-obj-head { display: flex; align-items: center; gap: .6cqw; justify-content: center; }
+.isla .mp-obj-star { width: 1.8cqw; height: 1.8cqw; display: block; } .isla .mp-obj-star svg { width: 100%; height: 100%; }
+.isla .mp-obj h2 { margin: 0; font-family: var(--ft); font-weight: 400; font-size: max(7px, .85cqw); color: #ffe28a; }
+.isla .mp-obj p { margin: 0; text-align: center; font-size: max(11px, 1.2cqw); font-weight: 700; color: #fff; }
+.isla .mp-obj-bar { position: relative; width: 100%; height: max(14px, 1.7cqw); background: #1a0f08; border: max(2px,.2cqw) solid #8a5f12; display: grid; place-items: center; }
+.isla .mp-obj-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #42cc4e; box-shadow: inset 0 max(2px,.2cqw) 0 #8cf596; }
+.isla .mp-obj-bar span { position: relative; font-size: max(10px, 1.1cqw); font-weight: 700; color: #fff; text-shadow: 1px 1px 0 #000; }
+
+/* Botones cuadrados inferiores: Perfil y Logros */
+.isla .mp-sq { top: 85%; width: 8%; height: 13.5%; flex-direction: column; justify-content: center; gap: .3cqw; }
+.isla .mp-perfil { left: 1.2%; } .isla .mp-logros { left: 10.3%; }
+.isla .mp-ico-big { width: 4.2cqw; height: 4.2cqw; display: block; }
+.isla .mp-lbl { font-family: var(--fp); font-weight: 700; font-size: max(12px, 1.6cqw); line-height: 1; color: #ffd84a; text-shadow: .15cqw .15cqw 0 #040c24; }
+
+/* Hover: sube 2 px y se ilumina el borde. Foco visible. Presionado de 2 px. */
+.isla .mp-btn { transition: transform .08s steps(2, end); }
+.isla .mp-btn:hover { transform: translateY(-2px); }
+.isla .mp-btn:hover.mp-panel, .isla .mp-btn:hover .mp-panel, .isla .mp-btn:hover .mp-avatar { background: #fff; }
+.isla .mp-btn:focus-visible { outline: none; }
+.isla .mp-btn:focus-visible.mp-panel, .isla .mp-btn:focus-visible .mp-panel, .isla .mp-btn:focus-visible .mp-avatar { background: #ffe67a; }
+.isla .mp-btn:focus-visible::after, .isla .mp-btn:focus-visible .mp-panel::after { border-color: #ffe67a; }
+.isla .mp-btn:active { transform: translateY(2px); filter: drop-shadow(max(1px,.1cqw) max(1px,.1cqw) 0 #040c24); }
+
+/* Tarjeta de información del nivel (abajo a la derecha) */
+.isla .mp-info { left: 69%; bottom: 1.5%; top: auto; width: 14%; min-height: 13%; padding: max(6px,.7cqw) max(6px,.8cqw); text-align: center; color: #2b1d0c;
+  background: #f6e8c3; border: max(3px,.3cqw) solid #7a4a1d; outline: max(2px,.2cqw) solid #d9a73a; outline-offset: calc(max(2px,.2cqw) * -3); display: flex; flex-direction: column; justify-content: center; gap: .5cqw; }
+.isla .mp-info-title { font-family: var(--ft); font-size: max(8px, 1cqw); color: #3b2410; }
+.isla .mp-info-tema { font-weight: 700; font-size: max(12px, 1.35cqw); line-height: 1.15; }
+.isla .mp-info-prog { font-weight: 700; font-size: max(10px, 1.05cqw); color: #1f5a2a; }
+
+@media (prefers-reduced-motion: reduce) { .isla .mp-btn { transition: none; } }
+
+/* ===== Ajustes de la v. con fondo 16:9: ranking más angosto (no tapa el faro), tamaños de texto mínimos ===== */
+.isla .mp-rank { width: 17%; }
+.isla .mp-obj { width: 17%; }
+.isla .mp-info { left: 76%; width: 14%; }
+.isla .mp-n, .isla .mp-v { font-size: clamp(16px, 1.5cqw, 24px); }
+.isla .mp-lbl, .isla .mp-info-tema, .isla .mp-obj p { font-size: clamp(12px, 1.1cqw, 18px); }
+.isla .mp-info-prog, .isla .mp-obj-bar span { font-size: clamp(12px, 1cqw, 16px); }
+.isla .mp-rk-row { font-size: max(12px, 5.4cqw); }
+.isla .mp-btn { touch-action: manipulation; }

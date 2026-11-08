@@ -1,0 +1,955 @@
+/* ========================================================
+   ESTILOS DE LA ISLA Y MAPA - ESTILO RETRO RPG PIXEL ART
+   Fiel a la interfaz de referencia
+   ======================================================== */
+
+.isla {
+  --bg: #0a1330;
+  --fg: #ffffff;
+  --ink: #0d1b3a;
+  --panel-bg: #12244f;
+  --gold: #f4c430;
+  --gold-border: #dfb55c;
+  --wood-bg: #291c12;
+  --wood-border: #bb8a35;
+  --paper: #f8efda;
+  --paper-ink: #2b1d0c;
+  --ok: #42cc4e;
+  --bad: #d64545;
+  box-sizing: border-box;
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Nunito', 'VT323', sans-serif;
+  height: 100vh;
+  width: 100vw;
+  padding: 0;
+  overflow: hidden;
+}
+
+.isla * {
+  box-sizing: border-box;
+}
+
+/* Header superior con selector de curso */
+.isla .top {
+  max-width: 1200px;
+  margin: 0 auto 12px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.isla h1 {
+  font: 400 clamp(14px, 2.5vw, 20px) 'Press Start 2P', monospace;
+  color: #ffe67a;
+  text-shadow: 2px 2px 0 #181005, -1px -1px 0 #3a2800;
+  margin: 0;
+  flex: 1;
+}
+
+.isla select {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 6px 10px;
+  border: 3px solid #dfb55c;
+  background: #142347;
+  color: #fff;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 #000;
+  cursor: pointer;
+}
+
+/* Contenedor del Mapa */
+.isla .wrap {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.isla .stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 820px;
+  container-type: inline-size;
+  background: #1b6fd0 center / 100% 100% no-repeat;
+  image-rendering: auto;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ========================================================
+   1. BARRA SUPERIOR: Nivel Actual, Ajustes, Comodines y Racha
+   ======================================================== */
+
+/* Nivel actual + Engranaje (Izquierda) */
+.isla .hud-top-left {
+  position: absolute;
+  top: 1.4cqw;
+  left: 1.6cqw;
+  display: flex;
+  gap: 0.8cqw;
+  align-items: center;
+  z-index: 15;
+  transform: scale(0.7);
+  transform-origin: top left;
+}
+
+.isla .hud-level-box {
+  display: flex;
+  align-items: center;
+  gap: 0.9cqw;
+  background: #112248;
+  border: 0.28cqw solid #e0b44a;
+  box-shadow: 0 0 0 0.18cqw #091329, 0 0.4cqw 0.8cqw rgba(0, 0, 0, 0.55);
+  border-radius: 0.9cqw;
+  padding: 0.35cqw 1.2cqw 0.35cqw 0.45cqw;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.isla .hud-level-box:hover {
+  transform: scale(1.02);
+}
+
+.isla .hud-avatar-frame {
+  width: 3.4cqw;
+  height: 3.4cqw;
+  background: #dfcba5;
+  border: 0.22cqw solid #1a1209;
+  border-radius: 0.45cqw;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.isla .hud-level-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.isla .hud-level-label {
+  color: #ffffff;
+  font-size: 0.82cqw;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.02cqw;
+  text-shadow: 0.1cqw 0.1cqw 0 #000;
+  white-space: nowrap;
+}
+
+.isla .hud-level-num {
+  color: #ffffff;
+  font-size: 2.1cqw;
+  font-weight: 900;
+  line-height: 1;
+  font-family: 'Press Start 2P', monospace;
+  text-shadow: 0.15cqw 0.15cqw 0 #000;
+  margin-top: 0.2cqw;
+}
+
+.isla .hud-gear-btn {
+  width: 3.7cqw;
+  height: 3.7cqw;
+  background: #112248;
+  border: 0.28cqw solid #e0b44a;
+  box-shadow: 0 0 0 0.18cqw #091329, 0 0.4cqw 0.8cqw rgba(0, 0, 0, 0.55);
+  border-radius: 0.75cqw;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s ease;
+}
+
+.isla .hud-gear-btn:hover {
+  transform: rotate(18deg) scale(1.05);
+}
+
+/* Píldoras centrales: Comodines y Racha */
+.isla .hud-top-stats {
+  position: absolute;
+  top: 1.4cqw;
+  left: 41.5cqw;
+  display: flex;
+  gap: 1.6cqw;
+  align-items: center;
+  z-index: 15;
+  transform: scale(0.7);
+  transform-origin: top center;
+}
+
+.isla .hud-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.85cqw;
+  background: #112248;
+  border: 0.25cqw solid #4b6b9e;
+  box-shadow: 0 0 0 0.16cqw #091329, 0 0.35cqw 0.7cqw rgba(0, 0, 0, 0.45);
+  border-radius: 1.1cqw;
+  padding: 0.35cqw 1.3cqw 0.35cqw 0.85cqw;
+}
+
+.isla .hud-pill-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.isla .hud-pill-texts {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.isla .hud-pill-title {
+  color: #ffffff;
+  font-size: 0.85cqw;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.02cqw;
+}
+
+.isla .hud-pill-val {
+  color: #ffffff;
+  font-size: 1.35cqw;
+  font-weight: 900;
+  font-family: 'Press Start 2P', monospace;
+  margin-top: 0.1cqw;
+}
+
+.isla .hud-pill-val.racha-gold {
+  color: #ffd438;
+  text-shadow: 0.12cqw 0.12cqw 0 #3b2200;
+}
+
+/* ========================================================
+   2. PANEL LATERAL: Tablero RPG (Ranking + Objetivo)
+   ======================================================== */
+
+.isla .side.rpg-board {
+  position: absolute;
+  left: 1.6cqw;
+  top: 8.8cqw;
+  width: 18.8cqw;
+  background: #2b1d12;
+  border: 0.32cqw solid #c89a42;
+  box-shadow: 0 0 0 0.22cqw #140d07, 0.55cqw 0.55cqw 0 rgba(0, 0, 0, 0.55);
+  border-radius: 0.85cqw;
+  padding: 0.85cqw 0.75cqw 0.75cqw;
+  z-index: 15;
+}
+
+/* 4 Remaches dorados en las esquinas */
+.isla .rivet {
+  position: absolute;
+  width: 0.55cqw;
+  height: 0.55cqw;
+  background: radial-gradient(circle, #fff1a8 15%, #d9a834 65%, #664307 100%);
+  border-radius: 50%;
+  box-shadow: 0.08cqw 0.08cqw 0.1cqw rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+.isla .rivet.tl { top: 0.3cqw; left: 0.3cqw; }
+.isla .rivet.tr { top: 0.3cqw; right: 0.3cqw; }
+.isla .rivet.bl { bottom: 0.3cqw; left: 0.3cqw; }
+.isla .rivet.br { bottom: 0.3cqw; right: 0.3cqw; }
+
+.isla .rpg-board-modal {
+  position: relative;
+  width: 360px;
+  background: #2b1d12;
+  border: 6px solid #c89a42;
+  box-shadow: 0 0 0 4px #140d07, 8px 8px 0 rgba(0, 0, 0, 0.55);
+  border-radius: 12px;
+  padding: 16px;
+  margin: auto;
+  z-index: 15;
+}
+
+.isla .rpg-board-modal .rivet {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #fff1a8 15%, #d9a834 65%, #664307 100%);
+  border-radius: 50%;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+.isla .rpg-board-modal .rivet.tl { top: 8px; left: 8px; }
+.isla .rpg-board-modal .rivet.tr { top: 8px; right: 8px; }
+.isla .rpg-board-modal .rivet.bl { bottom: 8px; left: 8px; }
+.isla .rpg-board-modal .rivet.br { bottom: 8px; right: 8px; }
+
+/* Cinta / Placa pergamino de Ranking */
+.isla .rk-header-ribbon {
+  background: #f7efdc;
+  border: 4px solid #3a2512;
+  border-radius: 6px;
+  padding: 6px 10px;
+  text-align: center;
+  margin: 4px auto 14px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  width: 90%;
+}
+
+.isla .rk-header-ribbon span {
+  color: #382413;
+  font-size: 14px;
+  font-weight: 900;
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: -0.5px;
+  display: block;
+}
+
+/* Lista de filas del ranking */
+.isla .rk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.isla .rk-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.isla .rk-pos {
+  width: 24px;
+  text-align: left;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.isla .rk-avatar-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 8px;
+  background: #dfcba5;
+  border: 2px solid #2b1d0c;
+  flex-shrink: 0;
+}
+
+.isla .rk-name {
+  flex: 1;
+  text-align: left;
+  margin-left: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.isla .rk-score {
+  font-weight: 800;
+  font-size: 14px;
+  text-align: right;
+}
+
+/* Fila destacada ("Tú") en amarillo/naranja vibrante */
+.isla .rk-row.me {
+  background: #f5a723;
+  color: #1a1206;
+  border: 3px solid #ffe485;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  font-weight: 900;
+}
+
+.isla .rk-row.me .rk-pos,
+.isla .rk-row.me .rk-score {
+  color: #1a1206;
+}
+
+/* Separador horizontal entre Ranking y Objetivo */
+.isla .side-divider {
+  height: 0.2cqw;
+  background: #160e07;
+  border-bottom: 0.15cqw solid #5f3e1b;
+  margin: 0.6cqw 0 0.5cqw;
+}
+
+/* Sección de Objetivo */
+.isla .obj-header {
+  text-align: center;
+  color: #ffffff;
+  font-size: 0.88cqw;
+  font-weight: 800;
+  font-family: 'Press Start 2P', monospace;
+  margin-bottom: 0.35cqw;
+}
+
+.isla .obj-star-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.25cqw;
+}
+
+.isla .obj-subtitle {
+  text-align: center;
+  color: #ffffff;
+  font-size: 0.8cqw;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 0.35cqw;
+}
+
+.isla .obj-bar-wrapper {
+  margin: 0.3cqw 0.4cqw;
+}
+
+.isla .obj-bar-track {
+  height: 1.15cqw;
+  background: #121822;
+  border: 0.18cqw solid #273449;
+  border-radius: 0.6cqw;
+  overflow: hidden;
+  padding: 0.1cqw;
+  box-shadow: inset 0 0.18cqw 0.25cqw rgba(0, 0, 0, 0.7);
+}
+
+.isla .obj-bar-fill {
+  height: 100%;
+  background: linear-gradient(180deg, #6ced74 0%, #3ec248 60%, #299331 100%);
+  border-radius: 0.4cqw;
+  box-shadow: 0 0 0.5cqw #45d850;
+  transition: width 0.35s ease;
+}
+
+.isla .obj-counter {
+  text-align: center;
+  color: #ffffff;
+  font-size: 0.85cqw;
+  font-weight: 800;
+  font-family: 'Press Start 2P', monospace;
+  margin-top: 0.25cqw;
+}
+
+/* ========================================================
+   3. BOTONES INFERIORES IZQUIERDOS (Perfil, Extras, Logros)
+   ======================================================== */
+
+.isla .side-nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8cqw;
+  margin-bottom: 1.2cqw;
+}
+
+.isla .side-nav-item {
+  background: #112248;
+  border: 0.2cqw solid #e0b44a;
+  border-radius: 0.5cqw;
+  box-shadow: 0 0 0 0.15cqw #091329;
+  padding: 0.6cqw 0.8cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.8cqw;
+  color: #ffffff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.1cqw;
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.1s ease;
+}
+
+.isla .side-nav-item:hover {
+  transform: translateX(0.4cqw);
+  filter: brightness(1.2);
+}
+
+.isla .side-nav-item span {
+  text-shadow: 0.1cqw 0.1cqw 0 #000;
+}
+
+/* ========================================================
+   4. CUADRO INFERIOR DERECHO (Nivel y Estrellas)
+   ======================================================== */
+
+.isla .info-card {
+  position: absolute;
+  right: 1.6cqw;
+  bottom: 1.6cqw;
+  width: 14.2cqw;
+  background: #faf0d7;
+  border: 0.28cqw solid #332111;
+  box-shadow: 0 0 0 0.18cqw #caa14c, 0 0.4cqw 0.8cqw rgba(0, 0, 0, 0.45);
+  border-radius: 0.6cqw;
+  padding: 0.6cqw 0.8cqw;
+  text-align: center;
+  z-index: 15;
+}
+
+.isla .info-level-title {
+  color: #2b1c10;
+  font-size: 1.05cqw;
+  font-weight: 900;
+  font-family: 'Press Start 2P', monospace;
+  margin-bottom: 0.25cqw;
+}
+
+.isla .info-level-subtitle {
+  color: #382515;
+  font-size: 0.9cqw;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 0.35cqw;
+}
+
+.isla .info-stars-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.4cqw;
+  align-items: center;
+}
+
+/* ========================================================
+   5. MASCOTA ÁNGEL Y BOCADILLO DE DIÁLOGO (Superior Derecha)
+   ======================================================== */
+
+.isla .angel-container {
+  position: absolute;
+  right: 1.2cqw;
+  top: 6.8cqw;
+  display: flex;
+  align-items: flex-start;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.isla .angel-sprite {
+  width: 9.8cqw;
+  height: auto;
+  image-rendering: pixelated;
+  animation: angelFloat 2.8s ease-in-out infinite;
+  filter: drop-shadow(0 0.4cqw 0.8cqw rgba(0, 0, 0, 0.35));
+}
+
+@keyframes angelFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.7cqw);
+  }
+}
+
+.isla .bub {
+  background: #fffdf5;
+  border: 0.26cqw solid #2e2217;
+  border-radius: 0.75cqw;
+  padding: 0.65cqw 0.95cqw;
+  color: #20170e;
+  font-size: 0.78cqw;
+  font-weight: 800;
+  font-family: 'Press Start 2P', monospace;
+  line-height: 1.45;
+  width: 18.5cqw;
+  position: relative;
+  margin-right: 0.8cqw;
+  margin-top: 1.2cqw;
+  box-shadow: 0.3cqw 0.3cqw 0 rgba(0, 0, 0, 0.3);
+  text-align: left;
+}
+
+/* Flecha/cola del bocadillo apuntando al ángel */
+.isla .bub::before {
+  content: '';
+  position: absolute;
+  right: -1.05cqw;
+  top: 1.25cqw;
+  width: 0;
+  height: 0;
+  border-top: 0.65cqw solid transparent;
+  border-bottom: 0.65cqw solid transparent;
+  border-left: 0.95cqw solid #2e2217;
+}
+
+.isla .bub::after {
+  content: '';
+  position: absolute;
+  right: -0.7cqw;
+  top: 1.4cqw;
+  width: 0;
+  height: 0;
+  border-top: 0.5cqw solid transparent;
+  border-bottom: 0.5cqw solid transparent;
+  border-left: 0.75cqw solid #fffdf5;
+}
+
+/* ========================================================
+   6. NODOS DEL MAPA Y SPRITE DEL JUGADOR
+   ======================================================== */
+
+.isla .node {
+  position: absolute;
+  width: 4.8cqw;
+  height: 4.8cqw;
+  transform: translate(-50%, -50%);
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  z-index: 5;
+}
+
+.isla .node:hover .disc {
+  transform: scale(1.08);
+}
+
+/* Etiqueta superior con número de nivel */
+.isla .tag {
+  position: absolute;
+  left: 50%;
+  top: -38%;
+  transform: translateX(-50%);
+  background: #fdf5df;
+  color: #281c10;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.88cqw;
+  font-weight: 800;
+  padding: 0.15cqw 0.5cqw;
+  border: 0.18cqw solid #281c10;
+  border-radius: 0.25cqw;
+  box-shadow: 0 0.15cqw 0.3cqw rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+}
+
+/* Plataforma 3D del nodo */
+.isla .disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+
+/* Nodos completados — disco verde */
+.isla .disc.done,
+.isla .disc.open,
+.isla .disc.now {
+  background: radial-gradient(circle at 35% 30%, #5ae863, #35b842 70%, #1e7526 100%);
+  border: 0.25cqw solid #103b14;
+  box-shadow: 0 0.55cqw 0 #103b14, 0 0.8cqw 0.8cqw rgba(0, 0, 0, 0.5);
+}
+
+/* Flash dorado para el nodo recién desbloqueado */
+.isla .node-flash .disc {
+  animation: nodeUnlock 3.5s ease-out forwards !important;
+}
+
+@keyframes nodeUnlock {
+  0%   { filter: brightness(1) drop-shadow(0 0 0 transparent); }
+  20%  { filter: brightness(2) drop-shadow(0 0 1.2cqw #ffd438); }
+  50%  { filter: brightness(1.5) drop-shadow(0 0 0.8cqw #ffd438); }
+  100% { filter: brightness(1) drop-shadow(0 0 0 transparent); }
+}
+
+
+.isla .now .disc {
+  animation: pulseNode 1.2s steps(4) infinite;
+}
+
+@keyframes pulseNode {
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 0.5cqw #65ff8a);
+  }
+}
+
+/* Medallón de estrella dorada (como el Nodo 2 de la imagen) */
+.isla .disc.gold-medallion {
+  background: radial-gradient(circle at 35% 30%, #ffeb7a, #f7ba23 65%, #b87b0a 100%);
+  border: 0.25cqw solid #573a04;
+  box-shadow: 0 0.55cqw 0 #573a04, 0 0.8cqw 0.8cqw rgba(0, 0, 0, 0.5);
+}
+
+.isla .gold-star-medallion {
+  font-size: 2.1cqw;
+  color: #ffffff;
+  text-shadow: 0 0.15cqw 0.3cqw #7a5005, 0 0 0.4cqw #ffffff;
+}
+
+/* Nodos bloqueados (Metálicos con candado) */
+.isla .disc.lock {
+  background: radial-gradient(circle at 35% 30%, #9fa6b3, #727a87 70%, #464c57 100%);
+  border: 0.25cqw solid #262a31;
+  box-shadow: 0 0.55cqw 0 #262a31, 0 0.8cqw 0.8cqw rgba(0, 0, 0, 0.5);
+  cursor: not-allowed;
+}
+
+/* Estrellas debajo del nodo completado */
+.isla .node-stars {
+  position: absolute;
+  left: 50%;
+  top: 110%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.15cqw;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.isla .mini-gold-star {
+  color: #ffd438;
+  font-size: 1.15cqw;
+  text-shadow: 0.12cqw 0.12cqw 0 #000, 0 0 0.3cqw #ffea75;
+}
+
+/* Sprite del Jugador sobre el nodo actual */
+.isla .player {
+  position: absolute;
+  transform: translate(-50%, -75%);
+  transition: left 0.6s ease, top 0.6s ease;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.isla .player svg {
+  animation: playerBob 0.8s ease-in-out infinite;
+}
+
+@keyframes playerBob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.35cqw);
+  }
+}
+
+/* Toast flotante */
+.isla .toast {
+  position: absolute;
+  left: 50%;
+  bottom: 8.5cqw;
+  transform: translateX(-50%);
+  background: #fdf5df;
+  color: #281c10;
+  padding: 0.8cqw 1.5cqw;
+  font-size: 0.95cqw;
+  font-family: 'Press Start 2P', monospace;
+  border: 0.25cqw solid #281c10;
+  border-radius: 0.4cqw;
+  box-shadow: 0.4cqw 0.4cqw 0 rgba(0, 0, 0, 0.4);
+  z-index: 25;
+}
+
+/* ========================================================
+   7. MODALES Y EJERCICIOS (Preservados para jugabilidad)
+   ======================================================== */
+
+.isla button:focus-visible,
+.isla select:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--ink);
+}
+
+.isla .velo {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 10, 30, 0.78);
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  z-index: 40;
+}
+
+.isla .modal {
+  width: min(580px, 100%);
+  max-height: 92vh;
+  overflow: auto;
+  border: 5px solid #dfb55c;
+  background: #fbf5e6;
+  color: #17202a;
+  padding: 22px;
+  font-size: 20px;
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.6);
+}
+
+.isla .modal h2 {
+  font: 400 16px/1.5 'Press Start 2P', monospace;
+  color: #2a1b0c;
+  margin: 0 0 10px;
+}
+
+.isla .modal p {
+  margin: 8px 0;
+}
+
+.isla .meta {
+  color: #5a5f78;
+}
+
+.isla .pr {
+  font-size: 24px;
+  line-height: 1.25;
+  margin: 8px 0 16px !important;
+}
+
+.isla .opt,
+.isla .chip,
+.isla .go,
+.isla .sec {
+  font: inherit;
+  font-size: 20px;
+  border: 3px solid #23304a;
+  background: #ffffff;
+  color: #17202a;
+  padding: 8px 14px;
+  cursor: pointer;
+  margin: 0 6px 8px 0;
+  text-align: left;
+  border-radius: 4px;
+}
+
+.isla .opt {
+  display: block;
+  width: 100%;
+}
+
+.isla .opt.on {
+  background: #ffe38a;
+  border-color: #9c6e10;
+}
+
+.isla .cod {
+  font-family: ui-monospace, monospace;
+  font-size: 18px;
+}
+
+.isla .f-ini,
+.isla .f-fin {
+  border-radius: 999px;
+  background: #bfe8c4;
+}
+
+.isla .f-dec {
+  background: #ffe38a;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  border: 0;
+  padding: 16px 44px;
+  text-align: center;
+}
+
+.isla .f-io {
+  background: #cfe0ff;
+  clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+  border: 0;
+  padding: 8px 22px;
+}
+
+.isla .resp {
+  min-height: 56px;
+  border: 3px dashed #8a8fa8;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.isla .resp span {
+  display: inline-block;
+}
+
+.isla .flecha {
+  display: block;
+  text-align: center;
+  color: #5a5f78;
+}
+
+.isla .ph {
+  color: #8a8fa8;
+}
+
+.isla .row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.isla .go {
+  background: #3fae49;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.isla .sec {
+  background: #dcd3b0;
+}
+
+.isla .msg {
+  min-height: 28px;
+  font-weight: 700;
+}
+
+.isla .msg.good {
+  color: #1d7a2a;
+}
+
+.isla .msg.bad {
+  color: var(--bad);
+}
+
+.isla .big {
+  font-size: 38px;
+  color: #e39a00;
+  text-align: center;
+  letter-spacing: 6px;
+}
+
+.isla .logro {
+  opacity: 0.55;
+  padding: 6px 0;
+  border-bottom: 1px dashed #d5c8ad;
+}
+
+.isla .logro.si {
+  opacity: 1;
+  color: #1d7a2a;
+}
+
+/* ===== Botones de nivel: círculos de píxeles, más grandes y escalables ===== */
+.isla .node { width: 6.6cqw; height: 6.6cqw; }
+.isla .node:hover .disc { transform: none; filter: brightness(1.15); }
+.isla .node:focus-visible { outline: 0.3cqw solid #fff; outline-offset: 0.6cqw; }
+.isla .disc.done, .isla .disc.open, .isla .disc.now, .isla .disc.gold-medallion, .isla .disc.lock {
+  background: none; border: 0; box-shadow: none; border-radius: 0;
+}
+.isla .disc .nodo-px { position: absolute; left: -24.5%; top: -19.2%; width: 149%; height: 149%; overflow: visible; pointer-events: none; }
+.isla .node-ico { position: relative; z-index: 2; width: 48%; height: 48%; display: block; margin-top: -4%; }
+.isla .node-ico svg { width: 100%; height: 100%; display: block; }
+.isla .node-ico.star { color: #fffbe0; filter: drop-shadow(0.2cqw 0.2cqw 0 #7a5005); }
+.isla .tag { top: -66%; font-size: 1.3cqw; padding: 0.3cqw 0.8cqw; border-width: 0.25cqw; border-radius: 0; box-shadow: 0.25cqw 0.25cqw 0 #281c10; }
+.isla .player svg { image-rendering: pixelated; }
+.isla .hud-top-left { transform: scale(0.95); }
+.isla .hud-top-stats { transform: scale(0.95); }

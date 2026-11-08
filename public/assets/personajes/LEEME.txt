@@ -1,0 +1,8 @@
+Personajes del juego
+--------------------
+Los personajes jugables (Chica, Chico, Perro) y los de la guia (Capyhein) YA NO se guardan aqui:
+se leen de la tabla `personaje` de Supabase (columna imagen_url, bucket "personajes").
+Para cambiar una imagen: subela al bucket y actualiza imagen_url en la tabla.
+
+Esta carpeta conserva solo:
+  mesias.png -> El Mesias del Pront (no forma parte de la tabla personaje).

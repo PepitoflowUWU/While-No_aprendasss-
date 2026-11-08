@@ -1,0 +1,25 @@
+/* ===== Ejercicio de armar un diagrama de flujo con caminos SI / NO ===== */
+.dg { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.dg-codigo { margin: 0; padding: 10px 14px; font: 14px/1.45 ui-monospace, Consolas, monospace; color: #d7e6ff; background: #0a1224; border: 2px solid #2f4a85; border-radius: 6px; white-space: pre; overflow-x: auto; max-height: 34dvh; }
+.dg-lienzo { background: #111d2e; border: 2px solid #263e5c; border-radius: 6px; padding: 14px; overflow: auto; max-height: 62dvh; }
+.dg-lista { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 6px; border: 2px dashed transparent; border-radius: 6px; cursor: pointer; min-width: 120px; }
+.dg-lista.rama { border-color: #34507a; flex: 1 1 0; }
+.dg-lista.activa { border-color: #f5c542; background: rgba(245, 197, 66, .08); }
+.dg-paso { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.dg-flecha { margin: 3px 0; color: #f5c542; font-size: 18px; line-height: 1; }
+.dg-bloque { margin: 0 !important; max-width: 100%; }
+.dg-bloque.bien { outline: 3px solid #4ee86a; outline-offset: 2px; }
+.dg-bloque.mal { outline: 3px solid #ff5a6a; outline-offset: 2px; }
+.dg-ramas { display: flex; gap: 10px; width: 100%; margin-top: 6px; align-items: flex-start; }
+.dg-etq { align-self: flex-start; font: 700 12px/1 "Press Start 2P", monospace; padding: 4px 6px; margin-bottom: 6px; border-radius: 3px; }
+.dg-etq.si { background: #1f6b3d; color: #d9ffe3; }
+.dg-etq.no { background: #7a1f2b; color: #ffe0e4; }
+.dg-hueco { margin-top: 6px; padding: 6px 10px; font-size: 12px; color: #7a8ea8; border: 2px dashed #34507a; border-radius: 4px; text-align: center; }
+.dg-hueco.activo { color: #ffd84e; border-color: #f5c542; }
+.dg-ayuda { margin: 0; font-size: 13px; color: #9db0d6; line-height: 1.5; }
+.dg-paleta { display: flex; flex-wrap: wrap; gap: 8px; }
+.dg-paleta .chip { margin: 0 !important; }
+.dg-vacio { font-size: 13px; color: #7a8ea8; }
+.dg-acciones { display: flex; flex-wrap: wrap; gap: 8px; }
+.dg-mini { font-size: 13px; padding: 6px 10px; color: #d7e6ff; background: #1a2b52; border: 1px solid #3a5aa5; border-radius: 6px; cursor: pointer; }
+@media (max-width: 600px) { .dg-ramas { gap: 6px; } .dg-lista { min-width: 0; padding: 4px; } }

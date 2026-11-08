@@ -1,0 +1,70 @@
+/* ===== Crear cuenta (Press Start 2P; Pixelify Sans solo rellena glifos que falten) ===== */
+.reg-screen { font-family:"Press Start 2P","Pixelify Sans",monospace; font-size:10px; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:20px 10px 28px; }
+.reg-panel { width:min(500px,100%); background:var(--panel); color:var(--ink); border:5px solid var(--linea); box-shadow:inset 3px 3px 0 #fff, inset -3px -3px 0 #a9cbe6, 8px 8px 0 #0f2a44; padding:0 0 22px; }
+.reg-header { background:var(--verde); color:#fff; border-bottom:4px solid #b9f08a; padding:18px 14px; text-align:center; }
+.reg-header h1 { margin:0; font-size:clamp(13px,3.6vw,17px); line-height:1.5; text-shadow:2px 2px 0 #0f3b2a; }
+.reg-header p { margin:10px 0 0; font-size:clamp(8px,2.2vw,10px); line-height:1.8; color:#eaffd8; }
+
+.reg-fields { display:flex; flex-direction:column; gap:24px; padding:24px 20px 6px; }
+.reg-field { display:grid; grid-template-columns:44px 1fr; gap:12px; align-items:start; }
+.reg-icon { width:44px; height:44px; display:grid; place-items:center; background:var(--verde); color:#fff; border:3px solid #b9f08a; box-shadow:3px 3px 0 #0f3b2a; margin-top:20px; }
+.reg-body { min-width:0; }
+.reg-label { display:block; font-size:clamp(8px,2.2vw,10px); line-height:1.6; color:var(--ink); margin-bottom:8px; }
+.reg-input { display:block; width:100%; min-height:50px; font-family:inherit; font-size:16px; color:var(--ink); background:#fff; border:4px solid #3b6f9a; border-right-color:#173f66; border-bottom-color:#173f66; padding:8px 12px; outline:none; border-radius:0; }
+.reg-input::placeholder { color:#5b7a93; opacity:1; }
+.reg-input:focus-visible { border-color:#2f8f46; box-shadow:0 0 0 3px #0f2a44; }
+.reg-input[readonly] { font-size:11px; background:#dcecf8; color:var(--ink); }
+.reg-input[aria-invalid="true"] { border-color:#a31f1f; }
+.reg-help { margin:8px 0 0; font-size:8px; line-height:1.9; color:#3a566e; }
+.reg-msg { margin:6px 0 0; font-size:8px; line-height:1.8; color:#a31f1f; display:flex; gap:6px; align-items:flex-start; }
+.reg-msg svg { flex:none; margin-top:1px; }
+.reg-msg.ok { color:#17652f; }
+.reg-msg:empty { display:none; }
+.reg-msg-envio { padding:0 20px; margin:10px 0 0; }
+
+.reg-mini { display:inline-flex; align-items:center; gap:8px; margin-top:10px; min-height:44px; font-family:inherit; font-size:9px; background:#bfe6ff; color:#0d2a4a; border:3px solid #f2fbff; border-right-color:#3b82c4; border-bottom-color:#2f6fae; box-shadow:3px 3px 0 #123a63; padding:8px 12px; cursor:pointer; }
+.reg-mini:disabled { opacity:.55; cursor:not-allowed; }
+.reg-mini:focus-visible, .reg-eye:focus-visible { outline:3px solid #0f2a44; outline-offset:3px; box-shadow:0 0 0 6px #b9f08a; }
+
+.reg-info { display:flex; gap:12px; align-items:center; background:#d9f0d0; border:3px dashed #2f8f46; padding:12px; color:var(--ink); }
+.reg-info svg { flex:none; color:#c28a0a; }
+.reg-info p { margin:0; font-size:8px; line-height:1.9; }
+
+.reg-pass { position:relative; }
+.reg-pass .reg-input { padding-right:56px; }
+.reg-eye { position:absolute; right:2px; top:2px; width:46px; height:46px; display:grid; place-items:center; background:transparent; border:0; color:var(--ink); cursor:pointer; }
+
+.reg-reqs { list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:7px; }
+.reg-reqs li { display:flex; align-items:center; gap:8px; font-size:8px; line-height:1.6; }
+.reg-reqs li.ok { color:#17652f; }
+.reg-reqs li.no { color:#a31f1f; }
+.reg-strength { display:flex; align-items:center; gap:10px; margin-top:12px; font-size:8px; color:var(--ink); }
+.reg-bars { display:flex; gap:4px; flex:1; max-width:190px; }
+.reg-bars i { flex:1; height:14px; background:#cfe0ee; border:2px solid #173f66; }
+.reg-bars i.on.l1 { background:#d9534f; } .reg-bars i.on.l2 { background:#f0a030; } .reg-bars i.on.l3 { background:#c9d63a; } .reg-bars i.on.l4 { background:#3fae5a; }
+
+.reg-actions { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; padding:20px 20px 0; }
+.reg-actions .pixel-button { flex:1 1 170px; }
+.reg-panel button.pixel-button[type="submit"] { font-family:inherit; }
+.px-load { display:inline-flex; gap:3px; margin-left:8px; vertical-align:middle; }
+.px-load i { width:7px; height:7px; background:#0d2a1a; display:block; animation:px-blink 1s steps(1,end) infinite; }
+.px-load i:nth-child(2) { animation-delay:.2s; } .px-load i:nth-child(3) { animation-delay:.4s; }
+@keyframes px-blink { 0%,100% { opacity:.2; } 40% { opacity:1; } }
+
+@media (max-width:480px) { .reg-field { grid-template-columns:36px 1fr; gap:8px; } .reg-icon { width:36px; height:36px; margin-top:20px; } .reg-fields { padding:20px 14px 4px; } .reg-actions { padding:18px 14px 0; } .reg-input[readonly] { font-size:10px; } }
+@media (prefers-reduced-motion: reduce) { .px-load i { animation:none; opacity:1; } }
+
+.reg-links { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 20px 0; }
+.reg-links button { min-height: 44px; background: none; border: 0; font-family: inherit; font-size: 8px; line-height: 1.9; color: #1c4f8f; text-decoration: underline; text-underline-offset: 3px; padding: 8px 10px; cursor: pointer; text-align: center; }
+.reg-links button:disabled { opacity: .55; cursor: not-allowed; }
+.reg-links button:focus-visible { outline: 3px solid #0f2a44; outline-offset: 3px; box-shadow: 0 0 0 6px #b9f08a; }
+.reg-input.reg-input-sm { font-size: clamp(9px, 3vw, 14px); }
+
+/* Celular y codigo SMS */
+.reg-tel { display: flex; align-items: stretch; }
+.reg-prefijo { display: grid; place-items: center; min-height: 50px; padding: 0 12px; font-size: 16px; font-weight: 700; color: var(--ink); background: #dcecf8; border: 4px solid #3b6f9a; border-right: 0; }
+.reg-tel .reg-input { flex: 1; min-width: 0; }
+.reg-codigo-sms { text-align: center; font-size: 26px; letter-spacing: .5em; padding-left: .5em; }
+.reg-tel-mask { color: #F2C85B; white-space: nowrap; }
+.reg-aviso { padding: 0 6px; min-height: 1.4em; color: #b9f08a; }
+@media (max-width: 480px) { .reg-codigo-sms { font-size: 22px; letter-spacing: .35em; } }

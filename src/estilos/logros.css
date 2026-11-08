@@ -1,0 +1,111 @@
+/* Panel de LOGROS y ficha del JUGADOR (perfil). Mismo estilo pixel del juego: azul oscuro, borde celeste y detalles dorados. */
+.lg-fondo { position: fixed; inset: 0; z-index: 8000; display: grid; place-items: center; padding: clamp(8px, 2vw, 24px); background: rgba(2, 8, 24, .8); }
+.lg-fondo *, .lg-fondo *::before, .lg-fondo *::after { box-sizing: border-box; }
+.lg-panel, .fj-panel { display: flex; flex-direction: column; min-height: 0; color: #fff; background: #0d2152; border: 4px solid #5FA8FF; box-shadow: 0 0 0 4px #071433, 8px 8px 0 4px rgba(0, 0, 0, .45); }
+.lg-panel { width: min(680px, 100%); max-height: min(92dvh, 820px); }
+.fj-panel { width: min(840px, 100%); max-height: min(94dvh, 780px); }
+.lg-barra { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #143077; border-bottom: 4px solid #071433; }
+.lg-barra h2 { flex: 1; margin: 0; font-size: clamp(14px, 3.4vw, 18px); letter-spacing: 2px; color: #F2C85B; }
+.lg-cuenta { font-size: 12px; color: #7ed957; }
+.lg-x { width: 34px; height: 34px; font: inherit; font-size: 16px; color: #fff; background: #1d3d8f; border: 3px solid #5FA8FF; cursor: pointer; }
+.lg-x:hover { background: #2b56c0; }
+
+/* Aviso de logros listos (como el cartel dorado de las misiones diarias) */
+.lg-banner { display: flex; align-items: center; gap: 12px; margin: 12px 12px 6px; padding: 10px 12px; background: #1a2d63; border: 3px solid #4a5f99; }
+.lg-banner.activo { background: #4a3a10; border-color: #F2C85B; }
+.lg-banner p { flex: 1; min-width: 0; margin: 0; font-size: 10px; line-height: 1.7; }
+.lg-banner b { color: #F2C85B; }
+.lg-error { margin: 4px 12px; padding: 8px 10px; font-size: 9px; line-height: 1.6; color: #ffb4b4; background: #3a1620; border: 3px solid #a33a4a; }
+
+/* Lista de logros */
+.lg-lista { list-style: none; margin: 0; padding: 6px 12px 14px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; min-height: 0; }
+.lg-fila { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px; background: #142a63; border: 3px solid #2a4a9a; }
+.lg-fila.lista { background: #16386e; border-color: #4fd18b; }
+.lg-fila.hecho { opacity: .8; border-color: #3b4f86; }
+.lg-icono { position: relative; width: 56px; height: 56px; display: grid; place-items: center; background: #0a1a45; border: 3px solid #3b66c8; }
+.lg-icono svg { width: 40px; height: 40px; display: block; }
+.lg-fila:not(.lista):not(.hecho) .lg-icono svg { filter: grayscale(.65) brightness(.85); }
+.lg-alerta { position: absolute; top: -9px; left: -9px; width: 22px; height: 22px; display: grid; place-items: center; font-style: normal; font-size: 13px; color: #fff; background: #e63946; border: 2px solid #fff; border-radius: 50%; }
+.lg-texto { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.lg-texto > b { font-size: 11px; color: #fff; letter-spacing: .5px; }
+.lg-desc { font-size: 9px; line-height: 1.6; color: #b9c8e8; }
+.lg-prog { position: relative; display: block; height: 18px; background: #0a1a45; border: 2px solid #3b66c8; overflow: hidden; }
+.lg-prog i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(#7ed957, #3fb54a); }
+.lg-prog em { position: relative; display: block; text-align: center; font-style: normal; font-size: 9px; line-height: 14px; color: #fff; text-shadow: 1px 1px 0 #000; }
+.lg-btn { padding: 11px 12px; font: inherit; font-size: 10px; color: #fff; white-space: nowrap; background: #7b3fe4; border: 3px solid #b18cff; box-shadow: 0 4px 0 #3d1f80; cursor: pointer; }
+.lg-btn:hover:not(:disabled) { background: #9157ff; }
+.lg-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #3d1f80; }
+.lg-btn:disabled { color: #8a93b5; background: #353b57; border-color: #566086; box-shadow: 0 4px 0 #1d2136; cursor: not-allowed; }
+.lg-btn-todo { align-self: stretch; }
+.lg-obtenido { font-size: 10px; line-height: 1.5; color: #7ed957; text-align: center; white-space: nowrap; }
+.lg-obtenido b { display: block; font-size: 18px; }
+
+/* Ficha del jugador */
+.fj-cuerpo { display: grid; grid-template-columns: minmax(190px, 38%) minmax(0, 1fr); gap: 16px; padding: 14px; overflow-y: auto; min-height: 0; }
+.fj-personaje { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 10px; min-height: 300px; padding: 12px; background: radial-gradient(circle at 50% 35%, #1d3d8f, #0a1a45 72%); border: 3px solid #2a4a9a; }
+.fj-personaje img { max-width: 100%; max-height: min(54dvh, 430px); object-fit: contain; image-rendering: pixelated; }
+.fj-pj-nombre { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #F2C85B; }
+.fj-derecha { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.fj-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; }
+.fj-datos > div { min-width: 0; padding: 9px 10px; background: #142a63; border: 3px solid #2a4a9a; }
+.fj-datos dt { font-size: 8px; letter-spacing: 1px; color: #8fa3c8; }
+.fj-datos dd { margin: 6px 0 0; font-size: 13px; color: #fff; overflow-wrap: anywhere; }
+.fj-nombre { grid-column: 1 / -1; }
+.fj-nombre dd { font-size: 15px; color: #F2C85B; }
+.fj-niveles { list-style: none; margin: -4px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 6px; }
+.fj-niveles li { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 4px; background: #0a1a45; border: 3px solid #1f3a80; }
+.fj-niveles li.hecho { border-color: #b8860b; background: #142a63; }
+.fj-nn { font-size: 7px; letter-spacing: 1px; color: #8fa3c8; }
+.fj-est { display: flex; gap: 1px; font-size: 16px; line-height: 1; }
+.fj-est i { font-style: normal; color: #2a3f7a; }
+.fj-est i.on { color: #ffd23f; text-shadow: 0 0 6px rgba(255, 210, 63, .55); }
+.fj-niveles b { font-size: 9px; color: #fff; }
+.fj-niveles li:not(.hecho) b { color: #6f83ab; }
+.fj-logros h3 { display: flex; justify-content: space-between; gap: 8px; margin: 0 0 8px; font-size: 11px; color: #F2C85B; }
+.fj-logros h3 span { color: #7ed957; }
+.fj-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; }
+.fj-grid li { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 6px; text-align: center; background: #142a63; border: 3px solid #b8860b; }
+.fj-ins { display: grid; place-items: center; width: 46px; height: 46px; background: #0a1a45; border: 2px solid #3b66c8; }
+.fj-grid b { font-size: 8px; line-height: 1.5; color: #fff; }
+.fj-vacio { margin: 0; padding: 12px; font-size: 9px; line-height: 1.8; color: #b9c8e8; background: #0a1a45; border: 3px dashed #3b66c8; }
+.fj-vacio b { color: #F2C85B; }
+
+/* Aviso rojo con la cantidad de logros por reclamar, sobre el boton LOGROS del mapa */
+.isla .mp-alerta, .isla .hc-alerta { position: absolute; top: -8px; right: -8px; z-index: 3; min-width: 22px; height: 22px; padding: 0 5px; display: grid; place-items: center;
+  font-size: 11px; font-style: normal; color: #fff; background: #e63946; border: 2px solid #fff; border-radius: 11px; }
+.isla .hc-nb { position: relative; }
+
+@media (max-width: 640px) {
+  .fj-cuerpo { grid-template-columns: 1fr; }
+  .fj-personaje { min-height: calc(min(32dvh, 290px) + 64px); }          /* alto minimo propio: sin esto la fila se encogia y la imagen quedaba recortada */
+  /* alto explicito: con solo max-height el navegador lo cuenta como 0 y la imagen desaparecia en el celular */
+  .fj-personaje img { height: min(32dvh, 290px); width: auto; max-height: none; }
+}
+@media (max-width: 520px) {
+  .lg-fila { grid-template-columns: 48px minmax(0, 1fr); }
+  .lg-icono { width: 48px; height: 48px; }
+  .lg-icono svg { width: 34px; height: 34px; }
+  .lg-fila > .lg-btn, .lg-fila > .lg-obtenido { grid-column: 1 / -1; }
+  .lg-banner { flex-direction: column; align-items: stretch; text-align: center; }
+}
+
+/* ===== Logros destacados (perfil del jugador) ===== */
+.fj-destacados h3 { align-items: center; }
+.fj-editar { padding: 4px 10px; font: inherit; font-size: 8px; letter-spacing: 1px; color: #0d2152; background: #F2C85B; border: 2px solid #071433; cursor: pointer; }
+.fj-editar:hover { background: #ffd97a; }
+.fj-dest { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.fj-dest li { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 104px; padding: 8px 6px; text-align: center; }
+.fj-dest li.lleno { background: linear-gradient(180deg, #1d3d8f, #142a63); border: 3px solid #F2C85B; box-shadow: 0 0 10px rgba(242, 200, 91, .35); }
+.fj-dest li.lleno .fj-ins { width: 54px; height: 54px; border-color: #F2C85B; }
+.fj-dest li.lleno b { font-size: 8px; line-height: 1.5; color: #F2C85B; }
+.fj-dest li.vacio { background: #0a1a45; border: 3px dashed #3b66c8; color: #3b66c8; font-size: 22px; }
+.fj-dest-acciones { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+.fj-dest-acciones p { margin: 0; font-size: 9px; line-height: 1.6; color: #b9c8e8; }
+.fj-dest-acciones p b { color: #F2C85B; }
+.fj-dest-acciones > div { display: flex; gap: 6px; }
+.fj-grid li.elegible { padding: 0; border-color: #3b66c8; }
+.fj-grid li.elegible.elegido { border-color: #F2C85B; box-shadow: 0 0 0 2px #F2C85B inset; }
+.fj-grid li.elegible > button { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; height: 100%; padding: 8px 6px; font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.fj-grid li.elegible > button:disabled { opacity: .45; cursor: not-allowed; }
+.fj-pos { position: absolute; top: 3px; right: 3px; display: grid; place-items: center; width: 18px; height: 18px; font-style: normal; font-size: 9px; color: #0d2152; background: #F2C85B; border: 2px solid #071433; }
+@media (max-width: 420px) { .fj-dest li { min-height: 88px; } .fj-dest li.lleno .fj-ins { width: 44px; height: 44px; } }

@@ -1,0 +1,27 @@
+/* ===== Ajuste "Animaciones y efectos: NO" (Opciones) =====
+   El atributo data-animaciones="off" lo pone audio/preferencias.js en <html>.
+   Quita todo movimiento y los efectos puramente decorativos; el contenido y los controles no cambian. */
+html[data-animaciones="off"] *,
+html[data-animaciones="off"] *::before,
+html[data-animaciones="off"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Efectos decorativos que sin movimiento no aportan nada */
+html[data-animaciones="off"] .code-rain,
+html[data-animaciones="off"] .bg-code-token,
+html[data-animaciones="off"] .isla .fx-layer,
+html[data-animaciones="off"] .isla .nube-cruce,
+html[data-animaciones="off"] .confetti-particle,
+html[data-animaciones="off"] .escena-lampara,
+html[data-animaciones="off"] .escena-brillo { display: none !important; }
+
+/* Elementos que solo se hacian visibles con una animacion: se muestran directamente */
+html[data-animaciones="off"] .victoria-star { opacity: 1 !important; transform: none !important; }
+html[data-animaciones="off"] .px-load i { opacity: 1; }
+html[data-animaciones="off"] .gb-cloud { left: var(--x); }
+
+/* La ejecucion paso a paso no avanza sola con las animaciones apagadas (se pasa con el boton "Siguiente paso") */
+html[data-animaciones="off"] .ejp-bloque.activa { transform: none; }

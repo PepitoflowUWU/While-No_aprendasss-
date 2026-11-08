@@ -1,0 +1,260 @@
+/* ========================================================
+   PANTALLA DE VICTORIA — Animación de nivel completado
+   ======================================================== */
+
+.victoria-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #07111d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 3vh, 32px) clamp(16px, 4vw, 48px);
+  overflow: hidden;
+  font-family: 'Nunito', sans-serif;
+  animation: vicFadeIn 0.4s ease-out;
+}
+
+@keyframes vicFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ---- Partículas de confetti ---- */
+.confetti-particle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: confettiFall linear forwards;
+  pointer-events: none;
+}
+
+@keyframes confettiFall {
+  0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
+}
+
+/* ---- Tarjeta de victoria ---- */
+.victoria-card {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(160deg, #0e2240 0%, #112647 60%, #09192d 100%);
+  border: 4px solid #f5c542;
+  border-radius: 18px;
+  padding: clamp(24px, 4vh, 44px) clamp(28px, 5vw, 56px);
+  max-width: 680px;
+  width: 100%;
+  box-shadow: 0 0 60px rgba(245, 197, 66, 0.25), 0 20px 50px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, 2.5vh, 24px);
+  animation: cardBounce 0.5s cubic-bezier(.34,1.56,.64,1) both;
+  animation-delay: 0.15s;
+}
+
+@keyframes cardBounce {
+  from { opacity: 0; transform: translateY(40px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Brillo superior de la tarjeta */
+.victoria-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffd84e, transparent);
+  border-radius: 999px;
+}
+
+/* ---- Imagen de CapyHein ---- */
+.victoria-capy {
+  width: clamp(90px, 12vw, 140px);
+  height: clamp(90px, 12vw, 140px);
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+  animation: capyBounce 1s ease-in-out infinite;
+}
+
+@keyframes capyBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ---- Encabezado ---- */
+.victoria-nivel-tag {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(8px, 1vw, 11px);
+  color: #aac4e0;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.victoria-titulo {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(18px, 2.5vw, 28px);
+  color: #ffd84e;
+  text-align: center;
+  text-shadow: 0 0 20px rgba(255,216,78,0.5), 2px 2px 0 #000;
+  margin: 0;
+}
+
+/* ---- Estrellas animadas ---- */
+.victoria-estrellas {
+  display: flex;
+  gap: clamp(8px, 1.5vw, 16px);
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0;
+}
+
+.victoria-star {
+  opacity: 0;
+  transform: scale(0) rotate(-30deg);
+  animation: starPop 0.4s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+
+.victoria-star:nth-child(1) { animation-delay: 0.5s; }
+.victoria-star:nth-child(2) { animation-delay: 0.75s; }
+.victoria-star:nth-child(3) { animation-delay: 1.0s; }
+
+@keyframes starPop {
+  to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* ---- XP Counter animado ---- */
+.victoria-xp {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(22px, 3vw, 36px);
+  color: #4ee86a;
+  text-shadow: 0 0 20px rgba(78,232,106,0.5);
+  animation: xpGlow 1.5s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+@keyframes xpGlow {
+  0%, 100% { text-shadow: 0 0 20px rgba(78,232,106,0.5); }
+  50%       { text-shadow: 0 0 40px rgba(78,232,106,0.9), 0 0 60px rgba(78,232,106,0.4); }
+}
+
+/* ---- Grid de estadísticas ---- */
+.victoria-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 1.5vw, 16px);
+  width: 100%;
+  animation: statsFadeIn 0.5s ease-out both;
+  animation-delay: 1.3s;
+}
+
+@keyframes statsFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.victoria-stat-card {
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: clamp(10px, 1.5vh, 16px) clamp(8px, 1vw, 12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.stat-icon {
+  font-size: clamp(18px, 2.5vw, 26px);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(10px, 1.1vw, 12px);
+  font-weight: 700;
+  color: #8aaec8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stat-value {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(13px, 1.6vw, 18px);
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.stat-value.green  { color: #4ee86a; }
+.stat-value.yellow { color: #ffd84e; }
+.stat-value.blue   { color: #6ec4ff; }
+
+/* ---- Mensaje motivacional ---- */
+.victoria-mensaje {
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(14px, 1.6vw, 17px);
+  font-weight: 800;
+  color: #d4ecff;
+  text-align: center;
+  line-height: 1.5;
+  max-width: 440px;
+  animation: statsFadeIn 0.5s ease-out both;
+  animation-delay: 1.5s;
+}
+
+/* ---- Botón ---- */
+.victoria-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #f5c542;
+  border: 3px solid #fff5a0;
+  border-radius: 8px;
+  padding: clamp(12px, 1.6vh, 18px) clamp(28px, 4vw, 44px);
+  color: #1c1400;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(11px, 1.3vw, 15px);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #9c7800, 0 8px 20px rgba(245,197,66,0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  animation: statsFadeIn 0.5s ease-out both;
+  animation-delay: 1.7s;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+.victoria-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 0 #9c7800, 0 12px 25px rgba(245,197,66,0.4);
+}
+
+.victoria-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 #9c7800;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .victoria-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .victoria-titulo {
+    font-size: 16px;
+  }
+
+  .victoria-card {
+    padding: 20px 16px;
+    gap: 14px;
+  }
+}

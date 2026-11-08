@@ -1,0 +1,4 @@
+Fondo del mapa (1536 x 1024):
+  fondo-original.png  -> mapa CON nubes dibujadas (se usa mientras no exista fondo.png)
+  fondo.png           -> el mismo mapa SIN nubes (si existe, se usa y se activan las nubes animadas)
+  nubes/nube-a.png ... nube-g.png -> PNG transparentes de cada nube

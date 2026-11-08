@@ -1,0 +1,27 @@
+/* Ficha de jugador (ranking). Va en un portal sobre el body: no depende de ningun contenedor del mapa. */
+.jd-fondo { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 14px; background: rgba(6, 14, 34, .66); }
+.jd-panel { width: min(560px, 100%); max-height: calc(100dvh - 28px); overflow: auto; color: #fff;
+  font-family: "Pixelify Sans", sans-serif; background: #0e2a5c; border: 4px solid #5fa8ff;
+  box-shadow: 0 0 0 4px #04122e, 6px 6px 0 4px rgba(0, 0, 0, .45); }
+.jd-barra { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px 8px 14px;
+  background: #1a4a9a; border-bottom: 4px solid #f2c85b; }
+.jd-barra h2 { margin: 0; font-family: "Press Start 2P", monospace; font-weight: 400; font-size: clamp(10px, 2.6vw, 13px); color: #ffe48a; }
+.jd-x { width: 44px; height: 44px; cursor: pointer; font: 700 18px "Pixelify Sans", sans-serif; color: #0d2a4a; background: #bfe6ff;
+  border: 3px solid #f2fbff; border-right-color: #3b82c4; border-bottom-color: #2f6fae; }
+.jd-x:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.jd-cuerpo { display: grid; grid-template-columns: minmax(120px, 38%) 1fr; gap: 14px; padding: 14px; }
+.jd-personaje { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 8px;
+  background: radial-gradient(circle at 50% 40%, #2f6bd0 0%, #0a1a3d 85%); border: 3px solid #2d5fb3; min-height: 160px; }
+.jd-personaje img { width: 100%; max-height: min(300px, 46dvh); object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 5px 8px rgba(0, 0, 0, .5)); }
+.jd-pj-nombre { font-family: "Press Start 2P", monospace; font-size: 9px; color: #cfe6ff; text-align: center; }
+.jd-datos { margin: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; justify-content: center; }
+.jd-datos > div { padding: 6px 10px; background: rgba(255, 255, 255, .07); border-left: 4px solid #5fa8ff; min-width: 0; }
+.jd-datos dt { font-family: "Press Start 2P", monospace; font-size: 8px; line-height: 1.4; color: #9cc8ff; }
+.jd-datos dd { margin: 3px 0 0; font-weight: 700; font-size: clamp(16px, 4.2vw, 20px); line-height: 1.15; overflow-wrap: anywhere; }
+.jd-nombre dd { color: #ffd23f; }
+.jd-tu { margin-left: 8px; padding: 2px 6px; font-size: 11px; background: #ffb627; color: #2a1400; vertical-align: middle; }
+.jd-conexion { border-left-color: #8793a8 !important; }
+.jd-conexion.on { border-left-color: #54e06c !important; }
+.jd-punto { display: inline-block; width: 10px; height: 10px; margin-right: 8px; background: #8793a8; }
+.jd-conexion.on .jd-punto { background: #54e06c; box-shadow: 0 0 6px #54e06c; }
+@media (max-width: 460px) { .jd-cuerpo { grid-template-columns: 1fr; } .jd-personaje { min-height: 0; } .jd-personaje img { max-height: 32dvh; } }

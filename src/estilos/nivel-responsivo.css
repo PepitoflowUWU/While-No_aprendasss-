@@ -1,0 +1,165 @@
+/* =====================================================================
+   Pantallas de lección: teoría, ejercicios y burbuja del comodín.
+   Todo se adapta al ancho Y al alto de la pantalla (unidad --u = min(1vw, 1.5dvh)),
+   con tamaños mínimos legibles en celular y topes en pantallas grandes.
+   ===================================================================== */
+.nivel-screen { --u: min(1vw, 1.5dvh); inset: 0 0 auto 0; height: 100dvh; box-sizing: border-box; }
+.nivel-container { min-height: 0; }
+
+/* ---------- Barra superior ---------- */
+.nivel-topbar { gap: clamp(8px, calc(var(--u) * 1.2), 16px); }
+.nivel-btn-teoria { background: #1e3250; border: 2px solid #375586; color: #aac4e0; border-radius: 8px; padding: 6px 14px; min-height: 44px; font: 800 clamp(13px, calc(var(--u) * 1.2), 18px)/1 'Nunito', sans-serif; cursor: pointer; transition: all .3s; white-space: nowrap; flex: none; }
+.nivel-title-text { font-size: clamp(10px, var(--u), 15px); }
+.nivel-gift-badge { flex: none; }
+
+/* ---------- Zona central ---------- */
+.nivel-main { display: flex; flex-direction: column; flex: 1 1 auto; gap: clamp(10px, 2dvh, 20px); min-height: 0; overflow: hidden; }
+.nivel-main.es-flujo { flex-direction: row; }
+
+.nivel-stage { display: grid; grid-template-columns: clamp(96px, min(calc(var(--u) * 17), 27dvh), 250px) minmax(0, 1fr); gap: clamp(12px, calc(var(--u) * 2.2), 36px); align-items: center; margin: 0; flex: none; }
+.capy-bubble { padding: clamp(12px, 2dvh, 26px) clamp(16px, calc(var(--u) * 2.4), 36px); }
+.capy-bubble-tag { font-size: clamp(8px, calc(var(--u) * .8), 11px); }
+.capy-bubble-question { font-size: clamp(17px, calc(var(--u) * 2.2), 34px); line-height: 1.35; }
+.capy-bubble-feedback { font-size: clamp(11px, calc(var(--u) * 1), 16px); }
+
+.nivel-exercise-area { flex: 1 1 auto; min-height: 0; min-width: 0; overflow-y: auto; display: flex; flex-direction: column; padding-right: 4px; }
+.nivel-main.es-flujo .nivel-exercise-area { background: #0d1b2a; border-radius: 12px; padding: 16px; }
+
+/* Ejercicio de diagrama: personaje y bocadillo en una columna lateral */
+.nivel-main.es-flujo .nivel-stage { display: flex; flex-direction: column; align-items: center; gap: 14px; flex: 0 0 clamp(230px, 26vw, 360px); overflow-y: auto; min-height: 0; }
+.nivel-main.es-flujo .capy-frame-wrapper { width: min(100%, clamp(100px, 27dvh, 250px)); }
+.nivel-main.es-flujo .capy-bubble { width: 100%; text-align: center; }
+.nivel-main.es-flujo .capy-bubble-question { font-size: clamp(14px, calc(var(--u) * 1.6), 22px); }
+
+/* Opciones: texto más grande y táctil */
+.option-card { min-height: clamp(60px, calc(var(--u) * 6), 120px); }
+.option-text { font-size: clamp(16px, calc(var(--u) * 2), 28px); }
+.option-badge { width: clamp(30px, calc(var(--u) * 2.8), 46px); height: clamp(30px, calc(var(--u) * 2.8), 46px); font-size: clamp(12px, calc(var(--u) * 1.2), 18px); }
+.nivel-exercise-area .ph { font-size: clamp(14px, calc(var(--u) * 1.4), 20px) !important; }
+
+/* Barra inferior */
+.btn-comodin-action, .btn-primary-action { min-height: 48px; font-size: clamp(10px, calc(var(--u) * 1.1), 16px); }
+
+/* ---------- Pantallas angostas: el diagrama pasa a columna ---------- */
+@media (max-width: 899px) {
+  .nivel-main.es-flujo { flex-direction: column; }
+  .nivel-main.es-flujo .nivel-stage { display: grid; grid-template-columns: clamp(80px, 22vw, 130px) minmax(0, 1fr); flex: none; overflow: visible; gap: 12px; }
+  .nivel-main.es-flujo .capy-frame-wrapper { width: 100%; }
+  .nivel-main.es-flujo .capy-bubble { text-align: left; }
+}
+
+/* ---------- Celular en vertical ---------- */
+@media (max-width: 640px) {
+  .nivel-screen { padding: 10px 12px; }
+  .nivel-stage { grid-template-columns: clamp(76px, 22vw, 120px) minmax(0, 1fr); gap: 12px; }
+  .capy-sub-badge { display: none; }
+  .capy-bubble::before, .capy-bubble::after { display: none; }
+  .options-grid { grid-template-columns: 1fr; gap: 10px; }
+  .option-card { min-height: clamp(52px, min(17vw, 8.4dvh), 92px); padding-top: 8px; padding-bottom: 8px; }
+  .option-text { font-size: clamp(15px, min(4.6vw, 2.9dvh), 22px); }
+  .capy-bubble-question { font-size: clamp(14px, min(5vw, 3dvh), 24px); }
+  .capy-bubble-tag { font-size: 8px; }
+  .teoria-p { font-size: clamp(18px, 4.8vw, 24px); }
+  .teoria-h3 { font-size: clamp(21px, 5.6vw, 28px); }
+  .teoria-codigo { font-size: clamp(15px, 4vw, 20px); }
+  .nivel-btn-teoria { padding: 6px 10px; }
+}
+@media (max-width: 480px) {
+  /* "TEORÍA" pasa a ser solo el ícono para que la barra superior no se apriete */
+  .nivel-btn-teoria { font-size: 0; width: 48px; padding: 0; }
+  .nivel-btn-teoria::before { content: "📖"; font-size: 22px; }
+  .nivel-title-text { font-size: 10px; line-height: 1.5; }
+}
+
+/* ---------- Horizontal con poca altura (celular girado): personaje a la izquierda, respuestas a la derecha ---------- */
+@media (max-height: 520px) and (min-aspect-ratio: 5/4) {
+  .nivel-screen { padding: 8px 14px; }
+  .nivel-main, .nivel-main.es-flujo { flex-direction: row; gap: 14px; }
+  .nivel-main .nivel-stage, .nivel-main.es-flujo .nivel-stage { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8px; flex: 0 0 clamp(230px, 38vw, 380px); overflow-y: auto; min-height: 0; }
+  .nivel-main .capy-frame-wrapper, .nivel-main.es-flujo .capy-frame-wrapper { width: auto; align-items: center; }
+  .nivel-main .capy-card { width: clamp(60px, 24dvh, 110px); }
+  .capy-nameplate, .capy-sub-badge { display: none; }
+  .nivel-main .capy-bubble, .nivel-main.es-flujo .capy-bubble { width: 100%; text-align: left; padding: 10px 14px; }
+  .capy-bubble::before, .capy-bubble::after { display: none; }
+  .capy-bubble-question, .nivel-main.es-flujo .capy-bubble-question { font-size: clamp(12px, 3.9dvh, 17px); line-height: 1.4; }
+  .capy-bubble-tag { display: none; }
+  .options-grid { grid-template-columns: 1fr; gap: 8px; }
+  .option-card { min-height: 48px; padding: 8px 14px; }
+  .nivel-exercise-area .chip { font-size: clamp(14px, 4.4dvh, 18px); padding: 6px 10px; margin-bottom: 6px; }
+}
+
+/* =====================================================================
+   TEORÍA
+   ===================================================================== */
+.teoria-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(13, 27, 42, .92); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 8px; box-sizing: border-box; font-family: 'Nunito', sans-serif; --u: min(1vw, 1.5dvh); }
+.teoria-box { position: relative; display: flex; flex-direction: column; gap: clamp(10px, calc(var(--u) * 1.6), 26px); width: 100%; max-width: min(1240px, 100%); margin: auto; max-height: 100%; min-height: 0; color: #fff; font-family: 'Nunito', sans-serif; }
+.teoria-box.es-modal { background: #112240; border: 3px solid #375586; border-radius: 16px; padding: clamp(14px, calc(var(--u) * 2.4), 40px); width: min(96vw, 1150px); max-height: 94dvh; }
+.teoria-cerrar { position: absolute; top: 4px; right: 4px; width: 48px; height: 48px; background: none; border: 0; color: #8aaec8; font-size: 34px; line-height: 1; cursor: pointer; z-index: 2; }
+.teoria-head { text-align: center; border-bottom: 1px solid #1e3250; padding: 0 52px clamp(8px, 1.6dvh, 16px); flex: none; }
+.teoria-kicker { font-size: clamp(12px, calc(var(--u) * 1.1), 17px); color: #8aaec8; letter-spacing: 1.5px; font-weight: 800; }
+.teoria-titulo { font-size: clamp(24px, calc(var(--u) * 3.2), 50px); margin: 4px 0 0; color: #fdfbf5; line-height: 1.2; }
+.teoria-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; gap: clamp(14px, calc(var(--u) * 2.5), 40px); align-items: flex-start; padding: 4px 4px 4px 0; }
+.teoria-capy { width: clamp(88px, min(calc(var(--u) * 15), 28vw), 280px); flex: none; object-fit: contain; }
+.teoria-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: clamp(8px, calc(var(--u) * 1.2), 18px); }
+.teoria-diagrama { flex: 1; display: flex; justify-content: center; background: rgba(0, 0, 0, .2); padding: 12px; border-radius: 12px; }
+.teoria-h3 { margin: 0; color: #6ec4ff; font-size: clamp(22px, calc(var(--u) * 2.8), 44px); line-height: 1.25; }
+.teoria-p { margin: 0; color: #c7dbf0; font-size: clamp(18px, calc(var(--u) * 2.25), 36px); line-height: 1.5; white-space: pre-wrap; }
+.teoria-codigo { background: #0a1420; padding: clamp(10px, calc(var(--u) * 1.2), 20px); border-radius: 8px; font-family: monospace; color: #4ee86a; font-size: clamp(16px, calc(var(--u) * 1.9), 30px); line-height: 1.45; white-space: pre-wrap; overflow-x: auto; }
+.teoria-grafico { zoom: 1; }
+@media (min-width: 900px) and (min-height: 620px) { .teoria-grafico { zoom: 1.25; } }
+@media (min-width: 1400px) and (min-height: 800px) { .teoria-grafico { zoom: 1.6; } }
+
+.teoria-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex: none; }
+.teoria-btn { min-height: 48px; padding: 8px clamp(14px, calc(var(--u) * 2), 32px); border: 0; border-radius: 10px; font: 900 clamp(17px, calc(var(--u) * 1.8), 28px)/1.1 'Nunito', sans-serif; cursor: pointer; transition: background .2s, transform .1s; }
+.teoria-btn.prev { background: transparent; color: #aac4e0; }
+.teoria-btn.next { background: #6ec4ff; color: #0d1b2a; }
+.teoria-btn.next.ultima { background: #4ee86a; }
+.teoria-btn:active { transform: scale(.96); }
+.teoria-btn:focus-visible, .teoria-cerrar:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.teoria-puntos { display: flex; gap: 8px; }
+.teoria-puntos i { width: clamp(9px, calc(var(--u) * .9), 13px); height: clamp(9px, calc(var(--u) * .9), 13px); border-radius: 50%; background: #2a4466; display: block; }
+.teoria-puntos i.on { background: #6ec4ff; }
+
+@media (max-width: 640px) {
+  .teoria-body { flex-direction: column; align-items: stretch; }
+  .teoria-capy { width: 88px; align-self: center; }
+  .teoria-btn { padding: 8px 12px; font-size: 16px; }
+}
+@media (max-height: 520px) and (min-aspect-ratio: 5/4) {
+  .teoria-capy { width: clamp(70px, 24dvh, 130px); }
+  .teoria-head { padding-bottom: 6px; }
+}
+
+/* =====================================================================
+   BURBUJA DEL COMODÍN (El Mesías ayudando): grande y siempre completa
+   ===================================================================== */
+.nivel-screen .helper-overlay { align-items: flex-end; justify-content: center; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); box-sizing: border-box; }
+.nivel-screen .helper-scene { width: min(1200px, 100%); min-height: 0; max-height: 100%; padding: 0 clamp(8px, 3vw, 48px); gap: clamp(0px, 1vw, 16px); align-items: flex-end; box-sizing: border-box; }
+.nivel-screen .helper-sprite { flex: none; width: min(34vw, 50dvh, 470px); max-height: 62dvh; }
+.nivel-screen .helper-dialog { flex: 1 1 auto; min-width: 0; width: auto; margin: 0 0 clamp(20px, 12dvh, 170px) 0; align-self: flex-end; max-height: calc(100dvh - 24px); overflow-y: auto;
+  font-size: clamp(13px, calc(var(--u) * 1.45), 22px); line-height: 1.7; padding: clamp(14px, calc(var(--u) * 1.8), 30px); border-width: clamp(4px, calc(var(--u) * .5), 7px); }
+.nivel-screen .helper-dialog .dialog-name { font-size: clamp(9px, calc(var(--u) * .9), 14px); margin-bottom: clamp(8px, 1.4dvh, 14px); }
+.nivel-screen .helper-dialog .hint { font-size: clamp(12px, calc(var(--u) * 1.2), 18px); line-height: 1.7; padding: clamp(10px, calc(var(--u) * 1.2), 18px); margin-top: 8px; }
+.nivel-screen .helper-dialog .pixel-button { font-size: clamp(12px, calc(var(--u) * 1.2), 17px); min-height: 48px; padding: 12px clamp(14px, calc(var(--u) * 1.8), 28px); margin-top: 12px; }
+.nivel-screen .helper-dialog .loading-bar { height: clamp(15px, calc(var(--u) * 1.4), 22px); }
+.nivel-screen .helper-dialog:before { left: -28px; bottom: 40px; }
+
+/* Celular vertical: el diálogo arriba a todo el ancho y el Mesías debajo */
+@media (max-width: 640px) {
+  .nivel-screen .helper-scene { flex-direction: column-reverse; align-items: stretch; padding: 0 12px; gap: 14px; }
+  .nivel-screen .helper-sprite { width: min(46vw, 30dvh, 220px); align-self: flex-start; }
+  .nivel-screen .helper-dialog { margin: 0; align-self: stretch; max-height: 56dvh; font-size: clamp(14px, 4.2vw, 18px); }
+  .nivel-screen .helper-dialog:before { left: 40px; bottom: -26px; border-color: transparent; border-top-color: #34463a; border-width: 14px; }
+  .nivel-screen .helper-dialog .hint { font-size: clamp(13px, 3.8vw, 16px); }
+  .nivel-screen .helper-dialog .pixel-button { width: 100%; }
+}
+/* Celular horizontal: Mesías a la izquierda, diálogo a la derecha, sin salirse de la pantalla */
+@media (max-height: 520px) and (min-aspect-ratio: 5/4) {
+  .nivel-screen .helper-sprite { width: min(26vw, 70dvh); max-height: 82dvh; }
+  .nivel-screen .helper-dialog { margin-bottom: 12px; max-height: calc(100dvh - 24px); font-size: clamp(13px, 3.8dvh, 17px); }
+}
+
+/* Tabletas en vertical: más espacio, así que todo crece un poco más */
+@media (min-width: 641px) and (max-aspect-ratio: 1/1) {
+  .nivel-screen, .teoria-overlay { --u: min(1.4vw, 1.5dvh); }
+}

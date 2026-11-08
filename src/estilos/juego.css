@@ -1,0 +1,54 @@
+/* ===== Fondo compartido, lluvia de código, indicador de pasos y guía ===== */
+.game-bg { position:relative; min-height:100vh; min-height:100dvh; background:#1f7fe0; }
+.gb-scene { position:fixed; inset:0; z-index:0; background:#1f7fe0 url('../assets/fondo-inicio.png') center bottom / cover no-repeat; image-rendering:pixelated; }
+.gb-clouds { position:fixed; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
+.gb-cloud { position:absolute; left:0; top:var(--t); opacity:.95; animation:gb-drift var(--d) linear infinite; animation-delay:var(--dl); will-change:transform; }
+.gb-cloud svg { display:block; }
+@keyframes gb-drift { from { transform:translateX(-100%); } to { transform:translateX(100vw); } }
+.gb-content { position:relative; z-index:3; min-height:100vh; min-height:100dvh; }
+
+.code-rain { position:fixed; inset:0; z-index:2; overflow:hidden; pointer-events:none; }
+.cr-col { position:absolute; top:0; display:flex; flex-direction:column; align-items:center; font-family:"Press Start 2P",monospace; line-height:1.5; transform:translateY(-100%); animation:cr-fall linear infinite; will-change:transform; }
+.cr-col span { text-shadow:1px 1px 0 rgba(0,70,130,.3); }
+.cr-lider { color:#FFFFFF; opacity:.5; }
+.cr-estela { color:#B8F5CE; }
+@keyframes cr-fall { from { transform:translateY(-100%); } to { transform:translateY(100vh); } }
+.code-rain.is-paused .cr-col { animation-play-state:paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gb-cloud { animation:none; left:var(--x); }
+  .cr-col { animation:none; transform:translateY(var(--y)); }
+  .code-rain { opacity:.5; }
+}
+
+.paso-chip { display:inline-flex; align-items:center; gap:10px; font-family:"Press Start 2P",monospace; font-size:clamp(7px,2vw,10px); line-height:1.6; color:#fff7c2; background:#15102b; border:3px solid #fff7c2; box-shadow:3px 3px 0 #0b0818; padding:9px 12px; text-align:center; }
+.paso-dots { display:inline-flex; gap:4px; }
+.paso-dots i { width:8px; height:8px; background:#4a4570; display:block; }
+.paso-dots i.on { background:#7dffa0; }
+
+/* Guía: abajo a la izquierda (en pantallas angostas va en el flujo, bajo los botones) */
+.cs-guide-x { display:flex; align-items:flex-end; gap:6px; margin-top:6px; max-width:100%; }
+.cs-guide-x img { width:60px; height:auto; flex:none; filter:drop-shadow(3px 3px 0 #15102b); }
+.cs-bubble { position:relative; background:#fff9d6; color:#24352b; border:4px solid #29382d; box-shadow:4px 4px 0 #15102b; padding:10px 12px; font-family:"Pixelify Sans",sans-serif; font-size:15px; line-height:1.35; width:min(260px,62vw); margin-bottom:18px; }
+.cs-bubble:before { content:""; position:absolute; left:-16px; bottom:12px; border:6px solid transparent; border-right-color:#29382d; border-width:6px 10px 6px 6px; }
+@media (min-width:1000px) {
+  .cs-guide-x { position:fixed; left:16px; bottom:12px; margin:0; z-index:20; }
+  .cs-guide-x img { width:96px; }
+  .cs-bubble { width:270px; font-size:16px; padding:12px; margin-bottom:60px; }
+}
+@media (max-height:560px) and (min-width:700px) { .cs-guide-x { display:none; } }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+/* ===== Paleta de botones y cuadros en armonía con el fondo (cielo, césped, nubes) ===== */
+.game-bg { --ink:#0f2a44; --linea:#173f66; --panel:rgba(236,248,255,.96); --verde:#2f8f46; }
+.game-bg .pixel-button { font-family:"Press Start 2P","Pixelify Sans",monospace; background:#7fdc6a; color:#0d2a1a; border:4px solid #d4ffb0; border-right-color:#2d8a3e; border-bottom-color:#256f33; box-shadow:4px 4px 0 #0f3b2a; }
+.game-bg .pixel-button.secondary { background:#bfe6ff; color:#0d2a4a; border-color:#f2fbff; border-right-color:#3b82c4; border-bottom-color:#2f6fae; box-shadow:4px 4px 0 #123a63; }
+.game-bg .pixel-button:focus-visible { outline:4px solid #fff; outline-offset:3px; box-shadow:0 0 0 7px #0f2a44; }
+.paso-chip { background:#0f2a44; border-color:#fff; box-shadow:3px 3px 0 #08182a; }
+
+/* Mayúsculas acentuadas: Press Start 2P las dibuja como minúsculas, así que la tilde se dibuja encima de la letra base */
+.ac { position:relative; display:inline-block; }
+.ac::after { content:""; position:absolute; width:.125em; height:.125em; background:currentColor; }
+.ac-a::after { left:.5em; top:-.2em; box-shadow:-.125em .125em 0 currentColor; }
+.ac-t::after { left:.125em; top:-.08em; box-shadow:.125em 0 0 currentColor, .25em -.125em 0 currentColor, .375em -.125em 0 currentColor; }
+.ac-d::after { left:.2em; top:-.2em; box-shadow:.25em 0 0 currentColor; }

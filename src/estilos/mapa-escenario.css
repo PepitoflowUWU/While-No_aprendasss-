@@ -1,0 +1,124 @@
+/* ===== Escenario del mapa (3:2), nodos moneda, nubes, efectos y HUD responsive ===== */
+.isla { height: 100dvh; width: 100%; }
+/* color del mar tomado del borde de la imagen */
+.isla .mapa-root { position: relative; width: 100%; height: 100dvh; overflow: hidden; background: #004DA0; }
+.isla .mapa-scroll { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+/* MODO AMPLIO: encuadre moderado (recorta como máximo 4% a lo ancho y 12% a lo alto, solo mar y nubes).
+   El recorte vertical se reparte 25% arriba / 75% abajo para que la puerta del portal se vea completa.
+   Si sobra espacio, se rellena con el mismo mapa reflejado (las nubes del borde continúan en forma de silueta). */
+.isla .mapa-scroll { --w: min(max(100vw, calc(100dvh * 1.7769)), calc(100vw / .96), calc(100dvh * 2.0192));
+  --h: calc(var(--w) * .56278); --d: calc(100dvh - var(--h)); --top: max(calc(var(--d) * .5), calc(var(--d) * .25)); }
+.isla .escenario { --nw: max(6.2cqw, 58px);
+  position: absolute; left: 50%; translate: -50% 0; top: var(--top);
+  width: var(--w); aspect-ratio: 1672 / 941; container-type: inline-size; overflow: hidden; user-select: none; }
+.isla .fondo-espejo { position: absolute; width: var(--w); height: var(--h); display: block; pointer-events: none; max-width: none; }
+.isla .fondo-espejo.izq { left: calc(50% - var(--w) * 1.5 + 2px); top: var(--top); transform: scaleX(-1); -webkit-mask-image: linear-gradient(to right, #000 0, #000 12%, transparent 20%); mask-image: linear-gradient(to right, #000 0, #000 12%, transparent 20%); }
+.isla .fondo-espejo.der { left: calc(50% + var(--w) * .5 - 2px); top: var(--top); transform: scaleX(-1); -webkit-mask-image: linear-gradient(to left, #000 0, #000 12%, transparent 20%); mask-image: linear-gradient(to left, #000 0, #000 12%, transparent 20%); }
+.isla .fondo-espejo.arr { left: 50%; translate: -50% 0; top: calc(var(--top) - var(--h) + 2px); transform: scaleY(-1); -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 12%, transparent 20%); mask-image: linear-gradient(to bottom, #000 0, #000 12%, transparent 20%); }
+.isla .fondo-espejo.aba { left: 50%; translate: -50% 0; top: calc(var(--top) + var(--h) - 2px); transform: scaleY(-1); -webkit-mask-image: linear-gradient(to top, #000 0, #000 12%, transparent 20%); mask-image: linear-gradient(to top, #000 0, #000 12%, transparent 20%); }
+.isla .mapa-fondo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.isla .hud-layer { position: absolute; inset: 0; container-type: inline-size; pointer-events: none; z-index: 20; }
+.isla .hud-layer .mp-item { pointer-events: auto; }
+
+/* ---------- Nodos: monedas isométricas (ancho --nw, alto .65 --nw, grosor .11 --nw) ---------- */
+.isla .mn { position: absolute; translate: -50% -50%; width: max(calc(var(--nw) * 1.15), 56px); height: max(calc(var(--nw) * .85), 56px); padding: 0; border: 0; background: none; cursor: pointer; z-index: 5; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.isla .mn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 4px #F2C85B; }
+.isla .mn-body { position: absolute; left: 50%; top: 50%; width: var(--nw); height: calc(var(--nw) * .65); translate: -50% -50%; display: block; pointer-events: none; }
+.isla .mn-art { position: absolute; left: 0; top: 0; width: 100%; height: 123.8%; display: block; }
+.isla .mn-ring { position: absolute; inset: 0; border: calc(var(--nw) * .05) solid #FFE18A; border-radius: 50%; animation: mn-ring 1.6s ease-out infinite; }
+.isla .mn-star { position: absolute; left: 50%; top: 46%; width: calc(var(--nw) * .38); height: calc(var(--nw) * .38); translate: -50% -50%; color: #FFF6D6; filter: drop-shadow(calc(var(--nw) * .025) calc(var(--nw) * .025) 0 #B8862B); }
+.isla .mn-star.tw { animation: mn-twinkle 1.4s ease-in-out infinite; }
+.isla .mn-lock { position: absolute; left: 50%; top: 44%; width: calc(var(--nw) * .42); height: calc(var(--nw) * .42); translate: -50% -50%; }
+.isla .mn-lock svg, .isla .mn-star svg, .isla .mn-stars svg { width: 100%; height: 100%; display: block; }
+.isla .mn-flash { position: absolute; inset: 0; border-radius: 50%; background: #fff; opacity: 0; animation: mn-flash .3s ease-out 1; }
+@keyframes mn-ring { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(1.35); opacity: 0; } }
+@keyframes mn-twinkle { 0%, 100% { transform: scale(.85); opacity: .8; } 50% { transform: scale(1.12); opacity: 1; } }
+@keyframes mn-flash { 0% { opacity: .9; } 100% { opacity: 0; } }
+
+/* Etiqueta crema con puntita hacia abajo, a .65 --nw sobre el centro (sobre la cabeza si el personaje está en ese nodo) */
+.isla .mn-tag { position: absolute; left: 50%; top: calc(50% - var(--nw) * .65); translate: -50% -50%; min-width: 1.9em; height: 1.7em; padding: 0 .3em; display: grid; place-items: center;
+  background: #FFF3C9; border: 2px solid #8A5A2B; color: #4A2C0F; font: 700 clamp(14px, 1.9cqw, 22px)/1 var(--fp); box-shadow: 2px 2px 0 rgba(40, 24, 8, .5); }
+.isla .mn-tag::before, .isla .mn-tag::after { content: ""; position: absolute; left: 50%; translate: -50% 0; width: 0; height: 0; border: solid transparent; border-bottom-width: 0; }
+.isla .mn-tag::before { top: 100%; border-width: .38em .34em 0; border-top-color: #8A5A2B; }
+.isla .mn-tag::after { top: calc(100% - 2px); border-width: .26em .23em 0; border-top-color: #FFF3C9; z-index: 1; }
+.isla .mn-tag.alto { top: calc(50% - 7cqw - 1.5em); }
+.isla .mn-tag.bob { animation: mn-bob 1.4s ease-in-out infinite; }
+@keyframes mn-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-.4cqw); } }
+.isla .mn-stars { position: absolute; left: 50%; top: calc(50% + var(--nw) * .7); translate: -50% -50%; display: flex; gap: calc(var(--nw) * .03); pointer-events: none; }
+.isla .mn-stars span { width: calc(var(--nw) * .28); height: calc(var(--nw) * .28); display: block; color: #1d2a55; filter: drop-shadow(1px 1px 0 #040c24); }
+.isla .mn-stars span.on { color: #FFCF33; }
+
+/* Personaje: base en el centro del disco, 7 u de alto */
+.isla .player { position: absolute; transform: none; translate: -50% -100%; z-index: 8; pointer-events: none; transition: left .6s ease, top .6s ease; }
+.isla .player img.player-img { height: calc(7cqw * var(--k, 1)); width: auto; display: block; image-rendering: auto; animation: mp-idle 1.2s ease-in-out infinite; }
+.isla .player svg { height: 7cqw; width: auto; display: block; image-rendering: pixelated; animation: mp-idle 1.2s ease-in-out infinite; }
+@keyframes mp-idle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+
+.isla .calibrar { position: absolute; translate: -50% -50%; z-index: 60; pointer-events: none; color: #ff2a2a; font: 700 28px/1 monospace; text-shadow: 0 0 2px #000; }
+.isla .calibrar b { position: absolute; left: 70%; top: -40%; font-size: 12px; color: #fff; background: #000; padding: 1px 3px; }
+
+/* ---------- Nubes ---------- */
+.isla .nubes-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+.isla .nube-pos { position: absolute; translate: -50% -50%; }
+.isla .nube { display: block; width: 100%; height: auto; image-rendering: pixelated;
+  animation-name: nube-sway, nube-bob; animation-timing-function: ease-in-out, ease-in-out; animation-iteration-count: infinite, infinite; animation-direction: alternate, alternate; }
+@keyframes nube-sway { from { transform: translateX(0); } to { transform: translateX(4cqw); } }
+@keyframes nube-bob { from { translate: 0 0; } to { translate: 0 .5cqw; } }
+.isla .nube-cruce { position: absolute; left: -8%; opacity: 0; animation-name: nube-cruce; animation-timing-function: linear; animation-iteration-count: infinite; }
+.isla .nube-cruce img { width: 100%; height: auto; display: block; image-rendering: pixelated; }
+@keyframes nube-cruce { 0% { transform: translateX(0); opacity: 0; } 10% { opacity: .9; } 55% { opacity: .9; } 80% { opacity: 0; } 100% { transform: translateX(78cqw); opacity: 0; } }
+
+/* ---------- Luz y vida ---------- */
+.isla .fx-layer { position: absolute; inset: 0; pointer-events: none; z-index: 3; mix-blend-mode: screen; }
+.isla .fx { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; display: block; }
+.isla .fx-glow { width: var(--s); height: var(--s); border-radius: 50%; background: radial-gradient(circle, var(--c) 0 28%, transparent 70%); }
+.isla .fx-flicker { animation: fx-flick 2s steps(4) infinite alternate; }
+@keyframes fx-flick { from { opacity: .4; } to { opacity: 1; } }
+.isla .fx-rays { width: .4cqw; height: .4cqw; animation: fx-rays 1s steps(2) infinite; }
+.isla .fx-rays.ra { box-shadow: 0 -2.4cqw 0 #FFE9A0, 0 -3cqw 0 #FFE9A0, 0 2.4cqw 0 #FFE9A0, 0 3cqw 0 #FFE9A0; }
+.isla .fx-rays.rb { box-shadow: -2.4cqw 0 0 #FFE9A0, -3cqw 0 0 #FFE9A0, 2.4cqw 0 0 #FFE9A0, 3cqw 0 0 #FFE9A0; animation-delay: -.5s; }
+@keyframes fx-rays { 0% { opacity: 1; } 50% { opacity: .15; } 100% { opacity: 1; } }
+.isla .fx-halo { animation: fx-halo 3s ease-in-out infinite; }
+@keyframes fx-halo { 0%, 100% { transform: scale(.94); opacity: .55; } 50% { transform: scale(1.08); opacity: .95; } }
+.isla .fx-part { width: .4cqw; height: .4cqw; background: #FFD86B; translate: calc(-50% + var(--dx)) -50%; opacity: 0; animation: fx-rise 4s linear infinite; }
+@keyframes fx-rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-7cqw); opacity: 0; } }
+.isla .fx-irregular { animation: fx-irr 3.3s linear infinite; }
+@keyframes fx-irr { 0% { opacity: .9; } 7% { opacity: .3; } 12% { opacity: 1; } 30% { opacity: .7; } 38% { opacity: .2; } 41% { opacity: .95; } 70% { opacity: .6; } 83% { opacity: .15; } 100% { opacity: .9; } }
+.isla .fx-beam { width: .35cqw; height: 4cqw; background: linear-gradient(#4FD8FF, transparent); translate: calc(-50% + var(--dx)) -50%; opacity: 0; animation: fx-beam 2.5s linear infinite; }
+@keyframes fx-beam { 0% { transform: translateY(1cqw); opacity: 0; } 20% { opacity: .8; } 100% { transform: translateY(-4cqw); opacity: 0; } }
+.isla .fx-lamp { animation: fx-lamp 1.8s ease-in-out infinite alternate; }
+@keyframes fx-lamp { from { opacity: .6; } to { opacity: 1; } }
+.isla .fx-stripe { width: 1.6cqw; height: .3cqw; background: #5FF4FF; translate: -50% calc(-50% + var(--dy)); animation: fx-seq 1.2s steps(3) infinite; }
+@keyframes fx-seq { 0% { opacity: .15; } 33% { opacity: 1; } 66% { opacity: 1; } 100% { opacity: .15; } }
+.isla .fx-door { opacity: .7; }
+.isla .fx-chip { animation: fx-chip 2.5s ease-in-out infinite alternate; }
+@keyframes fx-chip { from { opacity: .2; } to { opacity: 1; } }
+.isla .fx-spark-cable { width: .9cqw; height: .9cqw; background: #9FE3FF; box-shadow: 0 0 .8cqw #4FD8FF; opacity: 0; animation: fx-cable 1.5s linear infinite; }
+@keyframes fx-cable { 0% { transform: translate(-6.3cqw, 1.1cqw); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(6.3cqw, -1.1cqw); opacity: 0; } }
+.isla .fx-star4 { width: 1.4cqw; height: 1.4cqw; animation: fx-tw 2.5s ease-in-out infinite; }
+.isla .fx-star4::before, .isla .fx-star4::after { content: ""; position: absolute; background: var(--c); }
+.isla .fx-star4::before { left: 50%; top: 0; width: .25cqw; height: 100%; translate: -50% 0; }
+.isla .fx-star4::after { top: 50%; left: 0; height: .25cqw; width: 100%; translate: 0 -50%; }
+@keyframes fx-tw { 0%, 100% { opacity: 0; transform: scale(.6); } 50% { opacity: 1; transform: scale(1.2); } }
+.isla .fx-canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+
+/* Pausa con la pestaña oculta */
+.isla .is-paused *, .isla .is-paused *::before, .isla .is-paused *::after { animation-play-state: paused !important; }
+
+/* Movimiento reducido: todo quieto; resplandores estáticos al 60% */
+@media (prefers-reduced-motion: reduce) {
+  .isla .mapa-root *, .isla .mapa-root *::before, .isla .mapa-root *::after { animation: none !important; }
+  .isla .fx-glow, .isla .fx-rays, .isla .fx-stripe, .isla .fx-star4 { opacity: .6; }
+  .isla .fx-part, .isla .fx-beam, .isla .fx-spark-cable, .isla .mn-ring, .isla .mn-flash { display: none; }
+  .isla .nube-cruce { display: none; }
+  .isla .player { transition: none; }
+}
+
+/* ---------- MODO COMPACTO: el escenario NO se encoge, el mapa se arrastra con el dedo ---------- */
+@media (max-width: 899px), (max-height: 559px) {
+  .isla .mapa-scroll { display: flex; place-items: normal; overflow: auto; box-sizing: border-box; scrollbar-width: none; overscroll-behavior: contain; touch-action: pan-x pan-y; -webkit-overflow-scrolling: touch;
+    padding-top: var(--bar-top, 0px); padding-bottom: var(--bar-bottom, 0px); }
+  .isla .mapa-scroll::-webkit-scrollbar { display: none; }
+  .isla .escenario { position: relative; left: auto; top: auto; translate: none; flex: none; width: max(100vw, 960px); min-width: 960px; margin: auto; overflow: visible; }
+  .isla .mapa-fondo { overflow: hidden; }
+}

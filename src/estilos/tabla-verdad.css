@@ -1,0 +1,24 @@
+/* Tabla de verdad (ejercicio) y simbolos logicos */
+.sim-logico { display: inline-block; padding: 0 .1em; font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", "DejaVu Sans", Arial, sans-serif;
+  font-weight: 700; font-size: 1.18em; line-height: 1; font-variant-ligatures: none; text-transform: none; }
+.teoria-codigo .sim-logico { width: 1ch; padding: 0; text-align: center; font-size: 1em; }
+
+.tv-wrap { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; }
+.tv { border-collapse: separate; border-spacing: 4px; margin: 0 auto; }
+.tv-th { padding: 8px clamp(10px, 2.4vw, 22px); font: 700 clamp(15px, 2.6vw, 21px) "Pixelify Sans", sans-serif; color: #fff;
+  background: #1a3a6c; border: 3px solid #3b82c4; white-space: nowrap; }
+.tv-out-th { background: #4a2c7a; border-color: #8a5cd0; color: #ffe48a; }
+.tv-in { min-width: clamp(44px, 9vw, 64px); text-align: center; padding: 8px 6px; font: 700 clamp(16px, 2.8vw, 22px) "Pixelify Sans", sans-serif;
+  background: #0f2447; border: 3px solid #274a7c; color: #cfe6ff; }
+.tv-in.tv-V { color: #8dff9c; } .tv-in.tv-F { color: #ff9a9a; }
+.tv-out { padding: 0; }
+.tv-cel { width: 100%; min-width: clamp(56px, 12vw, 84px); min-height: 48px; cursor: pointer; font: 700 clamp(18px, 3vw, 24px) "Pixelify Sans", sans-serif;
+  color: #9db4d6; background: #14233f; border: 3px dashed #5a7aa8; }
+.tv-cel.lleno { border-style: solid; color: #fff; }
+.tv-cel.es-v { background: #1d6b3a; border-color: #54e06c; }
+.tv-cel.es-f { background: #7a2a2a; border-color: #ff7a7a; }
+.tv-cel.mal { background: #a02020; border-color: #ffd0d0; box-shadow: 0 0 0 3px #ff4a4a; }
+.tv-cel.bien { box-shadow: 0 0 0 3px #54e06c; }
+.tv-cel:disabled { cursor: default; }
+.tv-cel:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.tv-ayuda { margin: 0; font: 400 clamp(12px, 2.4vw, 14px) "Pixelify Sans", sans-serif; color: #9cc8ff; }
