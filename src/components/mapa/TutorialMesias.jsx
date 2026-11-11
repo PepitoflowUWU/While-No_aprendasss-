@@ -48,14 +48,34 @@ function buscar(t) {
   return null;
 }
 
-// Imagen del Mesías: la de la tabla `personaje` y, si no está o no carga, la copia del proyecto
-function ImagenMesias({ pose, espejo }) {
+function centrarSiHaceFalta(el, inmediato) {
+  let sc = el.parentElement;
+  while (sc && sc !== document.body) {
+    const cs = getComputedStyle(sc);
+    if (/(auto|scroll)/.test(cs.overflowX + cs.overflowY) && (sc.scrollWidth > sc.clientWidth || sc.scrollHeight > sc.clientHeight)) break;
+    sc = sc.parentElement;
+  }
+  if (!sc || sc === document.body) return;   // nada desplazable (PC): el mapa no se mueve
+  const r = el.getBoundingClientRect(), c = sc.getBoundingClientRect();
+  const visible = r.top >= c.top && r.bottom <= c.bottom && r.left >= c.left && r.right <= c.right;
+  if (visible) return;
+  sc.scrollTo({
+    left: sc.scrollLeft + (r.left + r.width / 2) - (c.left + c.width / 2),
+    top: sc.scrollTop + (r.top + r.height / 2) - (c.top + c.height / 2),
+    behavior: inmediato ? 'auto' : 'smooth',
+  });
+}
+
+// Imagen del Mesías: la de la tabla `personaje` y, si no está o no carga, la copia del proyecto.
+// maxAlto: espacio libre para que nunca tape el botón resaltado (en px; null = sin límite).
+function ImagenMesias({ pose, espejo, maxAlto }) {
   const { imagenDe } = usePersonajes();
   const remota = imagenDe(MESIAS[pose].id);
   const [fallo, setFallo] = useState({});
   const src = remota && !fallo[remota] ? remota : `${BASE}${MESIAS[pose].local}`;
   return (
     <img className={`tm-mesias ${espejo ? 'espejo' : ''}`} src={src} alt="" draggable={false}
+      style={maxAlto ? { maxHeight: maxAlto } : undefined}
       onError={() => remota && setFallo((f) => ({ ...f, [remota]: true }))} />
   );
 }
@@ -67,6 +87,8 @@ export default function TutorialMesias({ personaje, esAdmin = false, onFin }) {
   const [letras, setLetras] = useState(0);
   const [rect, setRect] = useState(null);
   const sigRef = useRef(null);
+  const globoRef = useRef(null);
+  const [altoGlobo, setAltoGlobo] = useState(190);
   const paso = pasos[i];
   const texto = paso.texto;
   const completo = letras >= texto.length;
@@ -85,12 +107,9 @@ export default function TutorialMesias({ personaje, esAdmin = false, onFin }) {
   useLayoutEffect(() => {
     let raf;
     const el0 = buscar(paso.t);
-    // Solo se desplaza el mapa si el punto no se ve (celular); en PC el mapa entero ya está en pantalla
-    if (el0 && paso.scroll) {
-      const r = el0.getBoundingClientRect();
-      const fuera = r.top < 90 || r.bottom > window.innerHeight - 160 || r.left < 0 || r.right > window.innerWidth;
-      if (fuera) el0.scrollIntoView({ block: 'center', inline: 'center', behavior: sinAnim() ? 'auto' : 'smooth' });
-    }
+    // Solo se desplaza el contenedor del mapa que SE PUEDE desplazar (celular) y solo si el punto queda fuera de la pantalla.
+    // Nunca scrollIntoView: también movería contenedores con overflow hidden y el mundo entero quedaba corrido (PC).
+    if (el0 && paso.scroll) centrarSiHaceFalta(el0, sinAnim());
     const medir = () => {
       const el = buscar(paso.t);
       const r = el?.getBoundingClientRect();
@@ -106,6 +125,12 @@ export default function TutorialMesias({ personaje, esAdmin = false, onFin }) {
   }, [paso]);   // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { sigRef.current?.focus({ preventScroll: true }); }, [i]);
+
+  // Alto real del cuadro de texto (cambia con cada texto y al girar el celular)
+  useLayoutEffect(() => {
+    const h = globoRef.current?.offsetHeight;
+    if (h && Math.abs(h - altoGlobo) > 2) setAltoGlobo(h);
+  });
 
   const avanzar = () => {
     if (!completo) { setLetras(texto.length); return; }
@@ -130,6 +155,11 @@ export default function TutorialMesias({ personaje, esAdmin = false, onFin }) {
   const cx = foco ? foco.left + foco.width / 2 : 0;
   const panelArriba = !!foco && cy > alto * 0.5;
   const aDerecha = !!foco && cx > ancho * 0.55;
+  // Espacio libre entre el borde de la pantalla y el botón resaltado (descontando la flecha). En celular vertical el Mesías
+  // va encima del cuadro de texto, así que a ese espacio se le resta el alto del cuadro.
+  const columna = window.matchMedia?.('(max-width: 520px)').matches;
+  const espacio = foco ? (panelArriba ? foco.top : alto - foco.top - foco.height) - 12 - 34 : Infinity;
+  const maxAlto = Number.isFinite(espacio) ? Math.max(110, Math.round(columna ? espacio - altoGlobo + 12 : espacio)) : null;
   const flecha = foco && (panelArriba
     ? { left: cx, top: foco.top - 10, dir: 'abajo' }                  // flecha sobre el botón, apuntando hacia abajo
     : { left: cx, top: foco.top + foco.height + 10, dir: 'arriba' }); // flecha bajo el botón, apuntando hacia arriba
@@ -140,8 +170,8 @@ export default function TutorialMesias({ personaje, esAdmin = false, onFin }) {
       {flecha && <div className={`tm-flecha ${flecha.dir}`} style={{ left: flecha.left, top: flecha.top }} aria-hidden="true" />}
 
       <div className={`tm-panel ${panelArriba ? 'arriba' : 'abajo'} ${aDerecha ? 'derecha' : ''}`}>
-        <ImagenMesias pose={foco ? 'senala' : 'pie'} espejo={aDerecha} />
-        <div className="tm-globo" onClick={(e) => { e.stopPropagation(); avanzar(); }}>
+        <ImagenMesias pose={foco ? 'senala' : 'pie'} espejo={aDerecha} maxAlto={maxAlto} />
+        <div ref={globoRef} className="tm-globo" onClick={(e) => { e.stopPropagation(); avanzar(); }}>
           <span className="tm-nombre">EL MESÍAS DEL PRONT</span>
           <p className="tm-texto" aria-hidden="true">{texto.slice(0, letras)}<span className="tm-resto">{texto.slice(letras)}</span></p>
           <p className="tm-sr" aria-live="polite">{texto}</p>
