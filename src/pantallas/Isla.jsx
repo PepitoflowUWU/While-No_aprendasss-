@@ -9,7 +9,10 @@ import Nivel from '../components/nivel/Nivel';
 import PanelNivel from '../components/mapa/PanelNivel';
 import PantallaTeoria from '../components/nivel/PantallaTeoria';
 import { empiezaConTeoria } from '../datos/helpers.js';
-import { Ranking, Perfil } from '../components/jugador/Paneles';
+import { Ranking } from '../components/jugador/Paneles';
+import OpcionesModal from '../components/jugador/OpcionesModal';
+import TutorialMesias, { tutorialVisto, marcarTutorialVisto } from '../components/mapa/TutorialMesias';
+import { useMusicaActiva, useAnimaciones } from '../audio/preferencias.js';
 import LogrosPanel from '../components/jugador/LogrosPanel';
 import FichaJugador from '../components/jugador/FichaJugador';
 import { useLogros } from '../hooks/useLogros.js';
@@ -28,8 +31,8 @@ import '../estilos/mapa-compacto.css';
 // Mapea la sección del registro al ID del curso
 const CURSO_DE = { 'Algoritmos': 'pseudocodigo' };
 
-export default function Isla({ sesion, onSalir }) {
-  const { p, completar, usarComodin, reiniciar, limiteUnidad, usadosUnidad } = useProgreso(sesion);
+export default function Isla({ sesion, onSalir, onMusica, onAnimaciones }) {
+  const { p, completar, usarComodin, limiteUnidad, usadosUnidad } = useProgreso(sesion);
   const logros = useLogros(sesion, p);
   const [cid,    setCid]    = useState(CURSO_DE[sesion.seccion] || CURSOS[0].id);
   const [nivel,  setNivel]  = useState(null); // indice del nivel abierto
@@ -39,6 +42,9 @@ export default function Isla({ sesion, onSalir }) {
   const [panel,  setPanel]  = useState(null);
   const [aviso,  setAviso]  = useState('');
   const [recienDesbloqueado, setRecienDesbloqueado] = useState(null);
+  const [tutorial, setTutorial] = useState(() => !tutorialVisto(sesion));   // la primera vez que entra al mapa
+  const musicaActiva = useMusicaActiva();
+  const animacionesActivas = useAnimaciones();
   const timer = useRef();
   const flashTimer = useRef();
 
@@ -152,7 +158,7 @@ export default function Isla({ sesion, onSalir }) {
         hudDatos={{
           com: p.com, racha: p.racha, rachaMax: p.rachaMax, personaje: sesion.personaje, xp: p.xp,
           alias: sesion.invitado ? null : (sesion.usuario || null),   // los invitados no aparecen en el ranking
-          onPerfil: () => setPanel('perfil'), onFicha: () => setPanel('ficha'), onLogros: () => setPanel('logros'), pendientes: logros.pendientes,
+          onPerfil: () => setPanel('ajustes'), onAjustes: () => setPanel('ajustes'), onFicha: () => setPanel('ficha'), onLogros: () => setPanel('logros'), pendientes: logros.pendientes,
           onAdmin: sesion.esAdmin ? () => setPanel('admin') : undefined,
         }}
       >
@@ -162,17 +168,18 @@ export default function Isla({ sesion, onSalir }) {
           racha={p.racha}
           rachaMax={p.rachaMax}
           personaje={sesion.personaje}
-          onPerfil={() => setPanel('perfil')}
+          onPerfil={() => setPanel('ajustes')}
+          onAjustes={() => setPanel('ajustes')}
           onFicha={() => setPanel('ficha')}
           onAdmin={sesion.esAdmin ? () => setPanel('admin') : undefined}
         />
         <RankingPanel xp={p.xp} alias={sesion.invitado ? null : (sesion.usuario || null)} personaje={sesion.personaje} />
         <ObjetivoPanel hechos={nHechos} total={total} />
-        <button type="button" className="mp-item mp-panel mp-sq mp-perfil mp-btn" onClick={() => setPanel('ficha')} aria-label="Perfil">
+        <button type="button" className="mp-item mp-panel mp-sq mp-perfil mp-btn" data-tuto="perfil" onClick={() => setPanel('ficha')} aria-label="Perfil">
           <span className="mp-ico-big"><BackpackIcon size={64} /></span>
           <span className="mp-lbl">Perfil</span>
         </button>
-        <button type="button" className="mp-item mp-panel mp-sq mp-logros mp-btn" onClick={() => setPanel('logros')} aria-label={logros.pendientes ? `Logros: ${logros.pendientes} por reclamar` : 'Logros'}>
+        <button type="button" className="mp-item mp-panel mp-sq mp-logros mp-btn" data-tuto="logros" onClick={() => setPanel('logros')} aria-label={logros.pendientes ? `Logros: ${logros.pendientes} por reclamar` : 'Logros'}>
           {logros.pendientes > 0 && <i className="mp-alerta" aria-hidden="true">{logros.pendientes}</i>}
           <span className="mp-ico-big"><TrophyIcon size={64} /></span>
           <span className="mp-lbl">Logros</span>
@@ -242,10 +249,25 @@ export default function Isla({ sesion, onSalir }) {
           </div>
         </div>
       )}
-      {panel === 'perfil'  && <Perfil  p={p} sesion={sesion} onReiniciar={sesion.invitado ? reiniciar : undefined} onSalir={onSalir} onCerrar={() => setPanel(null)} />}
+      {panel === 'ajustes' && (
+        <OpcionesModal
+          titulo="AJUSTES" invitado={!!sesion.invitado}
+          musicaActiva={musicaActiva} onMusica={onMusica}
+          animacionesActivas={animacionesActivas} onAnimaciones={onAnimaciones}
+          onTutorial={() => { setPanel(null); setTutorial(true); }}
+          onCerrarSesion={onSalir}
+          onCerrar={() => setPanel(null)}
+        />
+      )}
       {panel === 'logros'  && <LogrosPanel logros={logros} onCerrar={() => setPanel(null)} />}
       {panel === 'ficha'   && <FichaJugador p={p} sesion={sesion} logros={logros} onCerrar={() => setPanel(null)} />}
       {panel === 'admin' && sesion.esAdmin && <AdminPanel sesion={sesion} onCerrar={() => setPanel(null)} />}
+
+      {/* Tutorial del Mesías: solo sobre el mapa (no encima de una ventana ni de una lección) */}
+      {tutorial && panel === null && nivel === null && !enEjercicios && !mostrarTeoria && (
+        <TutorialMesias personaje={sesion.personaje} esAdmin={!!sesion.esAdmin}
+          onFin={() => { marcarTutorialVisto(sesion); setTutorial(false); }} />
+      )}
     </div>
   );
 }

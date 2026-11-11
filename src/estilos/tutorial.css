@@ -1,0 +1,64 @@
+/* ===== Tutorial del mapa: el Mesías del Pront explica cada botón ===== */
+.tm-velo { position: fixed; inset: 0; z-index: 1000; cursor: pointer; font-family: "Pixelify Sans", sans-serif; color: #fff;
+  background: rgba(2, 6, 18, .8); animation: tm-entrar .3s ease-out; -webkit-tap-highlight-color: transparent; }
+.tm-velo.con-foco { background: transparent; }
+
+/* Hueco iluminado sobre el botón: todo lo demás queda oscuro */
+.tm-foco { position: fixed; pointer-events: none; border: 3px solid #F2C85B;
+  box-shadow: 0 0 0 200vmax rgba(2, 6, 18, .8), 0 0 16px 4px rgba(242, 200, 91, .85), inset 0 0 12px rgba(242, 200, 91, .5);
+  transition: left .25s ease, top .25s ease, width .25s ease, height .25s ease; animation: tm-latido 1.1s ease-in-out infinite; }
+
+/* Flecha pixelada que apunta al botón */
+.tm-flecha { position: fixed; width: 0; height: 0; pointer-events: none; translate: -50% 0;
+  border-left: 14px solid transparent; border-right: 14px solid transparent; filter: drop-shadow(2px 2px 0 #05122c); }
+.tm-flecha.arriba { border-bottom: 20px solid #F2C85B; animation: tm-bote-arriba .7s ease-in-out infinite alternate; }
+.tm-flecha.abajo { border-top: 20px solid #F2C85B; translate: -50% -100%; animation: tm-bote-abajo .7s ease-in-out infinite alternate; }
+
+/* Mesías + globo de texto */
+.tm-panel { position: fixed; left: 50%; translate: -50% 0; width: min(760px, calc(100% - 24px)); display: flex; align-items: flex-end; gap: 0;
+  pointer-events: none; }
+.tm-panel.abajo { bottom: calc(12px + env(safe-area-inset-bottom)); }
+.tm-panel.arriba { top: calc(12px + env(safe-area-inset-top)); }
+.tm-panel.derecha { flex-direction: row-reverse; }
+.tm-mesias { flex: none; height: clamp(120px, 26dvh, 230px); width: auto; margin: 0 -10px 0 0; position: relative; z-index: 1; image-rendering: pixelated;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .6)); animation: tm-flotar 2.4s ease-in-out infinite; }
+.tm-panel.derecha .tm-mesias { margin: 0 0 0 -10px; }
+.tm-mesias.espejo { transform: scaleX(-1); }
+.tm-globo { position: relative; flex: 1; min-width: 0; margin-bottom: 8px; pointer-events: auto; cursor: default;
+  padding: 14px clamp(14px, 2.6vw, 22px) 12px; background: rgba(5, 12, 30, .97); border: 3px solid #F2C85B;
+  box-shadow: 0 0 0 3px #05122c, 5px 5px 0 3px rgba(0, 0, 0, .45); }
+.tm-nombre { display: inline-block; margin-bottom: 8px; padding: 3px 8px; background: #F2C85B; color: #0E2A5C; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+.tm-texto { margin: 0; min-height: 3.2em; font-size: clamp(16px, 2.3vw, 20px); line-height: 1.45; white-space: pre-line; text-wrap: pretty; }
+.tm-resto { visibility: hidden; }          /* reserva el espacio del texto que falta: el cuadro no salta mientras se escribe */
+.tm-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tm-pie { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
+.tm-cuenta { white-space: nowrap; font-size: 14px; color: #cfe6ff; font-weight: 700; }
+.tm-btns { display: flex; gap: 8px; }
+.tm-btn { min-height: 44px; padding: 0 16px; font: 700 15px "Pixelify Sans", sans-serif; letter-spacing: 1px; cursor: pointer; touch-action: manipulation; }
+.tm-saltar { background: transparent; color: #cfe6ff; border: 2px solid #5FA8FF; }
+.tm-sig { background: #F2C85B; color: #0E2A5C; border: 2px solid #fff; box-shadow: 3px 3px 0 rgba(0, 0, 0, .4); }
+.tm-btn:active { transform: translate(2px, 2px); }
+.tm-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+/* Celular en vertical: Mesías más chico */
+@media (max-width: 520px) {
+  .tm-mesias { height: clamp(96px, 18dvh, 150px); margin-right: -14px; }
+  .tm-panel.derecha .tm-mesias { margin-left: -14px; }
+  .tm-texto { font-size: 15px; }
+  .tm-btn { padding: 0 12px; font-size: 14px; }
+}
+/* Celular en horizontal (poco alto) */
+@media (max-height: 520px) {
+  .tm-mesias { height: min(42dvh, 170px); }
+  .tm-texto { font-size: 14px; min-height: 2.8em; }
+  .tm-globo { padding: 10px 14px 8px; }
+  .tm-pie { margin-top: 6px; }
+}
+
+@keyframes tm-entrar { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tm-latido { 50% { border-color: #fff3c4; box-shadow: 0 0 0 200vmax rgba(2, 6, 18, .8), 0 0 26px 8px rgba(242, 200, 91, .95), inset 0 0 16px rgba(242, 200, 91, .6); } }
+@keyframes tm-bote-arriba { to { transform: translateY(8px); } }
+@keyframes tm-bote-abajo { to { transform: translateY(-8px); } }
+@keyframes tm-flotar { 50% { translate: 0 -6px; } }
+@media (prefers-reduced-motion: reduce) { .tm-velo, .tm-foco, .tm-flecha, .tm-mesias { animation: none !important; transition: none !important; } }
+html[data-animaciones="off"] .tm-velo, html[data-animaciones="off"] .tm-foco, html[data-animaciones="off"] .tm-flecha, html[data-animaciones="off"] .tm-mesias { animation: none !important; transition: none !important; }

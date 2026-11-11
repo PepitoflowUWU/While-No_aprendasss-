@@ -57,7 +57,7 @@ function HojaRanking({ onCerrar, xp, alias, personaje }) {
 
 export default function HudCompacto({
   actual, com, racha, rachaMax = 0, personaje, xp, alias, strip, fuera,
-  onCentrar, onPerfil, onFicha, onLogros, onMedidas, onAdmin, pendientes = 0,
+  onCentrar, onPerfil, onAjustes = onPerfil, onFicha, onLogros, onMedidas, onAdmin, pendientes = 0,
 }) {
   const topRef = useRef(null);
   const botRef = useRef(null);
@@ -82,25 +82,25 @@ export default function HudCompacto({
             Fila 2: comodines y rachas. Con espacio suficiente las dos filas se juntan en una sola (ver mapa-compacto.css). */}
         <div className="hc-top-in">
         <div className="hc-row1">
-          <button type="button" className="hc-avatar hc-btn" onClick={onFicha || onPerfil} aria-label="Ver perfil">
+          <button type="button" className="hc-avatar hc-btn" data-tuto="avatar" onClick={onFicha || onPerfil} aria-label="Ver perfil">
             <AvatarJugador personaje={personaje} size={48} />
           </button>
-          <div className="hc-nivel"><span className="hc-nl">NIVEL</span><span className="hc-nn">{actual + 1}</span></div>
+          <div className="hc-nivel" data-tuto="nivel"><span className="hc-nl">NIVEL</span><span className="hc-nn">{actual + 1}</span></div>
           <div className="hc-acciones">
-            <button type="button" className="hc-gear hc-btn" onClick={onPerfil} aria-label="Ajustes y perfil" title="Ajustes"><GearIcon size={32} /></button>
-            {onAdmin && <button type="button" className="hc-gear hc-corona hc-btn" onClick={onAdmin} aria-label="Panel de administración" title="Panel de administración"><CrownIcon size={32} /></button>}
+            <button type="button" className="hc-gear hc-btn" data-tuto="ajustes" onClick={onAjustes} aria-label="Ajustes" title="Ajustes"><GearIcon size={32} /></button>
+            {onAdmin && <button type="button" className="hc-gear hc-corona hc-btn" data-tuto="admin" onClick={onAdmin} aria-label="Panel de administración" title="Panel de administración"><CrownIcon size={32} /></button>}
           </div>
         </div>
         <div className="hc-row2">
-          <div className="hc-pill" title="Comodines" aria-label={`Comodines: ${com}`}>
+          <div className="hc-pill" data-tuto="comodines" title="Comodines" aria-label={`Comodines: ${com}`}>
             <span className="hc-ico" aria-hidden="true"><CardIcon size={28} /></span>
             <span className="hc-dato" aria-hidden="true"><span className="hc-pl">COMODINES</span><span className="hc-pv">x{com}</span></span>
           </div>
-          <div className="hc-pill" title="Racha" aria-label={`Racha: ${racha} ${racha === 1 ? 'día' : 'días'}`}>
+          <div className="hc-pill" data-tuto="racha" title="Racha" aria-label={`Racha: ${racha} ${racha === 1 ? 'día' : 'días'}`}>
             <span className="hc-ico" aria-hidden="true"><FlameIcon size={28} /></span>
             <span className="hc-dato" aria-hidden="true"><span className="hc-pl">RACHA</span><span className="hc-pv gold">{racha} {racha === 1 ? 'día' : 'días'}</span></span>
           </div>
-          <div className="hc-pill" title="Racha máxima" aria-label={`Racha máxima: ${rachaMax} ${rachaMax === 1 ? 'día' : 'días'}`}>
+          <div className="hc-pill" data-tuto="racha-max" title="Racha máxima" aria-label={`Racha máxima: ${rachaMax} ${rachaMax === 1 ? 'día' : 'días'}`}>
             <span className="hc-ico" aria-hidden="true"><StarGold size={28} /></span>
             <span className="hc-dato" aria-hidden="true"><span className="hc-pl"><span className="hc-largo">RACHA MÁX.</span><span className="hc-corto">MÁXIMA</span></span><span className="hc-pv gold">{rachaMax} {rachaMax === 1 ? 'día' : 'días'}</span></span>
           </div>
@@ -117,11 +117,11 @@ export default function HudCompacto({
       <div className="hc-bottom" ref={botRef}>
         {strip && <div className="hc-strip" role="status">{strip}</div>}
         <nav className="hc-nav" aria-label="Menú del mapa">
-          <button type="button" className="hc-nb hc-btn" onClick={onFicha || onPerfil}><span className="hc-nico"><BackpackIcon size={28} /></span><span>Perfil</span></button>
-          <button type="button" className="hc-nb hc-btn" ref={rankBtn} onClick={() => setHoja(true)} aria-haspopup="dialog">
+          <button type="button" className="hc-nb hc-btn" data-tuto="perfil" onClick={onFicha || onPerfil}><span className="hc-nico"><BackpackIcon size={28} /></span><span>Perfil</span></button>
+          <button type="button" className="hc-nb hc-btn" data-tuto="ranking" ref={rankBtn} onClick={() => setHoja(true)} aria-haspopup="dialog">
             <span className="hc-nico"><PixelArt rows={BITMAPS.podio} fluid /></span><span>Ranking</span>
           </button>
-          <button type="button" className="hc-nb hc-btn" onClick={onLogros} aria-label={pendientes ? `Logros: ${pendientes} por reclamar` : 'Logros'}><span className="hc-nico"><TrophyIcon size={28} /></span><span>Logros</span>{pendientes > 0 && <i className="hc-alerta" aria-hidden="true">{pendientes}</i>}</button>
+          <button type="button" className="hc-nb hc-btn" data-tuto="logros" onClick={onLogros} aria-label={pendientes ? `Logros: ${pendientes} por reclamar` : 'Logros'}><span className="hc-nico"><TrophyIcon size={28} /></span><span>Logros</span>{pendientes > 0 && <i className="hc-alerta" aria-hidden="true">{pendientes}</i>}</button>
         </nav>
       </div>
 

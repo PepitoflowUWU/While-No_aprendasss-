@@ -259,6 +259,7 @@ export default function Mapa({
                 type="button"
                 className={`mn ${st}`}
                 data-actual={esActual ? 'true' : undefined}
+                data-tuto={k === 0 ? 'nodo-1' : undefined}
                 style={{ left: `${MAP_NODES[k][0]}%`, top: `${MAP_NODES[k][1]}%` }}
                 aria-label={`Nivel ${k + 1}, ${estado}`}
                 title={n.t}

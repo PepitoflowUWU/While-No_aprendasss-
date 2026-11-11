@@ -40,3 +40,10 @@ export const ANIMO_GUIA = {
 export const GUIA_PRIMER_PLANO = 'd0000000-0000-0000-0000-000000000011';
 
 export const GUIA_DEFECTO = 'Elige a tu compañero. Es solo estético, no cambia tus preguntas.';
+
+// El Mesías del Pront: guía del TUTORIAL del mapa (database/migraciones/33_guia_mesias.sql).
+// Si la tabla aun no lo tiene, o su imagen no carga, se usa la copia del proyecto (public/assets/personajes/guia/).
+export const MESIAS = {
+  senala: { id: 'd0000000-0000-0000-0000-000000000012', local: 'assets/personajes/guia/mesias-senala.png' },   // señalando (explica un botón)
+  pie:    { id: 'd0000000-0000-0000-0000-000000000013', local: 'assets/personajes/guia/mesias-pie.png' },      // de pie (explica algo general)
+};

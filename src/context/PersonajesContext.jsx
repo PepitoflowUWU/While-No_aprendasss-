@@ -46,7 +46,9 @@ export function PersonajesProvider({ children }) {
       const id = animo === 'primerPlano' ? GUIA_PRIMER_PLANO : ANIMO_GUIA[animo] || ANIMO_GUIA.serio;
       return filas.find((p) => p.id === id)?.imagen_url || null;
     };
-    return { jugables, porId, imagenGuia, cargando, error, recargar: cargar };
+    // Imagen de cualquier personaje de la tabla por su id (null si no esta)
+    const imagenDe = (id) => filas.find((p) => p.id === id)?.imagen_url || null;
+    return { jugables, porId, imagenGuia, imagenDe, cargando, error, recargar: cargar };
   }, [filas, cargando, error, cargar]);
 
   return <Ctx.Provider value={valor}>{children}</Ctx.Provider>;

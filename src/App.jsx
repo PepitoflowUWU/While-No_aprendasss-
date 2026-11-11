@@ -202,7 +202,7 @@ function Juego() {
       {pantalla === 'verify' && <VerificarCelular go={ir} />}
       {pantalla === 'login' && <IniciarSesion go={ir} onEntrar={entrarConPerfil} />}
       {pantalla === 'character' && <SeleccionPersonaje go={ir} onPick={elegirPersonaje} />}
-      {pantalla === 'map' && sesion && <Isla sesion={sesion} onSalir={salir} />}
+      {pantalla === 'map' && sesion && <Isla sesion={sesion} onSalir={salir} onMusica={cambiarMusica} onAnimaciones={cambiarAnimaciones} />}
     </div>
   );
 }

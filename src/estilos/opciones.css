@@ -11,3 +11,18 @@
 .opc-pie { display:flex; justify-content:center; padding:18px 22px 0; }
 .opc-texto { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .opc-ayuda { font-size: clamp(11px, 2.8vw, 13px); line-height: 1.35; color: #4a6a8a; }
+
+/* Colores propios: la ventana tambien se abre en el mapa (fuera de .game-bg) */
+.opc-fondo { --ink:#0f2a44; --linea:#173f66; --panel:rgba(236,248,255,.97); --verde:#2f8f46; font-family:"Press Start 2P","Pixelify Sans",monospace; }
+.opc-fondo .pixel-button { font-family:inherit; }
+.opc-fondo .pixel-button.secondary { background:#bfe6ff; color:#0d2a4a; border-color:#f2fbff; border-right-color:#3b82c4; border-bottom-color:#2f6fae; box-shadow:4px 4px 0 #123a63; }
+/* Ajustes del mapa: tutorial, reiniciar y cerrar sesion */
+.opc-acciones { display:flex; flex-direction:column; gap:12px; padding:24px 22px 0; margin-top:18px; border-top:3px dashed #a9cbe6; }
+.opc-accion { width:100%; min-height:48px; font-size:clamp(9px,2.4vw,11px); }
+.opc-fondo .pixel-button.opc-peligro { background:#e2574c; color:#fff; border-color:#ffb3aa; border-right-color:#8c2a22; border-bottom-color:#8c2a22; box-shadow:4px 4px 0 #4a1410; }
+.opc-confirmar { padding:26px 22px 4px; }
+.opc-conf-txt { margin:0 0 22px; font-size:clamp(9px,2.4vw,11px); line-height:1.9; color:var(--ink); text-align:center; }
+.opc-conf-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.opc-conf-btns .pixel-button { min-height:48px; font-size:clamp(9px,2.4vw,11px); }
+.opc-fondo .opc-ayuda { font-family:"Pixelify Sans",sans-serif; font-size:clamp(13px,3vw,15px); }
+.opc-fondo .opc-pie .pixel-button { min-height:48px; font-size:clamp(10px,2.6vw,12px); }

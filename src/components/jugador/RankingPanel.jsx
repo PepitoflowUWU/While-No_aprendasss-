@@ -74,7 +74,7 @@ export function RankingLista({ xp = 0, alias = null, personaje, variante = 'pane
 // Panel de escritorio (modo amplio): título fijo + lista con scroll.
 export function RankingPanel(props) {
   return (
-    <section className="mp-item mp-wood mp-rank" aria-labelledby="mp-rk-titulo">
+    <section className="mp-item mp-wood mp-rank" data-tuto="ranking" aria-labelledby="mp-rk-titulo">
       <h2 id="mp-rk-titulo" className="mp-rk-title">RANKING</h2>
       <RankingLista {...props} />
     </section>
