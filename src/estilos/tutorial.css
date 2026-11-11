@@ -15,14 +15,14 @@
 .tm-flecha.abajo { border-top: 20px solid #F2C85B; translate: -50% -100%; animation: tm-bote-abajo .7s ease-in-out infinite alternate; }
 
 /* Mesías + globo de texto */
-.tm-panel { position: fixed; left: 50%; translate: -50% 0; width: min(760px, calc(100% - 24px)); display: flex; align-items: flex-end; gap: 0;
+.tm-panel { position: fixed; left: 50%; translate: -50% 0; width: min(900px, calc(100% - 24px)); display: flex; align-items: flex-end; gap: 0;
   pointer-events: none; }
 .tm-panel.abajo { bottom: calc(12px + env(safe-area-inset-bottom)); }
 .tm-panel.arriba { top: calc(12px + env(safe-area-inset-top)); }
 .tm-panel.derecha { flex-direction: row-reverse; }
-.tm-mesias { flex: none; height: clamp(120px, 26dvh, 230px); width: auto; margin: 0 -10px 0 0; position: relative; z-index: 1; image-rendering: pixelated;
+.tm-mesias { flex: none; height: clamp(180px, 42dvh, 400px); width: auto; margin: 0 -14px 0 0; position: relative; z-index: 1; image-rendering: pixelated;
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .6)); animation: tm-flotar 2.4s ease-in-out infinite; }
-.tm-panel.derecha .tm-mesias { margin: 0 0 0 -10px; }
+.tm-panel.derecha .tm-mesias { margin: 0 0 0 -14px; }
 .tm-mesias.espejo { transform: scaleX(-1); }
 .tm-globo { position: relative; flex: 1; min-width: 0; margin-bottom: 8px; pointer-events: auto; cursor: default;
   padding: 14px clamp(14px, 2.6vw, 22px) 12px; background: rgba(5, 12, 30, .97); border: 3px solid #F2C85B;
@@ -40,16 +40,19 @@
 .tm-btn:active { transform: translate(2px, 2px); }
 .tm-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
-/* Celular en vertical: Mesías más chico */
+/* Celular en vertical: el Mesías va ENCIMA del cuadro (así es grande y el texto conserva todo el ancho) */
 @media (max-width: 520px) {
-  .tm-mesias { height: clamp(96px, 18dvh, 150px); margin-right: -14px; }
-  .tm-panel.derecha .tm-mesias { margin-left: -14px; }
+  .tm-panel, .tm-panel.derecha { flex-direction: column; align-items: flex-start; }
+  .tm-panel.derecha { align-items: flex-end; }
+  .tm-mesias, .tm-panel.derecha .tm-mesias { height: clamp(170px, 30dvh, 260px); margin: 0 0 -12px 6px; }
+  .tm-panel.derecha .tm-mesias { margin: 0 6px -12px 0; }
+  .tm-globo { width: 100%; box-sizing: border-box; }
   .tm-texto { font-size: 15px; }
   .tm-btn { padding: 0 12px; font-size: 14px; }
 }
 /* Celular en horizontal (poco alto) */
 @media (max-height: 520px) {
-  .tm-mesias { height: min(42dvh, 170px); }
+  .tm-mesias { height: min(62dvh, 250px); }
   .tm-texto { font-size: 14px; min-height: 2.8em; }
   .tm-globo { padding: 10px 14px 8px; }
   .tm-pie { margin-top: 6px; }
