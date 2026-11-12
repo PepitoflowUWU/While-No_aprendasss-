@@ -10,8 +10,22 @@ import '../estilos/seleccion.css';
 
 // Pantalla "Character Select" en 2 pasos:
 //  1) Chica o Chico (tarjeta del personaje base de cada grupo).
-//  2) La version: la normal y la N (ChicaN / ChicoN). Al hacer clic en una, onPick guarda el personaje_id
+//  2) La version: la normal y la N (ChicaN / ChicoN). Al confirmar una, onPick guarda el personaje_id
 //     en el estado global (App), que crea el perfil y entra al juego.
+// Tocar una tarjeta solo la SELECCIONA; el boton CONFIRMAR es el que avanza (asi un toque sin querer no elige).
+// En celulares (sin mouse) las tarjetas se ven a color y animadas desde que se abre la pantalla: alli no existe el "pasar el mouse".
+const TACTIL = '(hover: none) and (pointer: coarse)';
+function useTactil() {
+  const [t, setT] = useState(() => window.matchMedia?.(TACTIL).matches ?? false);
+  useEffect(() => {
+    const mq = window.matchMedia?.(TACTIL);
+    if (!mq) return undefined;
+    const f = () => setT(mq.matches);
+    mq.addEventListener('change', f);
+    return () => mq.removeEventListener('change', f);
+  }, []);
+  return t;
+}
 // Explica la causa para que se pueda arreglar sin abrir la consola del navegador.
 function motivoSinPersonajes(error) {
   if (!supabaseConfigurado) return 'Este despliegue no tiene las variables VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY. Cárgalas en el servicio donde publicaste el juego y vuelve a desplegarlo.';
@@ -24,6 +38,7 @@ export default function SeleccionPersonaje({ go, onPick }) {
   const [selectedId, setSelectedId] = useState('');
   const [hoveredId, setHoveredId] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const tactil = useTactil();
   const { jugables: LISTA_PERSONAJES, porId, cargando, error, recargar } = usePersonajes();
 
   // Grupos con las versiones que existen en la tabla `personaje`
@@ -39,11 +54,14 @@ export default function SeleccionPersonaje({ go, onPick }) {
     LISTA_PERSONAJES.forEach((p) => { const i = new Image(); i.src = p.imagen; });
   }, [LISTA_PERSONAJES]);
 
-  const elegir = async (id) => {
-    if (enviando) return;
-    if (!grupo) { setGrupoId(id); setHoveredId(''); setSelectedId(''); return; }   // paso 1 → paso 2
-    setSelectedId(id); setEnviando(true);
-    try { await onPick(id); } finally { setEnviando(false); }
+  // Tocar una tarjeta solo la marca
+  const marcar = (id) => { if (!enviando) setSelectedId(id); };
+  // CONFIRMAR: paso 1 → paso 2; paso 2 → entra al juego con el personaje marcado
+  const confirmar = async () => {
+    if (enviando || !selectedId) return;
+    if (!grupo) { setGrupoId(selectedId); setHoveredId(''); setSelectedId(''); return; }
+    setEnviando(true);
+    try { await onPick(selectedId); } finally { setEnviando(false); }
   };
   const volver = () => {
     if (grupo) { setGrupoId(''); setSelectedId(''); setHoveredId(''); } else go('register');
@@ -60,9 +78,9 @@ export default function SeleccionPersonaje({ go, onPick }) {
             <CharacterCard
               key={p.id}
               {...p}
-              revelado={hoveredId === p.id || selectedId === p.id}
+              revelado={tactil || hoveredId === p.id || selectedId === p.id}
               seleccionado={selectedId === p.id}
-              onSelect={elegir}
+              onSelect={marcar}
               onEnter={setHoveredId}
               onLeave={(id) => setHoveredId((h) => (h === id ? '' : h))}
             />
@@ -78,12 +96,15 @@ export default function SeleccionPersonaje({ go, onPick }) {
         )}
         {!cargando && !error && grupos.length > 0 && (
           <p className="cs-help" role="status">
-            {enviando ? 'ENTRANDO AL JUEGO...' : grupo ? 'HAZ CLIC EN UNA VERSIÓN PARA ENTRAR AL JUEGO' : 'PASA EL MOUSE Y HAZ CLIC PARA ELEGIR'}
+            {enviando ? 'ENTRANDO AL JUEGO...'
+              : selectedId ? 'PRESIONA CONFIRMAR PARA CONTINUAR'
+              : `${tactil ? 'TOCA' : 'HAZ CLIC EN'} ${grupo ? 'UNA VERSIÓN' : 'UN PERSONAJE'} Y LUEGO PRESIONA CONFIRMAR`}
           </p>
         )}
 
         <div className="cs-actions">
           <PixelButton onClick={volver} className="secondary" disabled={enviando}>{grupo ? '← CAMBIAR' : '← VOLVER'}</PixelButton>
+          <PixelButton onClick={confirmar} disabled={!selectedId || enviando}>{enviando ? 'ENTRANDO...' : 'CONFIRMAR ✔'}</PixelButton>
         </div>
 
       </div>
