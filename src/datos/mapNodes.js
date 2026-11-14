@@ -8,8 +8,10 @@ export const MAP_NODES = [
   [64.2, 39.1], // nivel 5
   [74.7, 30.6], // nivel 6
 ];
-// TODO: el curso actual tiene 7 niveles pero el fondo solo trae 6 discos.
-// El nivel 7 no se dibuja hasta que haya una 7.ª posición (p. ej. sobre la escalera del portal).
+// El mundo 1 tiene 6 niveles (uno por disco); el 6 es el examen final.
+
+// PORTAL (la puerta brillante junto al nivel 6): centro x, y y tamaño en % del escenario. Se abre al completar todos los niveles.
+export const MAP_PORTAL = { x: 80.6, y: 22.5, w: 6.5, h: 13 };
 
 // Nubes (centro x, y y ancho en % del escenario). Los PNG van en /assets/mapa/nubes/.
 export const MAP_NUBES = [

@@ -30,6 +30,7 @@ function pasosDe({ tratamiento, esAdmin }) {
     { t: 'ranking', texto: 'El ranking: compárate con los demás jugadores. ¡Mientras más puntos tengas, más arriba estarás!' },
     { t: 'logros', texto: 'Tus trofeos. Cuando aparece un número rojo, tienes logros por reclamar.' },
     { t: 'nodo-1', scroll: true, texto: 'Toca este punto para entrar al Nivel 1: "¿Qué es un algoritmo?". Los siguientes niveles se abren cuando completas el anterior.' },
+    { t: 'portal', texto: 'Esta puerta es el portal a otros mundos. Se abre cuando completas todos los niveles de este mundo.' },
     { t: null, texto: 'Cada lección empieza con una pequeña TEORÍA. Léela con calma: de ahí salen las preguntas.' },
     { t: null, texto: 'Después vienen las preguntas con 4 alternativas. Elige una y presiona COMPROBAR. Si te equivocas, puedes volver a intentarlo.' },
     { t: null, texto: 'Los puntos dependen del intento en que aciertas:\n• 1.er intento: 10 puntos\n• 2.º intento: 7 puntos\n• 3.er intento: 4 puntos\n• 4.º intento: 1 punto\nSi fallas 4 veces, esa pregunta no suma. ¡Piensa bien antes de responder!' },

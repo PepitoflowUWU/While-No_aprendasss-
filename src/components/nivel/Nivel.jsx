@@ -79,7 +79,7 @@ function FlujoSuccessModal({ q, onClose }) {
 // onCompletar(intentos) registra la leccion en el servidor (que da los puntos una sola vez); onUsarComodin() pide el comodin al servidor.
 // avance = donde se quedo el jugador la ultima vez ({ ejercicio, fallos, intentos, errores, directos }) para retomar ahi;
 // onAvance(datos) se llama cada vez que cambia ese avance, y onAvance(null) al terminar la leccion.
-export default function Nivel({ leccion, leccionIdx, nivel, nivelIdx, com, usos = null, primeraVez = true, personajeId = null, avance = null, onAvance, onUsarComodin, onCompletar, onFin, onCerrar }) {
+export default function Nivel({ leccion, leccionIdx, nivel, nivelIdx, com, usos = null, infinitos = false, primeraVez = true, personajeId = null, avance = null, onAvance, onUsarComodin, onCompletar, onFin, onCerrar }) {
   const total = leccion.ejercicios.length;
   const { porId } = usePersonajes();
   const [intro, setIntro] = useState(!!leccion.intro && !avance);   // el personaje guia habla primero (no al retomar una leccion)
@@ -162,7 +162,7 @@ export default function Nivel({ leccion, leccionIdx, nivel, nivelIdx, com, usos 
   const usarComodin = async () => {
     if (usandoComodin || ok) return;
     if (comodinBloqueado) { setMsg(`Ya usaste los ${usos.limite} comodines de esta unidad.`); return; }
-    if (com < 1) { setMsg('No te quedan comodines en este momento.'); return; }
+    if (!infinitos && com < 1) { setMsg('No te quedan comodines en este momento.'); return; }
     setUsandoComodin(true);
     let r;
     try { r = await onUsarComodin(); } catch { r = { ok: false, razon: 'error' }; }
@@ -497,13 +497,14 @@ export default function Nivel({ leccion, leccionIdx, nivel, nivelIdx, com, usos 
           <button
             className="btn-comodin-action"
             onClick={usarComodin}
-            disabled={com < 1 || ok || comodinBloqueado || usandoComodin}
+            disabled={(!infinitos && com < 1) || ok || comodinBloqueado || usandoComodin}
             title={comodinBloqueado ? 'Ya usaste todos los comodines de esta unidad' : 'Gastar 1 comodín para obtener ayuda'}
             aria-label={usos ? `Comodín: te quedan ${usosRestantes} usos en esta unidad` : 'Comodín'}
           >
             <span>🎁</span>
             <span>COMODÍN</span>
-            {usos && <span style={{ fontSize: '0.78em', opacity: 0.9 }}>{usosRestantes}/{usos.limite}</span>}
+            {infinitos ? <span style={{ fontSize: '0.9em' }} aria-label="ilimitados">∞</span>
+              : usos && <span style={{ fontSize: '0.78em', opacity: 0.9 }}>{usosRestantes}/{usos.limite}</span>}
           </button>
 
           {ok ? (

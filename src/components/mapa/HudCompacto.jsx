@@ -56,7 +56,7 @@ function HojaRanking({ onCerrar, xp, alias, personaje }) {
 }
 
 export default function HudCompacto({
-  actual, com, racha, rachaMax = 0, personaje, xp, alias, strip, fuera,
+  actual, com, comInfinitos = false, racha, rachaMax = 0, personaje, xp, alias, strip, fuera,
   onCentrar, onPerfil, onAjustes = onPerfil, onFicha, onLogros, onMedidas, onAdmin, pendientes = 0,
 }) {
   const topRef = useRef(null);
@@ -92,9 +92,9 @@ export default function HudCompacto({
           </div>
         </div>
         <div className="hc-row2">
-          <div className="hc-pill" data-tuto="comodines" title="Comodines" aria-label={`Comodines: ${com}`}>
+          <div className="hc-pill" data-tuto="comodines" title="Comodines" aria-label={comInfinitos ? 'Comodines ilimitados' : `Comodines: ${com}`}>
             <span className="hc-ico" aria-hidden="true"><CardIcon size={28} /></span>
-            <span className="hc-dato" aria-hidden="true"><span className="hc-pl">COMODINES</span><span className="hc-pv">x{com}</span></span>
+            <span className="hc-dato" aria-hidden="true"><span className="hc-pl">COMODINES</span><span className="hc-pv">{comInfinitos ? '∞' : `x${com}`}</span></span>
           </div>
           <div className="hc-pill" data-tuto="racha" title="Racha" aria-label={`Racha: ${racha} ${racha === 1 ? 'día' : 'días'}`}>
             <span className="hc-ico" aria-hidden="true"><FlameIcon size={28} /></span>

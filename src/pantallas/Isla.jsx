@@ -6,11 +6,13 @@ import { useNivelesRemotos } from '../hooks/useNiveles';
 import Mapa from '../components/mapa/Mapa';
 import HUD from '../components/mapa/HUD';
 import Nivel from '../components/nivel/Nivel';
+import ExamenFinal from '../components/nivel/ExamenFinal';
 import PanelNivel from '../components/mapa/PanelNivel';
 import PantallaTeoria from '../components/nivel/PantallaTeoria';
 import { empiezaConTeoria } from '../datos/helpers.js';
 import { Ranking } from '../components/jugador/Paneles';
 import OpcionesModal from '../components/jugador/OpcionesModal';
+import CartelPortal from '../components/mapa/CartelPortal';
 import TutorialMesias, { tutorialVisto, marcarTutorialVisto } from '../components/mapa/TutorialMesias';
 import { useMusicaActiva, useAnimaciones } from '../audio/preferencias.js';
 import LogrosPanel from '../components/jugador/LogrosPanel';
@@ -32,7 +34,7 @@ import '../estilos/mapa-compacto.css';
 const CURSO_DE = { 'Algoritmos': 'pseudocodigo' };
 
 export default function Isla({ sesion, onSalir, onMusica, onAnimaciones }) {
-  const { p, completar, usarComodin, limiteUnidad, usadosUnidad } = useProgreso(sesion);
+  const { p, completar, usarComodin, limiteUnidad, usadosUnidad, tieneCodigo, codigosDe, canjearCodigo } = useProgreso(sesion);
   const logros = useLogros(sesion, p);
   const [cid,    setCid]    = useState(CURSO_DE[sesion.seccion] || CURSOS[0].id);
   const [nivel,  setNivel]  = useState(null); // indice del nivel abierto
@@ -88,8 +90,14 @@ export default function Isla({ sesion, onSalir, onMusica, onAnimaciones }) {
     timer.current = setTimeout(() => setAviso(''), 2000);
   };
 
+  // Códigos del mundo actual (Ajustes › CÓDIGOS)
+  const comodinesInfinitos = tieneCodigo(cid, 'MESIAS');      // sin límite de comodines en este mundo
+  const todosAbiertos = tieneCodigo(cid, 'HELLO_WORD');        // todos los niveles de este mundo abiertos
+  const mundoCompleto = total > 0 && curso.niveles.every((_, k) => hechos[k]?.completado);
+  const tocarPortal = () => (mundoCompleto ? setPanel('portal') : avisar(`Completa los ${total} niveles para abrir el portal.`));
+
   const elegir = (i) => {
-    if (i > actual) return avisar('Completa el nivel anterior para desbloquearlo.');
+    if (i > actual && !todosAbiertos) return avisar('Completa el nivel anterior para desbloquearlo.');
     setPos(i);
     setTimeout(() => setNivel(i), 500);
   };
@@ -154,9 +162,12 @@ export default function Isla({ sesion, onSalir, onMusica, onAnimaciones }) {
         onElegir={elegir}
         aviso={aviso}
         recienDesbloqueado={recienDesbloqueado}
+        todosAbiertos={todosAbiertos}
+        mundoCompleto={mundoCompleto}
+        onPortal={tocarPortal}
         personaje={sesion.personaje}
         hudDatos={{
-          com: p.com, racha: p.racha, rachaMax: p.rachaMax, personaje: sesion.personaje, xp: p.xp,
+          com: p.com, comInfinitos: comodinesInfinitos, racha: p.racha, rachaMax: p.rachaMax, personaje: sesion.personaje, xp: p.xp,
           alias: sesion.invitado ? null : (sesion.usuario || null),   // los invitados no aparecen en el ranking
           onPerfil: () => setPanel('ajustes'), onAjustes: () => setPanel('ajustes'), onFicha: () => setPanel('ficha'), onLogros: () => setPanel('logros'), pendientes: logros.pendientes,
           onAdmin: sesion.esAdmin ? () => setPanel('admin') : undefined,
@@ -165,6 +176,7 @@ export default function Isla({ sesion, onSalir, onMusica, onAnimaciones }) {
         <HUD
           actual={actual}
           com={p.com}
+          comInfinitos={comodinesInfinitos}
           racha={p.racha}
           rachaMax={p.rachaMax}
           personaje={sesion.personaje}
@@ -206,7 +218,18 @@ export default function Isla({ sesion, onSalir, onMusica, onAnimaciones }) {
         />
       )}
 
-      {enEjercicios && leccionActiva !== null && (
+      {/* Examen final (nivel 6): pantalla propia con contrarreloj y nota */}
+      {enEjercicios && leccionActiva !== null && curso.niveles[nivel].lecciones[leccionActiva].tipo === 'examen' && (
+        <ExamenFinal
+          key={cid + nivel + leccionActiva}
+          leccion={curso.niveles[nivel].lecciones[leccionActiva]}
+          personajeId={sesion.personaje}
+          onCompletar={(intentos) => completar(cid, nivel, leccionActiva, intentos)}
+          onFin={alTerminarLeccion}
+        />
+      )}
+
+      {enEjercicios && leccionActiva !== null && curso.niveles[nivel].lecciones[leccionActiva].tipo !== 'examen' && (
         <Nivel
           key={cid + nivel + leccionActiva}
           leccion={curso.niveles[nivel].lecciones[leccionActiva]}
@@ -215,7 +238,8 @@ export default function Isla({ sesion, onSalir, onMusica, onAnimaciones }) {
           nivelIdx={nivel}
           personajeId={sesion.personaje}
           com={p.com}
-          usos={{ usados: usadosUnidad(cid), limite: limiteUnidad(cid) }}   // comodines usados en TODA la unidad (el limite lo pone el servidor)
+          usos={comodinesInfinitos ? null : { usados: usadosUnidad(cid), limite: limiteUnidad(cid) }}
+          infinitos={comodinesInfinitos}   // comodines usados en TODA la unidad (el limite lo pone el servidor)
           primeraVez={!((p.hechos[cid]?.[nivel]?.lecciones?.[leccionActiva] || 0) > 0)}
           avance={avanceDe(nivel, leccionActiva)}
           onAvance={(datos) => cambiarAvance(nivel, leccionActiva, datos)}
@@ -255,12 +279,15 @@ export default function Isla({ sesion, onSalir, onMusica, onAnimaciones }) {
           musicaActiva={musicaActiva} onMusica={onMusica}
           animacionesActivas={animacionesActivas} onAnimaciones={onAnimaciones}
           onTutorial={() => { setPanel(null); setTutorial(true); }}
+          onCanjear={(texto) => canjearCodigo(cid, texto)}
+          codigosActivos={codigosDe(cid)}
           onCerrarSesion={onSalir}
           onCerrar={() => setPanel(null)}
         />
       )}
       {panel === 'logros'  && <LogrosPanel logros={logros} onCerrar={() => setPanel(null)} />}
       {panel === 'ficha'   && <FichaJugador p={p} sesion={sesion} logros={logros} onCerrar={() => setPanel(null)} />}
+      {panel === 'portal' && <CartelPortal onCerrar={() => setPanel(null)} />}
       {panel === 'admin' && sesion.esAdmin && <AdminPanel sesion={sesion} onCerrar={() => setPanel(null)} />}
 
       {/* Tutorial del Mesías: solo sobre el mapa (no encima de una ventana ni de una lección) */}

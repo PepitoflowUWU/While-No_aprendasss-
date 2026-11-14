@@ -1,0 +1,24 @@
+/* ===== Cartel del portal: "En mantenimiento · Próximamente otros mundos" ===== */
+.pt-fondo { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px; background: rgba(2, 6, 18, .7);
+  font-family: "Pixelify Sans", sans-serif; }
+.pt-cartel { position: relative; width: min(440px, 100%); display: flex; flex-direction: column; align-items: center; gap: 16px; padding-top: 34px;
+  animation: pt-colgar .45s ease-out; transform-origin: 50% 0; }
+.pt-cuerda { position: absolute; top: 0; width: 4px; height: 40px; background: #6b4a2b; box-shadow: 1px 0 0 #3a2716; }
+.pt-cuerda.izq { left: 22%; }
+.pt-cuerda.der { right: 22%; }
+.pt-tablero { position: relative; width: 100%; box-sizing: border-box; padding: 30px 20px 38px; text-align: center; color: #3a2210;
+  background: repeating-linear-gradient(0deg, #d9a35a 0 22px, #c98f45 22px 24px); border: 5px solid #6b4a2b;
+  box-shadow: inset 0 0 0 3px #f0c27a, 6px 6px 0 rgba(0, 0, 0, .45); }
+.pt-cinta { position: absolute; left: -5px; right: -5px; top: 8px; height: 14px;
+  background: repeating-linear-gradient(-45deg, #1b1b1b 0 12px, #f2c200 12px 24px); border-top: 2px solid #000; border-bottom: 2px solid #000; }
+.pt-cinta.abajo { top: auto; bottom: 8px; }
+.pt-tablero h2 { margin: 18px 0 6px; font: 400 clamp(14px, 4vw, 20px) "Press Start 2P", monospace; color: #7a1a10; text-shadow: 2px 2px 0 #f0c27a; }
+.pt-icono { margin: 4px 0; font-size: 44px; line-height: 1; }
+.pt-texto { margin: 6px 0; font-size: clamp(20px, 5vw, 26px); font-weight: 700; color: #2b1a0c; }
+.pt-sub { margin: 4px 0 14px; font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.45; color: #4a2e14; }
+.pt-btn { min-height: 48px; padding: 0 26px; font: 700 17px "Pixelify Sans", sans-serif; letter-spacing: 1px; color: #0E2A5C; background: #F2C85B;
+  border: 2px solid #fff; box-shadow: 3px 3px 0 rgba(0, 0, 0, .45); cursor: pointer; touch-action: manipulation; }
+.pt-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+@keyframes pt-colgar { 0% { transform: translateY(-40px) rotate(-6deg); opacity: 0; } 60% { transform: rotate(3deg); opacity: 1; } 100% { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pt-cartel { animation: none; } }
+html[data-animaciones="off"] .pt-cartel { animation: none; }

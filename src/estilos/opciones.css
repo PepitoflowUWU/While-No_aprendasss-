@@ -26,3 +26,16 @@
 .opc-conf-btns .pixel-button { min-height:48px; font-size:clamp(9px,2.4vw,11px); }
 .opc-fondo .opc-ayuda { font-family:"Pixelify Sans",sans-serif; font-size:clamp(13px,3vw,15px); }
 .opc-fondo .opc-pie .pixel-button { min-height:48px; font-size:clamp(10px,2.6vw,12px); }
+/* Ajustes › CÓDIGOS */
+.opc-codigos { padding: 22px 22px 0; display: flex; flex-direction: column; gap: 12px; }
+.opc-cod-form { display: flex; flex-direction: column; gap: 10px; }
+.opc-cod-fila { display: flex; gap: 10px; }
+.opc-cod-fila input { flex: 1; min-width: 0; min-height: 48px; padding: 0 12px; font: 700 18px "Pixelify Sans", sans-serif; letter-spacing: 2px; text-transform: uppercase;
+  color: #0f2a44; background: #fff; border: 4px solid #173f66; }
+.opc-cod-fila input:focus-visible { outline: 3px solid #F2C85B; outline-offset: 2px; }
+.opc-fondo .opc-cod-btn { min-height: 48px; font-size: clamp(9px, 2.4vw, 11px); }
+.opc-cod-res { margin: 0; padding: 10px 12px; font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.4; border: 3px solid; }
+.opc-cod-res.ok { color: #14532d; background: #dcfce7; border-color: #2f8f46; }
+.opc-cod-res.mal { color: #7a1a10; background: #fee2e2; border-color: #c0392b; }
+.opc-cod-activos ul { margin: 8px 0 0; padding-left: 18px; font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; font-size: 15px; color: #0f2a44; }
+.opc-cod-activos li { margin: 4px 0; }

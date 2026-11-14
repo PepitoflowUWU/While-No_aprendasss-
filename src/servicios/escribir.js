@@ -66,7 +66,11 @@ export const saludoGuia = (nombrePersonaje) =>
   `Vamos a ver tu capacidad de razonar, ${tratamientoDe(nombrePersonaje)}. Te daré ejercicios de retroalimentación de lo que has aprendido. Veremos cómo te defiendes con esto.`;
 
 // Primera frase de la presentacion seria (niveles 4 y 5): muchacho o muchacha segun el personaje elegido
-export function fraseSeria(nombrePersonaje) {
+// muchacho / muchacha segun el personaje elegido ('aprendiz' si no se sabe)
+export function muchachoDe(nombrePersonaje) {
   const t = tratamientoDe(nombrePersonaje);
-  return `Ahora hay que ponernos serios, ${t === 'chica' ? 'muchacha' : t === 'chico' ? 'muchacho' : 'aprendiz'}.`;
+  return t === 'chica' ? 'muchacha' : t === 'chico' ? 'muchacho' : 'aprendiz';
+}
+export function fraseSeria(nombrePersonaje) {
+  return `Ahora hay que ponernos serios, ${muchachoDe(nombrePersonaje)}.`;
 }

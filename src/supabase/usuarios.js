@@ -50,6 +50,21 @@ export async function registrarLeccion(unidad, nivel, leccion, intentos) {
   return r;
 }
 
+// Activa un codigo (MESIAS, HELLO_WORD) para un mundo. Devuelve la lista de codigos activos de ese mundo.
+export async function canjearCodigoServidor(unidad, codigo) {
+  if (!esEntero(unidad) || unidad < 1) throw new RangeError('La unidad debe ser un entero desde 1.');
+  try {
+    const r = await rpc('canjear_codigo', { p_unidad_orden: unidad, p_codigo: codigo });
+    return { ok: true, codigos: Array.isArray(r?.codigos) ? r.codigos : [codigo] };
+  } catch (e) {
+    const m = `${e?.message || ''}`;
+    if (m.includes('CODIGO_INVALIDO')) return { ok: false, razon: 'invalido' };
+    if (/canjear_codigo|function|schema cache/i.test(m)) return { ok: false, razon: 'sin_migracion' };
+    console.warn('[Supabase] canjear_codigo:', m);
+    return { ok: false, razon: 'error' };
+  }
+}
+
 // Usa un comodin. { ok: true, disponibles, usados, limite } o { ok: false, razon: 'limite' | 'sin_comodines' | 'error' }.
 export async function usarComodinServidor(unidad) {
   if (!esEntero(unidad) || unidad < 1) throw new RangeError('La unidad debe ser un entero desde 1.');

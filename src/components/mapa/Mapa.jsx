@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { MAP_NODES } from '../../datos/mapNodes';
+import { MAP_NODES, MAP_PORTAL } from '../../datos/mapNodes';
 import NodoMoneda from './NodoMoneda';
 import NubesMapa from './NubesMapa';
 import EfectosMapa from './EfectosMapa';
@@ -59,6 +59,9 @@ export default function Mapa({
   niveles, hechos, actual, pos, onElegir,
   aviso, children, hudDatos, personaje,
   recienDesbloqueado = null, // índice del nodo recién desbloqueado (destello de 300 ms)
+  todosAbiertos = false,      // código HELLO_WORD: ningún nivel bloqueado
+  mundoCompleto = false,      // todos los niveles completados: el portal se abre
+  onPortal,
 }) {
   const [info, setInfo] = useState(null);
   const [conNubes, setConNubes] = useState(false);
@@ -239,7 +242,7 @@ export default function Mapa({
           {niveles.slice(0, visibles).map((n, k) => {
             const esHecho = Boolean(hechos[k]?.completado);
             const esActual = k === actual;
-            const esBloqueado = k > actual;
+            const esBloqueado = !todosAbiertos && k > actual;
             let st;
             if (esBloqueado) st = 'lock';
             else if (esHecho) st = 'gold-medallion';
@@ -282,6 +285,17 @@ export default function Mapa({
             );
           })}
 
+          {/* Portal a otros mundos: se puede tocar siempre; se abre al completar todos los niveles */}
+          {onPortal && (
+            <button type="button" className={`mapa-portal ${mundoCompleto ? 'abierto' : ''}`} data-tuto="portal"
+              style={{ left: `${MAP_PORTAL.x}%`, top: `${MAP_PORTAL.y}%`, width: `${MAP_PORTAL.w}%`, height: `${MAP_PORTAL.h}%` }}
+              aria-label={mundoCompleto ? 'Portal a otros mundos' : 'Portal a otros mundos (bloqueado: completa todos los niveles)'}
+              title={mundoCompleto ? 'Portal a otros mundos' : 'Completa todos los niveles para abrir el portal'}
+              onClick={onPortal}>
+              {!mundoCompleto && <span className="mapa-portal-candado" aria-hidden="true">🔒</span>}
+            </button>
+          )}
+
           {/* Personaje: de pie sobre el nodo donde está (base en el centro del disco) */}
           <div ref={playerRef} className="player" style={{ left: `${jugador[0]}%`, top: `${jugador[1]}%` }}>
             <JugadorMapa personaje={personaje} />
@@ -290,6 +304,7 @@ export default function Mapa({
           {CALIBRAR && MAP_NODES.map(([x, y], k) => (
             <span key={k} className="calibrar" style={{ left: `${x}%`, top: `${y}%` }}>+<b>{k + 1}</b></span>
           ))}
+          {CALIBRAR && <span className="calibrar" style={{ left: `${MAP_PORTAL.x}%`, top: `${MAP_PORTAL.y}%` }}>+<b>P</b></span>}
         </div>
       </div>
 

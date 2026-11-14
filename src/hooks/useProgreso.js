@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { CURSOS } from '../datos/cursos';
-import { registrarLeccion, usarComodinServidor } from '../supabase/usuarios.js';
+import { registrarLeccion, usarComodinServidor, canjearCodigoServidor } from '../supabase/usuarios.js';
+import { normalizarCodigo, esCodigoValido } from '../servicios/codigos.js';
 import { puntosLeccion, estrellasLeccion, validarIntentos } from '../servicios/puntuacion.js';
 import { COMODINES_MAX, comodinesSeguros, rachaSegura } from '../servicios/validaciones.js';
 import { aplicarNivelCompletado, fechaLocal } from '../servicios/racha.js';
@@ -34,6 +35,13 @@ export function hechosDeEstado(estado) {
   return hechos;
 }
 
+// Codigos activos por mundo: { 1: ['MESIAS', 'HELLO_WORD'] }
+function codigosDeEstado(estado) {
+  const c = {};
+  (estado?.codigos || []).forEach((x) => { (c[x.unidad] ||= []).push(x.codigo); });
+  return c;
+}
+
 function usosDeEstado(estado) {
   const usos = {};
   (estado?.comodines_unidad || []).forEach((u) => { usos[u.unidad] = { usados: u.usados, limite: u.limite }; });
@@ -45,12 +53,12 @@ function estadoInicial(sesion, almacen, KEY) {
   if (sesion && !sesion.invitado && sesion.id) {
     return {
       hechos: hechosDeEstado(e), xp: e?.puntos ?? sesion.db?.puntos ?? 0, com: comodinesSeguros(e?.comodines ?? 3),
-      racha: rachaSegura(e?.racha ?? 0), rachaMax: rachaSegura(e?.racha_max ?? 0), usos: usosDeEstado(e), error: null,
+      racha: rachaSegura(e?.racha ?? 0), rachaMax: rachaSegura(e?.racha_max ?? 0), usos: usosDeEstado(e), codigos: codigosDeEstado(e), error: null,
     };
   }
   let local = {};
   try { local = JSON.parse(almacen.getItem(KEY)) || {}; } catch { /* sin datos */ }
-  return { hechos: {}, xp: 0, com: 3, racha: 0, rachaMax: 0, ultimo: null, usos: {}, ...local, error: null };
+  return { hechos: {}, xp: 0, com: 3, racha: 0, rachaMax: 0, ultimo: null, usos: {}, codigos: {}, ...local, error: null };
 }
 
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -72,6 +80,26 @@ export function useProgreso(sesion) {
 
   const limiteUnidad = (cid) => p.usos[unidadDe(cid)]?.limite ?? LIMITE_COMODINES_UNIDAD_INVITADO;
   const usadosUnidad = (cid) => p.usos[unidadDe(cid)]?.usados ?? 0;
+  const tieneCodigo = (cid, codigo) => (p.codigos?.[unidadDe(cid)] || []).includes(codigo);
+  const codigosDe = (cid) => p.codigos?.[unidadDe(cid)] || [];
+
+  // Activa un codigo para el mundo cid. { ok, codigo } o { ok: false, razon: 'invalido' | 'repetido' | 'sin_migracion' | 'error' }
+  const canjearCodigo = async (cid, texto) => {
+    const codigo = normalizarCodigo(texto);
+    if (!esCodigoValido(codigo)) return { ok: false, razon: 'invalido' };
+    const unidad = unidadDe(cid);
+    const s = pRef.current;
+    if ((s.codigos?.[unidad] || []).includes(codigo)) return { ok: false, razon: 'repetido', codigo };
+    if (!registrado) {
+      poner({ ...s, codigos: { ...(s.codigos || {}), [unidad]: [...(s.codigos?.[unidad] || []), codigo] } });
+      return { ok: true, codigo };
+    }
+    const r = await canjearCodigoServidor(unidad, codigo);
+    if (!r.ok) return { ...r, codigo };
+    const cur = pRef.current;
+    poner({ ...cur, codigos: { ...(cur.codigos || {}), [unidad]: r.codigos } });
+    return { ok: true, codigo };
+  };
 
   // Marca la leccion en el mapa y aplica a la vez lo que cambio (estrellas, nivel completado).
   const conLeccion = (s, cid, nivelIdx, leccionIdx, estrellas, nivelCompleto) => {
@@ -129,8 +157,10 @@ export function useProgreso(sesion) {
   const usarComodin = async (cid) => {
     const s = pRef.current;
     const unidad = unidadDe(cid);
+    const ilimitados = (s.codigos?.[unidad] || []).includes('MESIAS');   // codigo MESIAS: sin limite y sin gastar comodines
     if (!registrado) {                                        // invitado: mismas reglas, solo en esta pestana
       const usados = s.usos[unidad]?.usados ?? 0;
+      if (ilimitados) { poner({ ...s, usos: { ...s.usos, [unidad]: { usados: usados + 1, limite: LIMITE_COMODINES_UNIDAD_INVITADO } } }); return { ok: true }; }
       if (usados >= LIMITE_COMODINES_UNIDAD_INVITADO) return { ok: false, razon: 'limite' };
       if (s.com <= 0) return { ok: false, razon: 'sin_comodines' };
       poner({ ...s, com: s.com - 1, usos: { ...s.usos, [unidad]: { usados: usados + 1, limite: LIMITE_COMODINES_UNIDAD_INVITADO } } });
@@ -148,8 +178,8 @@ export function useProgreso(sesion) {
   // Solo el invitado puede reiniciar: el progreso de un usuario registrado vive en la base de datos y no se borra desde aqui.
   const reiniciar = () => {
     if (registrado) return;
-    poner({ hechos: {}, xp: 0, com: 3, racha: 0, rachaMax: 0, ultimo: null, usos: {}, error: null });
+    poner({ hechos: {}, xp: 0, com: 3, racha: 0, rachaMax: 0, ultimo: null, usos: {}, codigos: {}, error: null });
   };
 
-  return { p, completar, usarComodin, reiniciar, limiteUnidad, usadosUnidad };
+  return { p, completar, usarComodin, reiniciar, limiteUnidad, usadosUnidad, tieneCodigo, codigosDe, canjearCodigo };
 }

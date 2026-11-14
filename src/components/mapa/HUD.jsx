@@ -3,7 +3,7 @@ import { GearIcon, CrownIcon, CardIcon, FlameIcon, StarGold } from '../comun/Pix
 import AvatarJugador from '../personajes/AvatarJugador';
 
 // HUD superior: nivel actual (con avatar), ajustes, comodines y racha. data-tuto = lo que resalta el tutorial (TutorialMesias.jsx).
-export default function HUD({ actual, com, racha, rachaMax = 0, personaje, onPerfil, onAjustes = onPerfil, onFicha, onAdmin }) {
+export default function HUD({ actual, com, comInfinitos = false, racha, rachaMax = 0, personaje, onPerfil, onAjustes = onPerfil, onFicha, onAdmin }) {
   return (
     <>
       <button type="button" className="mp-item mp-nivel mp-btn" onClick={onFicha || onPerfil} aria-label={`Nivel actual ${actual + 1}. Ver perfil`} title="Ver perfil">
@@ -25,7 +25,7 @@ export default function HUD({ actual, com, racha, rachaMax = 0, personaje, onPer
       )}
       <div className="mp-item mp-panel mp-com" data-tuto="comodines">
         <span className="mp-ico-s"><CardIcon size={40} /></span>
-        <span className="mp-txt"><span className="mp-t">COMODINES</span><span className="mp-v">x {com}</span></span>
+        <span className="mp-txt"><span className="mp-t">COMODINES</span><span className="mp-v">{comInfinitos ? '∞' : `x ${com}`}</span></span>
       </div>
 
       <div className="mp-item mp-panel mp-racha" data-tuto="racha">

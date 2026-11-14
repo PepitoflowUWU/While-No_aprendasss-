@@ -122,3 +122,13 @@
   .isla .escenario { position: relative; left: auto; top: auto; translate: none; flex: none; width: max(100vw, 960px); min-width: 960px; margin: auto; overflow: visible; }
   .isla .mapa-fondo { overflow: hidden; }
 }
+
+/* Portal a otros mundos (puerta junto al nivel 6) */
+.isla .mapa-portal { position: absolute; translate: -50% -50%; min-width: 48px; min-height: 48px; padding: 0; border: 0; background: none; cursor: pointer; z-index: 5;
+  border-radius: 40% 40% 6% 6%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.isla .mapa-portal:hover, .isla .mapa-portal:focus-visible { box-shadow: 0 0 18px 6px rgba(255, 240, 160, .75), inset 0 0 14px rgba(255, 240, 160, .6); outline: none; }
+.isla .mapa-portal.abierto { animation: mapa-portal-brillo 1.8s ease-in-out infinite; }
+.isla .mapa-portal-candado { position: absolute; left: 50%; bottom: -6%; translate: -50% 0; font-size: clamp(14px, 1.6cqw, 26px); filter: drop-shadow(1px 1px 0 #000); pointer-events: none; }
+@keyframes mapa-portal-brillo { 50% { box-shadow: 0 0 22px 8px rgba(255, 240, 160, .8); } }
+.isla .is-paused .mapa-portal.abierto, html[data-animaciones="off"] .isla .mapa-portal.abierto { animation: none; }
+@media (prefers-reduced-motion: reduce) { .isla .mapa-portal.abierto { animation: none; } }
