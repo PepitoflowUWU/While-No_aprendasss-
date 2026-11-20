@@ -131,15 +131,19 @@ html[data-animaciones="off"] .ex-reloj.poco { animation: none; }
 .ex-esperado { font-size: clamp(15px, 2.2vw, 17px); line-height: 1.5; }
 .ex-nota-ayuda { font-size: 15px; line-height: 1.5; }
 
-/* Recomendaciones de Gemini (ejercicios de escribir código) */
-.ex-reco { display: flex; flex-direction: column; gap: 8px; }
-.ex-reco-btn { align-self: flex-start; background: #3a2a6e; border-color: #c39bff; color: #fff; }
-.ex-reco-cargando { margin: 0; font-family: var(--ex-lectura); font-size: 15px; color: #c39bff; }
-.ex-reco-error { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 12px; border: 2px solid #c39bff; background: rgba(40, 20, 80, .5); }
-.ex-reco-error p { margin: 0; flex: 1; min-width: 200px; font-family: var(--ex-lectura); font-size: 15px; }
-.ex-reco-caja { padding: 12px 14px; border: 3px solid #c39bff; background: rgba(40, 20, 80, .6); }
-.ex-reco-t { font-size: 14px; font-weight: 700; color: #e0ccff; letter-spacing: 1px; }
-.ex-reco-resumen { margin: 8px 0 4px; font-family: var(--ex-lectura); font-size: 16px; font-weight: 600; }
-.ex-reco-caja ul { margin: 6px 0 0; padding-left: 20px; font-family: var(--ex-lectura); font-size: 15px; line-height: 1.5; }
-.ex-reco-caja li { margin: 6px 0; white-space: pre-wrap; }
-.ex-reco-nota { margin: 8px 0 0; font-family: var(--ex-lectura); font-size: 13px; color: #b9a6dd; }
+/* Recomendaciones de Gemini en la pantalla de la nota (ejercicios de escribir código) */
+.ex-reco-final { width: 100%; display: flex; flex-direction: column; gap: 10px; text-align: left; margin-top: 4px; }
+.ex-reco-t { margin: 0; font-size: 15px; font-weight: 700; color: #e0ccff; letter-spacing: 1px; }
+.ex-reco-nota { margin: -4px 0 0; font-family: var(--ex-lectura); font-size: 13px; color: #b9a6dd; }
+.ex-reco-caja { padding: 12px 14px; border: 2px solid #c39bff; background: rgba(40, 20, 80, .55); }
+.ex-reco-ej { display: block; font-family: var(--ex-lectura); font-size: 15px; font-weight: 700; color: #fff; }
+.ex-reco-ej .bien { color: #7fdc6a; } .ex-reco-ej .mal { color: #ff8a80; }
+.ex-reco-cargando { margin: 6px 0 0; font-family: var(--ex-lectura); font-size: 14px; color: #c39bff; }
+.ex-reco-error { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 6px; }
+.ex-reco-error p { margin: 0; flex: 1; min-width: 180px; font-family: var(--ex-lectura); font-size: 14px; color: #ffd0cc; }
+.ex-reco-resumen { margin: 8px 0 4px; font-family: var(--ex-lectura); font-size: 15px; font-weight: 600; }
+.ex-reco-caja ul { margin: 6px 0 0; padding-left: 20px; font-family: var(--ex-lectura); font-size: 14px; line-height: 1.5; }
+.ex-reco-caja li { margin: 5px 0; white-space: pre-wrap; }
+/* La tarjeta de la nota crece con las recomendaciones: se desplaza dentro de la pantalla */
+.ex-final { align-items: flex-start; }
+.ex-tarjeta { margin: auto; width: min(640px, 100%); }

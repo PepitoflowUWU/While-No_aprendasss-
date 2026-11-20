@@ -6,7 +6,8 @@
 // Subirla: npx supabase functions deploy recomendaciones
 
 const CLAVE = Deno.env.get('GEMINI_API_KEY') ?? '';
-const MODELOS = [Deno.env.get('GEMINI_MODEL'), 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].filter(Boolean) as string[];
+// Primero Flash-Lite (más rápido: con Flash las respuestas tardaban de 40 a 80 s); si no existe, se prueban los demás.
+const MODELOS = [Deno.env.get('GEMINI_MODEL'), 'gemini-3.5-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].filter(Boolean) as string[];
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -39,17 +40,25 @@ Deno.serve(async (req) => {
     `Resultado de las pruebas: ${datos.correcto ? 'correcto (pasó todas las pruebas)' : `incorrecto. ${String(datos.mensaje ?? '').slice(0, 400)}`}`;
 
   let ultimo = '';
+  // Pide con "pensamiento" bajo (responde mucho más rápido: con el normal tardaba hasta 80 s). Si el modelo no acepta esa
+  // opción (error 400), repite el pedido sin ella.
+  const llamar = (modelo: string, pensarPoco: boolean) => fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': CLAVE },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: INSTRUCCION }] },
+      contents: [{ role: 'user', parts: [{ text: pedido }] }],
+      // Límite alto: los modelos nuevos "piensan" antes de responder y eso también gasta salida (con 600 la respuesta llegaba cortada)
+      generationConfig: {
+        temperature: 0.4, maxOutputTokens: 4096, responseMimeType: 'application/json',
+        ...(pensarPoco ? { thinkingConfig: { thinkingLevel: 'low' } } : {}),
+      },
+    }),
+  });
+
   for (const modelo of MODELOS) {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': CLAVE },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: INSTRUCCION }] },
-        contents: [{ role: 'user', parts: [{ text: pedido }] }],
-        // Límite alto: los modelos nuevos "piensan" antes de responder y eso también gasta salida (con 600 la respuesta llegaba cortada)
-        generationConfig: { temperature: 0.4, maxOutputTokens: 4096, responseMimeType: 'application/json' },
-      }),
-    });
+    let r = await llamar(modelo, true);
+    if (r.status === 400) r = await llamar(modelo, false);
     if (r.status === 404) { ultimo = `modelo ${modelo} no disponible`; continue; }   // nombre de modelo que no existe: prueba el siguiente
     if (!r.ok) return responder({ error: `Gemini respondió ${r.status}` }, r.status === 429 ? 429 : 502);
     const d = await r.json();

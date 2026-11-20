@@ -49,6 +49,59 @@ function EditorCodigo({ valor, setValor, bloq }) {
   );
 }
 
+// RECOMENDACIONES DEL GUÍA (Gemini) en la pantalla de la nota: una por cada ejercicio de código que entregó.
+// Se piden de a una (la versión gratis de Gemini admite pocas consultas por minuto) y cada una aparece apenas llega.
+function RecomendacionesFinales({ entregas: lista }) {
+  const [entregas] = useState(lista);                        // fija: la lista no cambia mientras se muestra
+  const [estado, setEstado] = useState({});                  // { [numero]: { cargando } | { resumen, consejos } | { error } }
+  const vivo = useRef(true);
+
+  const pedir = async (e) => {
+    setEstado((s) => ({ ...s, [e.numero]: { cargando: true } }));
+    let r;
+    try {
+      const x = await pedirRecomendaciones({ enunciado: e.enunciado, codigo: e.codigo, correcto: e.correcto, mensaje: e.mensaje });
+      r = x.consejos.length || x.resumen ? x : { error: 'El guía no encontró nada que recomendar esta vez.' };
+    } catch (err) { r = { error: err.message }; }
+    if (vivo.current) setEstado((s) => ({ ...s, [e.numero]: r }));
+  };
+
+  useEffect(() => {
+    vivo.current = true;
+    (async () => { for (const e of entregas) { if (!vivo.current) return; await pedir(e); } })();
+    return () => { vivo.current = false; };
+  }, []);   // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!entregas.length) return null;
+  return (
+    <section className="ex-reco-final" aria-labelledby="ex-reco-t">
+      <h2 id="ex-reco-t" className="ex-reco-t">💡 RECOMENDACIONES DEL GUÍA</h2>
+      <p className="ex-reco-nota">Consejos para mejorar tu código. No cambian tus puntos.</p>
+      {entregas.map((e) => {
+        const r = estado[e.numero];
+        return (
+          <article key={e.numero} className="ex-reco-caja" aria-live="polite">
+            <span className="ex-reco-ej">{e.titulo} <b className={e.correcto ? 'bien' : 'mal'}>{e.correcto ? '✔' : '✘'}</b></span>
+            {(!r || r.cargando) && <p className="ex-reco-cargando">{r ? 'El guía está revisando tu código... (puede tardar hasta medio minuto)' : 'En espera...'}</p>}
+            {r?.error && (
+              <div className="ex-reco-error">
+                <p>{r.error}</p>
+                <button type="button" className="ex-btn ex-secundario" onClick={() => pedir(e)}>REINTENTAR</button>
+              </div>
+            )}
+            {r?.consejos && (
+              <>
+                {r.resumen && <p className="ex-reco-resumen">{r.resumen}</p>}
+                <ul>{r.consejos.map((c, k) => <li key={k}>{c}</li>)}</ul>
+              </>
+            )}
+          </article>
+        );
+      })}
+    </section>
+  );
+}
+
 export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }) {
   const ejercicios = leccion.ejercicios;
   const total = ejercicios.length;
@@ -64,7 +117,6 @@ export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }
   const [consola, setConsola] = useState(null);             // { salida, error } de EJECUTAR
   const [entregado, setEntregado] = useState(null);         // { bien, mensaje } del ejercicio actual
   const [aviso, setAviso] = useState('');
-  const [reco, setReco] = useState(null);                   // recomendaciones de Gemini: { cargando } | { resumen, consejos } | { error }
   const [confirmar, setConfirmar] = useState(null);         // 'entregar' | 'saltar' | 'salir'
   const [finAt, setFinAt] = useState(0);
   const [ahora, setAhora] = useState(Date.now());
@@ -72,10 +124,9 @@ export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }
   const [guardado, setGuardado] = useState(null);
   const [errorGuardado, setErrorGuardado] = useState(false);
   const terminado = useRef(false);
-  const iRef = useRef(0);   // ejercicio visible: una recomendación que llega tarde no se muestra en otro ejercicio
+  const entregas = useRef({});   // ejercicios de código entregados: { [i]: { numero, titulo, enunciado, codigo, correcto, mensaje } }
 
   const q = ejercicios[i];
-  iRef.current = i;
   const restante = fase === 'examen' ? Math.max(0, Math.ceil((finAt - ahora) / 1000)) : MINUTOS_EXAMEN * 60;
   const puntos = resultados.filter(Boolean).length * PUNTOS_POR_EJERCICIO;
 
@@ -111,7 +162,7 @@ export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }
   }
 
   const reiniciarEjercicio = () => {
-    setDiagrama([]); setCodigo(PLANTILLA); setDatosPrueba(''); setConsola(null); setEntregado(null); setAviso(''); setConfirmar(null); setReco(null);
+    setDiagrama([]); setCodigo(PLANTILLA); setDatosPrueba(''); setConsola(null); setEntregado(null); setAviso(''); setConfirmar(null);
   };
 
   const vacio = q?.tipo === 'diagrama' ? diagrama.length === 0 : codigo.replace(/\b(INICIO|FIN)\b/gi, '').trim() === '';
@@ -135,6 +186,8 @@ export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }
       entregar(correcto, correcto ? '¡Correcto! El diagrama respeta la lógica del pseudocódigo.' : 'Incorrecto: el diagrama no corresponde al pseudocódigo.');
     } else {
       const r = validar(codigo, q.validacion);
+      // se guarda para las recomendaciones de Gemini, que se piden al final (pantalla de la nota)
+      entregas.current[i] = { numero: i + 1, titulo: q.p, enunciado: `${q.p}\n${q.problema || ''}`, codigo, correcto: r.correcto, mensaje: r.mensaje };
       entregar(r.correcto, r.mensaje);
     }
   };
@@ -145,19 +198,6 @@ export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }
     if (i >= total - 1) { terminar('completo'); return; }
     setI(i + 1); reiniciarEjercicio();
     document.querySelector('.ex-cuerpo')?.scrollTo?.({ top: 0 });
-  };
-
-  // Gemini revisa el código entregado y da consejos (nombres de variables, cómo resumirlo...). No cambia los puntos.
-  const recomendar = async () => {
-    if (reco?.cargando) return;
-    const yo = i;
-    setReco({ cargando: true });
-    try {
-      const r = await pedirRecomendaciones({ enunciado: `${q.p}
-${q.problema || ''}`, codigo, correcto: !!entregado?.bien, mensaje: entregado?.mensaje || '' });
-      if (iRef.current !== yo) return;
-      setReco(r.consejos.length || r.resumen ? r : { error: 'El guía no encontró nada que recomendar esta vez.' });
-    } catch (e) { if (iRef.current === yo) setReco({ error: e.message }); }
   };
 
   const probar = () => {
@@ -208,6 +248,7 @@ ${q.problema || ''}`, codigo, correcto: !!entregado?.bien, mensaje: entregado?.m
                 : `Todavía no, ${muchacho}. Necesitas al menos ${PUNTOS_PARA_APROBAR} puntos para completar el nivel. Repasa y vuelve a intentarlo.`}
             </p>
           </div>
+          <RecomendacionesFinales entregas={Object.values(entregas.current).sort((a, b) => a.numero - b.numero)} />
           {aprobado && !guardado && !errorGuardado && <p className="ex-guardando">Guardando tu resultado...</p>}
           {errorGuardado && <p className="ex-error">No se pudo guardar tu resultado. Revisa tu conexión y vuelve a dar el examen.</p>}
           <button type="button" className="ex-btn ex-principal" onClick={() => onFin(guardado)} disabled={aprobado && !guardado && !errorGuardado}>
@@ -288,28 +329,6 @@ ${q.problema || ''}`, codigo, correcto: !!entregado?.bien, mensaje: entregado?.m
             <b>{entregado.bien ? `✔ +${PUNTOS_POR_EJERCICIO} puntos` : '✘ 0 puntos'}</b>
             <span>{entregado.mensaje}</span>
           </div>
-        )}
-        {entregado && q.tipo === 'programa' && !entregado.mensaje.startsWith('Ejercicio saltado') && (
-          <section className="ex-reco" aria-live="polite">
-            {!reco && (
-              <button type="button" className="ex-btn ex-reco-btn" onClick={recomendar}>💡 RECOMENDACIONES DEL GUÍA</button>
-            )}
-            {reco?.cargando && <p className="ex-reco-cargando">El guía está revisando tu código... puede tardar hasta medio minuto (si pasas al siguiente ejercicio, ya no las verás).</p>}
-            {reco?.error && (
-              <div className="ex-reco-error">
-                <p>{reco.error}</p>
-                <button type="button" className="ex-btn ex-secundario" onClick={recomendar}>REINTENTAR</button>
-              </div>
-            )}
-            {reco?.consejos && (
-              <div className="ex-reco-caja">
-                <span className="ex-reco-t">💡 RECOMENDACIONES DEL GUÍA</span>
-                {reco.resumen && <p className="ex-reco-resumen">{reco.resumen}</p>}
-                <ul>{reco.consejos.map((c, k) => <li key={k}>{c}</li>)}</ul>
-                <p className="ex-reco-nota">Son consejos para mejorar: no cambian tus puntos.</p>
-              </div>
-            )}
-          </section>
         )}
       </main>
 
