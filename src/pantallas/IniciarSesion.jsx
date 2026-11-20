@@ -77,6 +77,7 @@ export default function IniciarSesion({ go, onEntrar }) {
                 </button>
               </div>
             </Campo>
+            <button type="button" className="reg-olvide" onClick={() => go('recuperar')} disabled={enviando}>¿OLVIDASTE TU CONTRASEÑA?</button>
           </div>
 
           <div className="reg-actions">

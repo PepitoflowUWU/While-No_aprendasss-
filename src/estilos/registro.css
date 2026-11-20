@@ -68,3 +68,9 @@
 .reg-tel-mask { color: #F2C85B; white-space: nowrap; }
 .reg-aviso { padding: 0 6px; min-height: 1.4em; color: #b9f08a; }
 @media (max-width: 480px) { .reg-codigo-sms { font-size: 22px; letter-spacing: .35em; } }
+/* Enlace "¿Olvidaste tu contraseña?" bajo el campo de contraseña */
+.reg-olvide { align-self: flex-end; margin: -4px 0 0; padding: 8px 2px; min-height: 40px; background: none; border: 0; cursor: pointer;
+  font: inherit; font-size: clamp(8px, 2.2vw, 10px); color: #2f6fae; text-decoration: underline; text-underline-offset: 3px; }
+.reg-olvide:hover { color: #173f66; }
+.reg-olvide:focus-visible { outline: 3px solid #F2C85B; outline-offset: 2px; }
+.reg-olvide:disabled { opacity: .5; cursor: default; }

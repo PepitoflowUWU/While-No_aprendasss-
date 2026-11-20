@@ -82,6 +82,42 @@ export async function verificarCodigoSms(telefono, codigo) {
   }
 }
 
+// ── ¿OLVIDASTE TU CONTRASEÑA? ─────────────────────────────────────────────────────────────────────
+// 1) enviarSmsRecuperacion: Twilio (via Supabase) envia un codigo al celular VINCULADO a la cuenta (solo si ya existe: no crea cuentas).
+// 2) verificarSmsRecuperacion: si el codigo coincide, Supabase abre una sesion de esa cuenta.
+// 3) cambiarContrasena: con esa sesion se guarda la contraseña nueva y se cierra la sesion (luego inicia sesion con la nueva).
+export async function enviarSmsRecuperacion(telefono) {
+  if (!RE_TELEFONO.test(telefono)) throw falla('TEL_INVALIDO');
+  const { error } = await cliente().auth.signInWithOtp({ phone: telefono, options: { shouldCreateUser: false } });
+  if (error) {
+    const m = String(error.message || ''); const c = String(error.code || '');
+    if (c === 'otp_disabled' || /signups? not allowed|user not found|not registered/i.test(m)) throw falla('TEL_SIN_CUENTA', error);
+    throw errorSms(error);
+  }
+}
+
+export async function verificarSmsRecuperacion(telefono, codigo) {
+  if (!/^[0-9]{6}$/.test(String(codigo))) throw falla('CODIGO_SMS_INVALIDO');
+  const { data, error } = await cliente().auth.verifyOtp({ phone: telefono, token: String(codigo), type: 'sms' });
+  if (error || !data?.session) {
+    const e = error ? errorSms(error) : null;
+    throw e?.codigo === 'SMS_ESPERA' ? e : falla('CODIGO_SMS_INVALIDO', error);
+  }
+}
+
+export async function cambiarContrasena(password) {
+  const db = cliente();
+  const { error } = await db.auth.updateUser({ password });
+  if (error) {
+    const m = String(error.message || ''); const c = String(error.code || '');
+    if (c === 'same_password' || /different from the old/i.test(m)) throw falla('CLAVE_IGUAL', error);
+    if (c === 'weak_password' || /weak|at least/i.test(m)) throw falla('CLAVE_DEBIL', error);
+    if (c === 'reauthentication_needed' || /reauthenticat/i.test(m)) throw falla('REAUTENTICAR', error);
+    throw falla('CAMBIO_FALLO', error);
+  }
+  await db.auth.signOut().catch(() => {});
+}
+
 // Crea el perfil del jugador (usuario + configuracion + 3 comodines) con el personaje elegido.
 export async function finalizarRegistro({ codigo, personajeId, musica = true, animaciones = true }) {
   const db = cliente();

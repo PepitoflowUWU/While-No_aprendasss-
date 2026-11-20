@@ -4,6 +4,7 @@ import SeleccionPersonaje from './pantallas/SeleccionPersonaje.jsx';
 import VerificarCelular from './pantallas/VerificarCelular.jsx';
 import Registro from './pantallas/Registro.jsx';
 import IniciarSesion from './pantallas/IniciarSesion.jsx';
+import RecuperarContrasena from './pantallas/RecuperarContrasena.jsx';
 import Isla from './pantallas/Isla.jsx';
 import IntroLogo from './components/multimedia/IntroLogo.jsx';
 import MusicaMenu from './components/multimedia/MusicaMenu.jsx';
@@ -201,6 +202,7 @@ function Juego() {
       {pantalla === 'register' && <Registro go={ir} />}
       {pantalla === 'verify' && <VerificarCelular go={ir} />}
       {pantalla === 'login' && <IniciarSesion go={ir} onEntrar={entrarConPerfil} />}
+      {pantalla === 'recuperar' && <RecuperarContrasena go={ir} />}
       {pantalla === 'character' && <SeleccionPersonaje go={ir} onPick={elegirPersonaje} />}
       {pantalla === 'map' && sesion && <Isla sesion={sesion} onSalir={salir} onMusica={cambiarMusica} onAnimaciones={cambiarAnimaciones} />}
     </div>
