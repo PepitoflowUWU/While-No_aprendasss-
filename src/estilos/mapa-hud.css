@@ -108,3 +108,10 @@
 .isla .mp-info-prog, .isla .mp-obj-bar span { font-size: clamp(12px, 1cqw, 16px); }
 .isla .mp-rk-row { font-size: max(12px, 5.4cqw); }
 .isla .mp-btn { touch-action: manipulation; }
+
+/* Aviso rojo de logros por reclamar: FLOTA en la esquina del botón (no ocupa lugar en la columna del ícono y la etiqueta).
+   Va por dentro del borde porque el panel recorta todo lo que sale de su contorno (clip-path). Antes "position: relative"
+   de .mp-panel > * le ganaba, el aviso empujaba el trofeo y la palabra "Logros" hacia abajo y quedaba cortado. */
+.isla .mp-panel > .mp-alerta { position: absolute; top: 8%; right: 7%; z-index: 3; min-width: 22px; height: 22px; padding: 0 5px; box-sizing: border-box;
+  display: grid; place-items: center; font: 700 12px/1 var(--fp); font-style: normal; color: #fff; background: #e63946; border: 2px solid #fff; border-radius: 11px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .35); pointer-events: none; }

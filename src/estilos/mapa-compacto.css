@@ -96,3 +96,9 @@
 .isla .toast-compacto { bottom: calc(var(--bar-bottom, 120px) + 64px); font-size: 14px; }
 
 @media (prefers-reduced-motion: reduce) { .isla .hc-btn, .isla .hc-hoja { transition: none !important; } }
+
+/* Aviso rojo de logros (modo compacto): flota en la esquina, sin mover el ícono ni la etiqueta */
+.isla .hc-nb { position: relative; }
+.isla .hc-nb > .hc-alerta { position: absolute; top: 4px; right: 4px; z-index: 3; min-width: 20px; height: 20px; padding: 0 4px; box-sizing: border-box;
+  display: grid; place-items: center; font: 700 11px/1 "Pixelify Sans", sans-serif; font-style: normal; color: #fff; background: #e63946;
+  border: 2px solid #fff; border-radius: 10px; pointer-events: none; }

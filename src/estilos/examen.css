@@ -145,5 +145,16 @@ html[data-animaciones="off"] .ex-reloj.poco { animation: none; }
 .ex-reco-caja ul { margin: 6px 0 0; padding-left: 20px; font-family: var(--ex-lectura); font-size: 14px; line-height: 1.5; }
 .ex-reco-caja li { margin: 5px 0; white-space: pre-wrap; }
 /* La tarjeta de la nota crece con las recomendaciones: se desplaza dentro de la pantalla */
-.ex-final { align-items: flex-start; }
-.ex-tarjeta { margin: auto; width: min(640px, 100%); }
+/* Centrada solo si cabe: con "justify-content: center" lo que no entraba quedaba CORTADO arriba (sin poder subir).
+   Con margin: auto se centra cuando sobra espacio y, si es más alta que la pantalla, empieza arriba y se desplaza normal. */
+.ex-final { justify-content: flex-start; align-items: stretch; overscroll-behavior: contain;
+  padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+.ex-tarjeta { margin: auto; flex: none; box-sizing: border-box; width: min(640px, 100%); }
+@media (max-width: 560px) {
+  .ex-tarjeta { padding: 18px 12px; gap: 10px; }
+  .ex-nota { width: 120px; height: 120px; }
+  .ex-nota-letra { font-size: 44px; }
+  .ex-guia-img img { width: 90px; height: 90px; }
+  .ex-guia-final { gap: 8px; }
+}
+@media (max-height: 520px) { .ex-nota { width: 110px; height: 110px; } .ex-nota-letra { font-size: 40px; } }

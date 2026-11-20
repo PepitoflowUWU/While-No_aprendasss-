@@ -6,6 +6,7 @@ import { evaluarDiagrama } from '../../servicios/diagrama.js';
 import { ejecutar, validar } from '../../servicios/pseint.js';
 import { muchachoDe } from '../../servicios/escribir.js';
 import { pedirRecomendaciones } from '../../supabase/recomendaciones.js';
+import { consejosLocales } from '../../servicios/consejosLocales.js';
 import { usePersonajes } from '../../context/PersonajesContext.jsx';
 import { MINUTOS_EXAMEN, PUNTOS_POR_EJERCICIO, PUNTOS_PARA_APROBAR, notaExamen } from '../../datos/nivel6.js';
 import '../../estilos/examen.css';
@@ -49,51 +50,33 @@ function EditorCodigo({ valor, setValor, bloq }) {
   );
 }
 
-// RECOMENDACIONES DEL GUÍA (Gemini) en la pantalla de la nota: una por cada ejercicio de código que entregó.
-// Se piden de a una (la versión gratis de Gemini admite pocas consultas por minuto) y cada una aparece apenas llega.
-function RecomendacionesFinales({ entregas: lista }) {
-  const [entregas] = useState(lista);                        // fija: la lista no cambia mientras se muestra
-  const [estado, setEstado] = useState({});                  // { [numero]: { cargando } | { resumen, consejos } | { error } }
-  const vivo = useRef(true);
-
-  const pedir = async (e) => {
-    setEstado((s) => ({ ...s, [e.numero]: { cargando: true } }));
-    let r;
-    try {
-      const x = await pedirRecomendaciones({ enunciado: e.enunciado, codigo: e.codigo, correcto: e.correcto, mensaje: e.mensaje });
-      r = x.consejos.length || x.resumen ? x : { error: 'El guía no encontró nada que recomendar esta vez.' };
-    } catch (err) { r = { error: err.message }; }
-    if (vivo.current) setEstado((s) => ({ ...s, [e.numero]: r }));
-  };
-
-  useEffect(() => {
-    vivo.current = true;
-    (async () => { for (const e of entregas) { if (!vivo.current) return; await pedir(e); } })();
-    return () => { vivo.current = false; };
-  }, []);   // eslint-disable-line react-hooks/exhaustive-deps
-
+// RECOMENDACIONES DEL GUÍA en la pantalla de la nota: una por cada ejercicio de código que entregó.
+// Para que sea lo más rápido posible: a Gemini se le pregunta en segundo plano APENAS se entrega cada ejercicio (durante el
+// examen no se muestra nada), y mientras su respuesta no llega se ven al instante los consejos del juego (consejosLocales).
+// Si Gemini no responde, se quedan esos consejos.
+function RecomendacionesFinales({ entregas, recos, onReintentar }) {
   if (!entregas.length) return null;
   return (
     <section className="ex-reco-final" aria-labelledby="ex-reco-t">
       <h2 id="ex-reco-t" className="ex-reco-t">💡 RECOMENDACIONES DEL GUÍA</h2>
       <p className="ex-reco-nota">Consejos para mejorar tu código. No cambian tus puntos.</p>
       {entregas.map((e) => {
-        const r = estado[e.numero];
+        const r = recos[e.numero];
+        const gemini = r?.consejos?.length ? r : null;
+        const consejos = gemini ? gemini.consejos : e.locales;
         return (
           <article key={e.numero} className="ex-reco-caja" aria-live="polite">
             <span className="ex-reco-ej">{e.titulo} <b className={e.correcto ? 'bien' : 'mal'}>{e.correcto ? '✔' : '✘'}</b></span>
-            {(!r || r.cargando) && <p className="ex-reco-cargando">{r ? 'El guía está revisando tu código... (puede tardar hasta medio minuto)' : 'En espera...'}</p>}
-            {r?.error && (
+            {gemini?.resumen && <p className="ex-reco-resumen">{gemini.resumen}</p>}
+            {consejos.length > 0
+              ? <ul>{consejos.map((c, k) => <li key={k}>{c}</li>)}</ul>
+              : !r?.cargando && <p className="ex-reco-resumen">¡Tu código se ve ordenado! Sigue así.</p>}
+            {r?.cargando && <p className="ex-reco-cargando">El guía está revisando tu código para darte más ideas...</p>}
+            {r?.error && !e.locales.length && (
               <div className="ex-reco-error">
                 <p>{r.error}</p>
-                <button type="button" className="ex-btn ex-secundario" onClick={() => pedir(e)}>REINTENTAR</button>
+                <button type="button" className="ex-btn ex-secundario" onClick={() => onReintentar(e)}>REINTENTAR</button>
               </div>
-            )}
-            {r?.consejos && (
-              <>
-                {r.resumen && <p className="ex-reco-resumen">{r.resumen}</p>}
-                <ul>{r.consejos.map((c, k) => <li key={k}>{c}</li>)}</ul>
-              </>
             )}
           </article>
         );
@@ -124,7 +107,8 @@ export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }
   const [guardado, setGuardado] = useState(null);
   const [errorGuardado, setErrorGuardado] = useState(false);
   const terminado = useRef(false);
-  const entregas = useRef({});   // ejercicios de código entregados: { [i]: { numero, titulo, enunciado, codigo, correcto, mensaje } }
+  const entregas = useRef({});   // ejercicios de código entregados: { [i]: { numero, titulo, enunciado, codigo, correcto, mensaje, locales } }
+  const [recos, setRecos] = useState({});   // respuestas de Gemini por ejercicio: { [numero]: { cargando } | { resumen, consejos } | { error } }
 
   const q = ejercicios[i];
   const restante = fase === 'examen' ? Math.max(0, Math.ceil((finAt - ahora) / 1000)) : MINUTOS_EXAMEN * 60;
@@ -186,11 +170,21 @@ export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }
       entregar(correcto, correcto ? '¡Correcto! El diagrama respeta la lógica del pseudocódigo.' : 'Incorrecto: el diagrama no corresponde al pseudocódigo.');
     } else {
       const r = validar(codigo, q.validacion);
-      // se guarda para las recomendaciones de Gemini, que se piden al final (pantalla de la nota)
-      entregas.current[i] = { numero: i + 1, titulo: q.p, enunciado: `${q.p}\n${q.problema || ''}`, codigo, correcto: r.correcto, mensaje: r.mensaje };
+      // se guarda para las recomendaciones de la pantalla de la nota
+      const e = { numero: i + 1, titulo: q.p, enunciado: `${q.p}\n${q.problema || ''}`, codigo, correcto: r.correcto, mensaje: r.mensaje, locales: consejosLocales(codigo) };
+      entregas.current[i] = e;
+      pedirReco(e);                       // a Gemini se le pregunta YA, en segundo plano: al terminar el examen ya estará la respuesta
       entregar(r.correcto, r.mensaje);
     }
   };
+
+  // Recomendaciones de Gemini (no se muestran durante el examen; solo en la pantalla de la nota)
+  function pedirReco(e) {
+    setRecos((s) => ({ ...s, [e.numero]: { cargando: true } }));
+    pedirRecomendaciones({ enunciado: e.enunciado, codigo: e.codigo, correcto: e.correcto, mensaje: e.mensaje })
+      .then((x) => setRecos((s) => ({ ...s, [e.numero]: x.consejos.length ? x : { error: 'El guía no encontró nada más que recomendar.' } })))
+      .catch((err) => setRecos((s) => ({ ...s, [e.numero]: { error: err.message } })));
+  }
 
   const saltar = () => { entregar(false, 'Ejercicio saltado: 0 puntos.'); };
 
@@ -248,7 +242,7 @@ export default function ExamenFinal({ leccion, personajeId, onCompletar, onFin }
                 : `Todavía no, ${muchacho}. Necesitas al menos ${PUNTOS_PARA_APROBAR} puntos para completar el nivel. Repasa y vuelve a intentarlo.`}
             </p>
           </div>
-          <RecomendacionesFinales entregas={Object.values(entregas.current).sort((a, b) => a.numero - b.numero)} />
+          <RecomendacionesFinales entregas={Object.values(entregas.current).sort((a, b) => a.numero - b.numero)} recos={recos} onReintentar={pedirReco} />
           {aprobado && !guardado && !errorGuardado && <p className="ex-guardando">Guardando tu resultado...</p>}
           {errorGuardado && <p className="ex-error">No se pudo guardar tu resultado. Revisa tu conexión y vuelve a dar el examen.</p>}
           <button type="button" className="ex-btn ex-principal" onClick={() => onFin(guardado)} disabled={aprobado && !guardado && !errorGuardado}>
